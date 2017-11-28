@@ -14,12 +14,14 @@ namespace ReverseShellServer
         readonly BinaryWriter bw;
         readonly BinaryReader br;
         readonly StreamWriter sw;
+        readonly StreamReader sr;
 
-        public ServerTools(BinaryWriter bw, BinaryReader br, StreamWriter sw)
+        public ServerTools(BinaryWriter bw, BinaryReader br, StreamWriter sw, StreamReader sr)
         {
             this.bw = bw;
             this.br = br;
             this.sw = sw;
+            this.sr = sr;
         }
 
 
@@ -159,6 +161,8 @@ namespace ReverseShellServer
             }
 
             sw.Flush();
+
+            
         }
 
 

