@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyLogger", "KeyLogger\KeyL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseShellClient", "ReverseShellClient\ReverseShellClient.csproj", "{9FDAE122-CD1E-467D-A6FA-A98C26E76348}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseShellServer", "ReverseShellServer\ReverseShellServer.csproj", "{BC27CF57-F1F6-42F1-8B19-0E414A2F5721}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseShellServer", "ReverseShellServerWPF\ReverseShellServer.csproj", "{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{9FDAE122-CD1E-467D-A6FA-A98C26E76348}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FDAE122-CD1E-467D-A6FA-A98C26E76348}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FDAE122-CD1E-467D-A6FA-A98C26E76348}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC27CF57-F1F6-42F1-8B19-0E414A2F5721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC27CF57-F1F6-42F1-8B19-0E414A2F5721}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC27CF57-F1F6-42F1-8B19-0E414A2F5721}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC27CF57-F1F6-42F1-8B19-0E414A2F5721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

