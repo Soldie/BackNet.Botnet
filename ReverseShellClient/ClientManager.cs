@@ -177,7 +177,7 @@ namespace ReverseShellClient
                 {
                     // Clear console
                     Console.Clear();
-                    // TODO : still display the cmd line
+                    tools.SayHello();
                 }
                 else if (command == "")
                 {
