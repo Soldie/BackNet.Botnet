@@ -6,7 +6,6 @@ namespace BrowserTornado
 {
     public static class Firefox
     {
-        #region Bookmarks
         /// <summary>
         /// Dump all bookmarks inside the given places database
         /// in the form of an IEnumerable of tuples (string name, string url)
@@ -29,10 +28,8 @@ namespace BrowserTornado
                 }
             }
         }
-        #endregion Bookmarks
 
-
-        #region Cookies
+        
         /// <summary>
         /// Dump all cookies from the given cookie database
         /// </summary>
@@ -54,10 +51,8 @@ namespace BrowserTornado
                 }
             }
         }
-        #endregion Cookies
 
-
-        #region History
+        
         /// <summary>
         /// Dump all urls from the given history database
         /// </summary>
@@ -79,6 +74,5 @@ namespace BrowserTornado
                 }
             }
         }
-        #endregion History
     }
 }

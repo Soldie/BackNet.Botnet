@@ -97,8 +97,7 @@ namespace BrowserTornado
         }
         #endregion Cookies
 
-
-        #region History
+        
         /// <summary>
         /// Dump all urls from the given history database
         /// </summary>
@@ -120,6 +119,5 @@ namespace BrowserTornado
                 }
             }
         }
-        #endregion History
     }
 }

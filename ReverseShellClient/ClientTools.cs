@@ -159,10 +159,7 @@ namespace ReverseShellClient
         }
 
 
-        public void lcwd()
-        {
-            Console.WriteLine("Local cwd : '{0}'", Directory.GetCurrentDirectory());
-        }
+        public void lcwd() => Console.WriteLine("Local cwd : '{0}'", Directory.GetCurrentDirectory());
 
 
         public void lls()
@@ -210,10 +207,7 @@ namespace ReverseShellClient
         #region Modules functions
 
         #region Keylogger
-        public void GetKeyloggerStatus()
-        {
-            Console.WriteLine(sr.ReadLine());
-        }
+        public void GetKeyloggerStatus() => Console.WriteLine(sr.ReadLine());
 
 
         public void DumpKeyloggerLogs()

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Runtime.Remoting.Messaging;
+using System.Windows.Forms;
 
 namespace KeyLogger
 {
@@ -52,10 +53,7 @@ namespace KeyLogger
         /// <summary>
         /// Stop the hook from processing keys
         /// </summary>
-        public void StopListening()
-        {
-            keyboardHook.listening = false;
-        }
+        public void StopListening() => keyboardHook.listening = false;
 
 
         /// <summary>
@@ -164,24 +162,18 @@ namespace KeyLogger
             keyboardHook.Uninstall();
         }
 
-        
+
         /// <summary>
         /// Provides an access to the logger's GetLog() method outside of the namespace
         /// </summary>
         /// <returns>Log's content</returns>
-        public string DumpLogs()
-        {
-            return logger.GetLogs();
-        }
+        public string DumpLogs() => logger.GetLogs();
 
 
         /// <summary>
         /// Returns the hook's listening status
         /// </summary>
         /// <returns>A boolean stating the hook's listening status</returns>
-        public bool GetStatus()
-        {
-            return keyboardHook.listening;
-        }
+        public bool GetStatus() => keyboardHook.listening;
     }
 }

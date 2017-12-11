@@ -1,41 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ReverseShellClient
 {
     public static class ConsoleColorTools
     {
-        public static void WriteCommandMessage(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine(" [+] " + message);
-            Console.ForegroundColor = ConsoleColor.Green;
-        }
+        public static void WriteCommandMessage(string message) =>
+            WriteColorMessage(message, " [+] ", ConsoleColor.Gray);
 
-        public static void WriteWarning(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.Green;
-        }
+        public static void WriteCommandError(string message) =>
+            WriteColorMessage(message, " [-] ", ConsoleColor.Red);
 
-        public static void WriteError(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.Green;
-        }
+        public static void WriteCommandSuccess(string message) =>
+            WriteColorMessage(message, " [+] ", ConsoleColor.Cyan);
 
-        public static void WriteCommandError(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(" [-] " + message);
-            Console.ForegroundColor = ConsoleColor.Green;
-        }
+        public static void WriteWarning(string message) =>
+            WriteColorMessage(message, "", ConsoleColor.Yellow);
 
-        public static void WriteCommandSuccess(string message)
+        public static void WriteError(string message) =>
+            WriteColorMessage(message, "", ConsoleColor.Red);
+
+
+        static void WriteColorMessage(string message, string messagePrefix, ConsoleColor color)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(" [+] " + message);
+            Console.ForegroundColor = color;
+            Console.WriteLine(messagePrefix + message);
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }

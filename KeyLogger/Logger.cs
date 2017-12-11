@@ -34,9 +34,6 @@
         /// <summary>
         /// Empty logs variable
         /// </summary>
-        public void ClearLogs()
-        {
-            logs = "";
-        }
+        public void ClearLogs() => logs = "";
     }
 }

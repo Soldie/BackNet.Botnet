@@ -20,10 +20,8 @@ namespace BrowserTornado
                     CopyDatabase(Path.Combine(basePath, "History"), "chrome-history") &&
                     CopyDatabase(Path.Combine(basePath, "Bookmarks"), "chrome-bookmarks"));
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
 
@@ -43,10 +41,8 @@ namespace BrowserTornado
                 return (CopyDatabase(Path.Combine(basePath, dir, "cookies.sqlite"), "ff-cookies") &&
                     CopyDatabase(Path.Combine(basePath, dir, "places.sqlite"), "ff-places"));
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
 

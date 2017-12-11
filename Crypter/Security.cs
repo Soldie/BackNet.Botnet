@@ -10,7 +10,7 @@ namespace Crypter
     {
         public enum ProcessTypes { encrypt, decrypt }
 
-        List<byte> defaultByteList { get; set; }
+        List<byte> defaultByteList { get; }
 
         List<byte> substitutionByteList { get; set; }
 
