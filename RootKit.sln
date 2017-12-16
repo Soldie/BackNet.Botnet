@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseShellClient", "Rever
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseShellServer", "ReverseShellServer\ReverseShellServer.csproj", "{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands", "Commands\Commands.csproj", "{7E0A8C84-CA50-4A9A-9B35-6DA4E5640CDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleColorTools", "ConsoleColorTools\ConsoleColorTools.csproj", "{982DC5B6-1123-428A-83DD-D212490C859F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E0A8C84-CA50-4A9A-9B35-6DA4E5640CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E0A8C84-CA50-4A9A-9B35-6DA4E5640CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E0A8C84-CA50-4A9A-9B35-6DA4E5640CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E0A8C84-CA50-4A9A-9B35-6DA4E5640CDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{982DC5B6-1123-428A-83DD-D212490C859F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{982DC5B6-1123-428A-83DD-D212490C859F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{982DC5B6-1123-428A-83DD-D212490C859F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{982DC5B6-1123-428A-83DD-D212490C859F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
