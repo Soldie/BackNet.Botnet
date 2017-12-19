@@ -14,6 +14,7 @@ namespace ReverseShellServer
 {
     public class ServerTools
     {
+        /*
         readonly BinaryWriter bw;
         readonly BinaryReader br;
         readonly StreamWriter sw;
@@ -291,5 +292,7 @@ namespace ReverseShellServer
         #endregion Crypter
 
         #endregion Modules functions
+
+    */
     }
 }

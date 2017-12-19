@@ -45,6 +45,13 @@ namespace Commands
         /// Flags sent by the server to init a client-side function
         /// </summary>
         List<string> clientFlags { get; }
+
+
+        /// <summary>
+        /// List of data to save between the command beeing send to the server and the execution by the client,
+        /// example : a path for the file to upload to the server
+        /// </summary>
+        List<string> savedData { get; set; }
         #endregion Variables
 
 

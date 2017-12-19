@@ -41,7 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandsManager.cs" />
+    <Compile Include="Exit.cs" />
     <Compile Include="ICommand.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Terminate.cs" />
     <Compile Include="UploadFile.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -49,9 +52,11 @@
       <Project>{982dc5b6-1123-428a-83dd-d212490c859f}</Project>
       <Name>Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetworkManager\NetworkManager.csproj">
+      <Project>{4099dcc2-a969-4a5c-9f6d-eff87706995c}</Project>
+      <Name>NetworkManager</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

