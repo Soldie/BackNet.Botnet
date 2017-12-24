@@ -7,6 +7,7 @@ namespace ReverseShellClient
 {
     public class ClientTools
     {
+        /*
         readonly BinaryWriter bw;
         readonly BinaryReader br;
         readonly StreamWriter sw;
@@ -218,5 +219,6 @@ namespace ReverseShellClient
         #endregion Keylogger
 
         #endregion Modules functions
+        */
     }
 }

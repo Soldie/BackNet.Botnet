@@ -14,6 +14,7 @@ namespace ReverseShellServer
 {
     public class ServerTools
     {
+        /*
         readonly BinaryWriter bw;
         readonly BinaryReader br;
         readonly StreamWriter sw;
@@ -224,7 +225,6 @@ namespace ReverseShellServer
 
         // TODO : play sound
         // TODO : change wallpaper
-        // TODO : execute program ?? (can do with cmd without blocking it ? else implement it to create a new process)
         // TODO : persistance
 
         #endregion Misc functions
@@ -292,5 +292,7 @@ namespace ReverseShellServer
         #endregion Crypter
 
         #endregion Modules functions
+
+    */
     }
 }
