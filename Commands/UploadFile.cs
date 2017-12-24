@@ -45,10 +45,10 @@ namespace Commands
         #region Methods
         public bool PreProcessCommand(List<string> args)
         {
-            var result = File.Exists(args[1]);
+            var result = File.Exists(args[0]);
             if (result)
             {
-                savedData.Add(args[1]);
+                savedData.Add(args[0]);
             }
             else
             {
@@ -61,7 +61,7 @@ namespace Commands
 
         public void ClientMethod(List<string> args)
         {
-            var path = savedData[1];
+            var path = savedData[0];
             ColorTools.WriteCommandMessage($"Starting upload of file '{path}' to the server");
 
             // Send the data length first
@@ -87,13 +87,13 @@ namespace Commands
 
         public void ServerMethod(List<string> args)
         {
-            GlobalNetworkManager.WriteLine("{ReceiveFileFromClient:init}");
+            GlobalNetworkManager.WriteLine(clientFlags[0]);
 
             var dataLength = GlobalNetworkManager.ReadBytesAsInt32();
 
             try
             {
-                using (var fs = new FileStream(args[2], FileMode.Create))
+                using (var fs = new FileStream(args[1], FileMode.Create))
                 {
                     GlobalNetworkManager.ReadNetworkStreamAndWriteToFileStream(fs, 4096, dataLength);
                 }

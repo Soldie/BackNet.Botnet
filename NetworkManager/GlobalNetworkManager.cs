@@ -56,7 +56,15 @@ namespace NetworkManager
         /// Read one line from the network stream
         /// </summary>
         /// <returns>String</returns>
-        public static string ReadLine() => streamReader.ReadLine();
+        public static string ReadLine()
+        {
+            string data = null;
+            while (data == null)
+            {
+                data = streamReader.ReadLine();
+            }
+            return data;
+        }
 
         #endregion Read
 

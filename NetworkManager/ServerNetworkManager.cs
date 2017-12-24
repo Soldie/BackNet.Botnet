@@ -7,11 +7,7 @@ namespace NetworkManager
 {
     public class ServerNetworkManager
     {
-        TcpClient tcpClient { get; }
-
-
-        public ServerNetworkManager() => tcpClient = new TcpClient();
-        
+        TcpClient tcpClient { get; set; }
 
 
         /// <summary>
@@ -22,10 +18,7 @@ namespace NetworkManager
         /// <returns>Boolean for result</returns>
         public bool ConnectToClient(string remoteAdress, int remotePort)
         {
-            if (tcpClient.Connected)
-            {
-                return true;
-            }
+            tcpClient = new TcpClient();
 
             IPAddress ipAddress = null;
             try

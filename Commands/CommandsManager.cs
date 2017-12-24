@@ -21,29 +21,48 @@ namespace Commands
             var type = typeof(ICommand);
 
             commandList = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(p => type.IsAssignableFrom(p) && !p.IsInterface)
-                .Cast<ICommand>()
+                .SelectMany(a => a.GetTypes())
+                .Where(t => type.IsAssignableFrom(t) && !t.IsInterface)
+                .Select(t => (ICommand)Activator.CreateInstance(t))
                 .ToList();
         }
 
 
-        /// <summary>
+        /// <summary>   
         /// Return the Command whose name was given as a parameter, or null if it doesn't exist
         /// </summary>
         /// <param name="commandName">Command name to find</param>
-        /// <returns>Found Command or null</returns>
-        public static ICommand GetCommandByName(string commandName)
-            => commandList.First(s => s.name == commandName);
+        /// <returns>Found ICommand or null</returns>
+        public static ICommand GetCommandByName(string commandName) => SearchCommand(s => s.name == commandName);
 
 
         /// <summary>
         /// Return the Command whose clientFlags list contains the given flag
         /// </summary>
         /// <param name="flag">Flag to find</param>
-        /// <returns>Found Command or null</returns>
-        public static ICommand GetCommandByFlag(string flag)
-            => commandList.First(s => s.clientFlags.Contains(flag));
+        /// <returns>Found ICommand or null</returns>
+        public static ICommand GetCommandByFlag(string flag) => SearchCommand(s => s.clientFlags.Contains(flag));
+
+
+        /// <summary>
+        /// Search a command in the commandList matching the given predicate
+        /// </summary>
+        /// <param name="predicate">Predicate to use to find the command</param>
+        /// <returns>Found ICommand or null</returns>
+        static ICommand SearchCommand(Func<ICommand, bool> predicate)
+        {
+            ICommand foundCommand;
+            try
+            {
+                foundCommand = commandList.First(predicate);
+            }
+            catch (Exception)
+            {
+                foundCommand = null;
+            }
+
+            return foundCommand;
+        }
 
 
         /// <summary>

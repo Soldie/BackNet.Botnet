@@ -41,9 +41,6 @@ namespace NetworkManager
             GlobalNetworkManager.binaryReader = new BinaryReader(GlobalNetworkManager.networkStream);
 
             ColorTools.WriteCommandMessage("Connected to " + (IPEndPoint)socketForServer.RemoteEndPoint + "\n");
-
-            // Say hello to display the cmd path the first time
-            GlobalNetworkManager.SayHello();
         }
         
 
@@ -60,7 +57,7 @@ namespace NetworkManager
         /// <param name="processingCommand"></param>
         public void Cleanup(bool processingCommand)
         {
-            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped [ENTER]" : "\nDisconnected [ENTER]");
+            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped" : "\nDisconnected [ENTER]");
 
             connected = false;
 

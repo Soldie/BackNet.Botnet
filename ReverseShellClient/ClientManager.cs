@@ -49,8 +49,8 @@ namespace ReverseShellClient
 
                 // Process user input
                 ProcessInput();
-
-                // Connection ended, ask if listen again
+                
+                // Connection ended, ask listen again
                 listen = AskListenAgain();
             }
         }
@@ -104,6 +104,12 @@ namespace ReverseShellClient
         {
             while (true)
             {
+                // If the connection was closed, break from the loop
+                if (!GlobalNetworkManager.clientNetworkManager.IsConnected())
+                {
+                    processingCommand = false;
+                    break;
+                }
                 // If not allowed to send commands, continue
                 if (processingCommand)
                 {
@@ -112,7 +118,7 @@ namespace ReverseShellClient
 
                 var commandString = Console.ReadLine();
 
-                // If the connection was closed, break from the loop
+                // Test again after the readline
                 if (!GlobalNetworkManager.clientNetworkManager.IsConnected())
                 {
                     break;
@@ -139,7 +145,7 @@ namespace ReverseShellClient
                     {
                         var arguments = new List<string>();
 
-                        if (splittedCommand.Count == 1)
+                        if (splittedCommand.Count > 1)
                         {
                             arguments = splittedCommand.GetRange(1, splittedCommand.Count - 1);
                         }
