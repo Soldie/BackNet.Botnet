@@ -56,15 +56,7 @@ namespace NetworkManager
         /// Read one line from the network stream
         /// </summary>
         /// <returns>String</returns>
-        public static string ReadLine()
-        {
-            string data = null;
-            while (data == null)
-            {
-                data = streamReader.ReadLine();
-            }
-            return data;
-        }
+        public static string ReadLine() => streamReader.ReadLine();
 
         #endregion Read
 
@@ -74,11 +66,11 @@ namespace NetworkManager
         /// <summary>
         /// Read all the given ReadStream content and write it to the network stream as byte arrays, then flush
         /// </summary>
-        /// <param name="fileStream">Stream to process, must be a readable stream</param>
+        /// <param name="stream">Stream to process, must be a readable stream</param>
         /// <param name="bufferSize">Buffer size that will be used to send data</param>
-        public static void ReadFileStreamAndWriteToNetworkStream(FileStream fileStream, int bufferSize)
+        public static void ReadStreamAndWriteToNetworkStream(Stream stream, int bufferSize)
         {
-            if (!fileStream.CanRead)
+            if (!stream.CanRead)
             {
                 // The stream can't read : invalid argument
                 throw new ArgumentException();
@@ -86,7 +78,7 @@ namespace NetworkManager
 
             var buffer = new byte[bufferSize];
             int bytesRead;
-            while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
+            while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
             {
                 binaryWriter.Write(buffer, 0, bytesRead);
                 binaryWriter.Flush();
@@ -95,14 +87,14 @@ namespace NetworkManager
 
 
         /// <summary>
-        /// Read all the network ReadStream content and write it to the given FileStream stream
+        /// Read all the network ReadStream content and write it to the given stream stream
         /// </summary>
-        /// <param name="fileStream">Stream to process, must be a writable stream</param>
+        /// <param name="stream">Stream to process, must be a writable stream</param>
         /// <param name="bufferSize">Buffer size that will be used to receive data</param>
-        /// <param name="fileSize">Size of the file to write</param>
-        public static void ReadNetworkStreamAndWriteToFileStream(FileStream fileStream, int bufferSize, int fileSize)
+        /// <param name="dataSize">Size of the data to write</param>
+        public static void ReadNetworkStreamAndWriteToStream(Stream stream, int bufferSize, int dataSize)
         {
-            if (!fileStream.CanWrite)
+            if (!stream.CanWrite)
             {
                 // The stream can't write : invalid argument
                 throw new ArgumentException();
@@ -113,11 +105,11 @@ namespace NetworkManager
             var bytesWritten = 0;
             while ((bytesRead = ReadBytesIntoBuffer(buffer, buffer.Length)) > 0)
             {
-                fileStream.Write(buffer, 0, bytesRead);
+                stream.Write(buffer, 0, bytesRead);
                 bytesWritten += bytesRead;
 
                 // The file has been totally written
-                if (bytesWritten == fileSize)
+                if (bytesWritten == dataSize)
                 {
                     break;
                 }

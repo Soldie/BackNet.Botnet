@@ -137,7 +137,7 @@ namespace ReverseShellClient
                 }
                 else
                 {
-                    var splittedCommand = commandString.Split(' ').ToList();
+                    var splittedCommand = commandString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                     var commandName = splittedCommand[0];
 
                     var command = CommandsManager.GetCommandByName(commandName);
@@ -170,11 +170,13 @@ namespace ReverseShellClient
                         if (!CommandsManager.CheckCommandSyntax(command, arguments))
                         {
                             ColorTools.WriteCommandError($"Syntax error, check out the command's help page ({commandName} help)");
+                            // Still display cmd again
+                            GlobalNetworkManager.SayHello();
                             continue;
                         }
 
 
-                        var preProcessResult = true;
+                        var preProcessResult = CommandsManager.PreProcessResult.OK;
                         try
                         {
                             preProcessResult = command.PreProcessCommand(arguments);
@@ -184,7 +186,7 @@ namespace ReverseShellClient
                             // Ignored
                         }
 
-                        if (!preProcessResult)
+                        if (preProcessResult == CommandsManager.PreProcessResult.KO)
                         {
                             // Error in the PreProcess method
                             GlobalNetworkManager.SayHello();
@@ -198,10 +200,13 @@ namespace ReverseShellClient
                             GlobalNetworkManager.SayHello();
                             continue;
                         }
-                        
 
-                        // Will have to wait for the process to finish in order to issue commands again
-                        processingCommand = true;
+
+                        if (preProcessResult != CommandsManager.PreProcessResult.NoClientProcess)
+                        {
+                            // Will have to wait for the process to finish in order to issue commands again
+                            processingCommand = true;
+                        }
                     }
 
                     // Send the data to the server

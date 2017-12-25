@@ -13,17 +13,13 @@ namespace Commands
     {
         #region Variables
         public string name { get; } = "uploadfile";
-
-
+        
         public string description { get; } = "Upload a file to the server";
-
-
+        
         public string syntaxHelper { get; } = "uploadfile [localFileName] [remoteFileName]";
-
-
+        
         public bool isLocal { get; } = false;
-
-
+        
         public List<List<Type>> validArguments { get; } = new List<List<Type>>()
         {
             new List<Type>()
@@ -31,8 +27,7 @@ namespace Commands
                 typeof(string), typeof(string)
             }
         };
-
-
+        
         public List<string> clientFlags { get; } = new List<string>()
         {
             "{UploadFile:init}"
@@ -43,7 +38,7 @@ namespace Commands
 
 
         #region Methods
-        public bool PreProcessCommand(List<string> args)
+        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
         {
             var result = File.Exists(args[0]);
             if (result)
@@ -55,10 +50,9 @@ namespace Commands
                 ColorTools.WriteCommandError("The specified file doesn't exist");
             }
 
-            return result;
+            return result ? CommandsManager.PreProcessResult.OK : CommandsManager.PreProcessResult.KO;
         }
-
-
+        
         public void ClientMethod(List<string> args)
         {
             var path = savedData[0];
@@ -69,7 +63,7 @@ namespace Commands
 
             using (var readStream = new FileStream(path, FileMode.Open))
             {
-                GlobalNetworkManager.ReadFileStreamAndWriteToNetworkStream(readStream, 4096);
+                GlobalNetworkManager.ReadStreamAndWriteToNetworkStream(readStream, 4096);
             }
 
             var result = GlobalNetworkManager.ReadLine();
@@ -82,9 +76,9 @@ namespace Commands
             {
                 ColorTools.WriteCommandError("An error occured");
             }
+
+            savedData.Clear();
         }
-
-
         public void ServerMethod(List<string> args)
         {
             GlobalNetworkManager.WriteLine(clientFlags[0]);
@@ -95,7 +89,7 @@ namespace Commands
             {
                 using (var fs = new FileStream(args[1], FileMode.Create))
                 {
-                    GlobalNetworkManager.ReadNetworkStreamAndWriteToFileStream(fs, 4096, dataLength);
+                    GlobalNetworkManager.ReadNetworkStreamAndWriteToStream(fs, 4096, dataLength);
                 }
 
                 GlobalNetworkManager.WriteLine("Success");
