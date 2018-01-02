@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NetworkManager;
 using Shared;
 
@@ -43,10 +40,17 @@ namespace Commands
 
         public void ClientMethod(List<string> args)
         {
-            var path = savedData[0];
-            ColorTools.WriteCommandMessage($"Starting download of file '{savedData[1]}' from the server");
+            var initResult = GlobalNetworkManager.ReadLine();
+            if (initResult != "OK")
+            {
+                ColorTools.WriteCommandError(initResult == "NotFound" ? "The remote file doesn't exist" : "An IO exception occured");
+                return;
+            }
 
-            var dataLength = GlobalNetworkManager.ReadBytesAsInt32();
+            var path = savedData[1];
+            ColorTools.WriteCommandMessage($"Starting download of file '{savedData[0]}' from the server");
+            
+            var dataLength = int.Parse(GlobalNetworkManager.ReadLine());
 
             try
             {
@@ -73,16 +77,24 @@ namespace Commands
 
             if (!File.Exists(args[0]))
             {
-                GlobalNetworkManager.WriteLine("File not found");
+                GlobalNetworkManager.WriteLine("NotFound");
                 return;
             }
 
-            // Send the data length first
-            GlobalNetworkManager.WriteIntAsBytes((int)new FileInfo(args[0]).Length);
-
-            using (var readStream = new FileStream(args[0], FileMode.Open))
+            try
             {
-                GlobalNetworkManager.ReadStreamAndWriteToNetworkStream(readStream, 4096);
+                using (var readStream = new FileStream(args[0], FileMode.Open))
+                {
+                    GlobalNetworkManager.WriteLine("OK");
+
+                    // Send the data length first
+                    GlobalNetworkManager.WriteLine(new FileInfo(args[0]).Length.ToString());
+                    GlobalNetworkManager.ReadStreamAndWriteToNetworkStream(readStream, 4096);
+                }
+            }
+            catch (IOException)
+            {
+                GlobalNetworkManager.WriteLine("IOException");
             }
         }
     }

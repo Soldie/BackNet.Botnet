@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NetworkManager;
 using Shared;
 
@@ -59,7 +56,7 @@ namespace Commands
             ColorTools.WriteCommandMessage($"Starting upload of file '{path}' to the server");
 
             // Send the data length first
-            GlobalNetworkManager.WriteIntAsBytes((int)new FileInfo(path).Length);
+            GlobalNetworkManager.WriteLine(new FileInfo(path).Length.ToString());
 
             using (var readStream = new FileStream(path, FileMode.Open))
             {
@@ -83,7 +80,7 @@ namespace Commands
         {
             GlobalNetworkManager.WriteLine(clientFlags[0]);
 
-            var dataLength = GlobalNetworkManager.ReadBytesAsInt32();
+            var dataLength = int.Parse(GlobalNetworkManager.ReadLine());
 
             try
             {

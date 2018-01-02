@@ -21,6 +21,8 @@ namespace NetworkManager
 
         internal static BinaryReader binaryReader { get; set; }
 
+        const int DEFAULT_BUFFER_SIZE = 4046;   // to use
+
 
         /// <summary>
         /// Constructor, initiate clientNetworkManager and ServerNetworkManager
@@ -36,20 +38,13 @@ namespace NetworkManager
         #region Read
         
         /// <summary>
-        /// Read a byte array of the 'count' size from the network stream into the given buffer
+        /// Read a byte array of 'count' size from the network stream into the given buffer
         /// </summary>
         /// <param name="buffer">Buffer to write the byte array into</param>
         /// <param name="count">Number of bytes to read</param>
         /// <returns>Read lenght</returns>
         public static int ReadBytesIntoBuffer(byte[] buffer, int count)
             => binaryReader.Read(buffer, 0, count);
-        
-
-        /// <summary>
-        /// Read byte from the network stream as an Int32
-        /// </summary>
-        /// <returns>Int32</returns>
-        public static int ReadBytesAsInt32() => binaryReader.ReadInt32();
 
 
         /// <summary>
@@ -72,7 +67,7 @@ namespace NetworkManager
         {
             if (!stream.CanRead)
             {
-                // The stream can't read : invalid argument
+                // The stream can't be read : invalid argument
                 throw new ArgumentException();
             }
 
@@ -122,17 +117,6 @@ namespace NetworkManager
         /// </summary>
         /// <param name="data">Byte array to write</param>
         public static void WriteByteArray(byte[] data)
-        {
-            binaryWriter.Write(data);
-            binaryWriter.Flush();
-        }
-
-
-        /// <summary>
-        /// Write the given integer as a byte to the network stream, then flush
-        /// </summary>
-        /// <param name="data">Int to write</param>
-        public static void WriteIntAsBytes(int data)
         {
             binaryWriter.Write(data);
             binaryWriter.Flush();

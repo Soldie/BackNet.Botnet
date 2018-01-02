@@ -81,6 +81,11 @@ namespace Commands
         /// <returns>Correct syntax boolean</returns>
         public static bool CheckCommandSyntax(ICommand command, List<string> arguments)
         {
+            if (command.validArguments == null && arguments.Count == 0)
+            {
+                return true;
+            }
+
             int dummy;  // Only for use of int.TryParse()
             var argsType = arguments.Select(s => int.TryParse(s, out dummy) ? typeof(int) : typeof(string)).ToList();
 

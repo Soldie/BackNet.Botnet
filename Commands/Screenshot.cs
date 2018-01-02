@@ -23,10 +23,7 @@ namespace Commands
 
         public bool isLocal { get; } = false;
 
-        public List<List<Type>> validArguments { get; } = new List<List<Type>>()
-        {
-            new List<Type>()
-        };
+        public List<List<Type>> validArguments { get; } = null;
 
         public List<string> clientFlags { get; } = new List<string>()
         {
@@ -50,7 +47,7 @@ namespace Commands
                            + ".png";
 
             // Get data length
-            var dataLength = GlobalNetworkManager.ReadBytesAsInt32();
+            var dataLength = int.Parse(GlobalNetworkManager.ReadLine());
 
             try
             {
@@ -71,7 +68,7 @@ namespace Commands
 
         public void ServerMethod(List<string> args)
         {
-            GlobalNetworkManager.WriteLine("{Screenshot:init}");
+            GlobalNetworkManager.WriteLine(clientFlags[0]);
 
             using (var ms = new MemoryStream())
             {
@@ -88,7 +85,7 @@ namespace Commands
 
 
                 // Send the data length first
-                GlobalNetworkManager.WriteIntAsBytes((int)ms.Length);
+                GlobalNetworkManager.WriteLine(ms.Length.ToString());
 
                 // Reset memory stream position
                 ms.Position = 0;
