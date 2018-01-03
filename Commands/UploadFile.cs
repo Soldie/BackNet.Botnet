@@ -73,8 +73,6 @@ namespace Commands
             {
                 ColorTools.WriteCommandError("An error occured");
             }
-
-            savedData.Clear();
         }
         public void ServerMethod(List<string> args)
         {

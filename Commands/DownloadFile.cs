@@ -67,8 +67,6 @@ namespace Commands
                 File.Delete(path);
                 ColorTools.WriteCommandError("An error occured");
             }
-
-            savedData.Clear();
         }
 
         public void ServerMethod(List<string> args)

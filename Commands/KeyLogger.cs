@@ -59,8 +59,6 @@ namespace Commands
             {
                 Console.WriteLine(GlobalNetworkManager.ReadLine());
             }
-
-            savedData.Clear();
         }
 
         public void ServerMethod(List<string> args)
