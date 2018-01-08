@@ -22,6 +22,8 @@ namespace ReverseShellClient
 
         public void Start()
         {
+            ShowBanner();
+
             var listen = true;
 
             while (listen)
@@ -251,6 +253,12 @@ namespace ReverseShellClient
             {
                 // Ignored
             }
+        }
+
+
+        void ShowBanner()
+        {
+            Console.WriteLine(" _____ _     _       _      _     _             _       \n|     |_|___| |_ ___| |   _| |___| |___ ___ ___| |_ ___ \n| | | | |  _|   | -_| |  | . | -_| | . | -_|  _|   | -_|\n|_|_|_|_|___|_|_|___|_|  |___|___|_|  _|___|___|_|_|___|\n                                   |_|                  \n\n");
         }
     }
 }
