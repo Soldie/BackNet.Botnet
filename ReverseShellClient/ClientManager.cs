@@ -143,6 +143,12 @@ namespace ReverseShellClient
                 {
                     GlobalNetworkManager.SayHello();
                 }
+                else if (commandString == "help")
+                {
+                    // Global help section
+                    CommandsManager.ShowGlobalHelp();
+                    GlobalNetworkManager.SayHello();
+                }
                 else
                 {
                     var splittedCommand = commandString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -159,16 +165,10 @@ namespace ReverseShellClient
                         }
 
 
-                        if (commandString.Contains("help")){
+                        if (arguments.Count == 1 && arguments[0] == "help")
+                        {
                             // Help commands section
-                            if (commandString == "help")
-                            {
-                                CommandsManager.ShowGlobalHelp();
-                            }
-                            else
-                            {
-                                CommandsManager.ShowCommandHelp(command);
-                            }
+                            CommandsManager.ShowCommandHelp(command);
 
                             GlobalNetworkManager.SayHello();
                             continue;
