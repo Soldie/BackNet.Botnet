@@ -11,7 +11,6 @@ namespace Commands
         #region Variables
         /// <summary>
         /// Name of the command
-        /// if the command accepts multiple names, write them separated by '|' (ex: 'ls|dir')
         /// </summary>
         string name { get; }
 
