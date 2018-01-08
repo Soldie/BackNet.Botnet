@@ -57,7 +57,10 @@ namespace Commands
 
             if (result != "OK")
             {
-                ColorTools.WriteCommandError("Unable to use the webcam in the default timespan, maybe another application is using it");
+                ColorTools.WriteCommandError(result == "KO"
+                    ? "Unable to use the webcam in the default timespan, maybe another application is using it"
+                    : "Unable to find a webcam on the remote server");
+
                 return;
             }
 
@@ -86,7 +89,17 @@ namespace Commands
             GlobalNetworkManager.WriteLine(clientFlags[0]);
             mustReturn = false;
 
-            var captureDevice = new FilterInfoCollection(FilterCategory.VideoInputDevice)[0];
+            FilterInfo captureDevice;
+            try
+            {
+                captureDevice = new FilterInfoCollection(FilterCategory.VideoInputDevice)[0];
+            }
+            catch (Exception)
+            {
+                GlobalNetworkManager.WriteLine("NoCam");
+                return;
+            }
+
             video = new VideoCaptureDevice(captureDevice.MonikerString);
             video.NewFrame += Video_NewFrame;
             video.Start();
