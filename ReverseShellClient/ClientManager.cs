@@ -22,6 +22,8 @@ namespace ReverseShellClient
 
         public void Start()
         {
+            ShowBanner();
+
             var listen = true;
 
             while (listen)
@@ -73,6 +75,7 @@ namespace ReverseShellClient
                     {
                         // Call client method
                         command.ClientMethod(null);
+                        command.savedData?.Clear();
                         processingCommand = false;
                     }
                     else
@@ -93,7 +96,12 @@ namespace ReverseShellClient
                 }
                 catch (Exception)
                 {
-                    Cleanup();
+                    // An exception will be catched if the client used the "exit" command, the cleanup is already done
+                    if (GlobalNetworkManager.clientNetworkManager.IsConnected())
+                    {
+                        Cleanup(false);
+                    }
+                    
                     break;
                 }
             }
@@ -135,9 +143,15 @@ namespace ReverseShellClient
                 {
                     GlobalNetworkManager.SayHello();
                 }
+                else if (commandString == "help")
+                {
+                    // Global help section
+                    CommandsManager.ShowGlobalHelp();
+                    GlobalNetworkManager.SayHello();
+                }
                 else
                 {
-                    var splittedCommand = commandString.Split(' ').ToList();
+                    var splittedCommand = commandString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                     var commandName = splittedCommand[0];
 
                     var command = CommandsManager.GetCommandByName(commandName);
@@ -151,16 +165,10 @@ namespace ReverseShellClient
                         }
 
 
-                        if (commandString.Contains("help")){
+                        if (arguments.Count == 1 && arguments[0] == "help")
+                        {
                             // Help commands section
-                            if (commandString == "help")
-                            {
-                                CommandsManager.ShowGlobalHelp();
-                            }
-                            else
-                            {
-                                CommandsManager.ShowCommandHelp(command);
-                            }
+                            CommandsManager.ShowCommandHelp(command);
 
                             GlobalNetworkManager.SayHello();
                             continue;
@@ -170,11 +178,13 @@ namespace ReverseShellClient
                         if (!CommandsManager.CheckCommandSyntax(command, arguments))
                         {
                             ColorTools.WriteCommandError($"Syntax error, check out the command's help page ({commandName} help)");
+                            // Still display cmd again
+                            GlobalNetworkManager.SayHello();
                             continue;
                         }
 
 
-                        var preProcessResult = true;
+                        var preProcessResult = CommandsManager.PreProcessResult.OK;
                         try
                         {
                             preProcessResult = command.PreProcessCommand(arguments);
@@ -184,7 +194,7 @@ namespace ReverseShellClient
                             // Ignored
                         }
 
-                        if (!preProcessResult)
+                        if (preProcessResult == CommandsManager.PreProcessResult.KO)
                         {
                             // Error in the PreProcess method
                             GlobalNetworkManager.SayHello();
@@ -194,14 +204,26 @@ namespace ReverseShellClient
 
                         if (command.isLocal)
                         {
-                            command.ClientMethod(arguments);
-                            GlobalNetworkManager.SayHello();
-                            continue;
+                            try
+                            {
+                                command.ClientMethod(arguments);
+                                command.savedData?.Clear();
+                                GlobalNetworkManager.SayHello();
+                                continue;
+                            }
+                            catch (ExitException)
+                            {
+                                Cleanup(true);
+                                break;
+                            }
                         }
-                        
 
-                        // Will have to wait for the process to finish in order to issue commands again
-                        processingCommand = true;
+
+                        if (preProcessResult != CommandsManager.PreProcessResult.NoClientProcess)
+                        {
+                            // Will have to wait for the process to finish in order to issue commands again
+                            processingCommand = true;
+                        }
                     }
 
                     // Send the data to the server
@@ -221,16 +243,22 @@ namespace ReverseShellClient
         }
 
 
-        void Cleanup()
+        void Cleanup(bool IsExit)
         {
             try
             {
-                GlobalNetworkManager.clientNetworkManager.Cleanup(processingCommand);
+                GlobalNetworkManager.clientNetworkManager.Cleanup(processingCommand, IsExit);
             }
             catch (Exception)
             {
                 // Ignored
             }
+        }
+
+
+        void ShowBanner()
+        {
+            Console.WriteLine(" _____ _     _       _      _     _             _       \n|     |_|___| |_ ___| |   _| |___| |___ ___ ___| |_ ___ \n| | | | |  _|   | -_| |  | . | -_| | . | -_|  _|   | -_|\n|_|_|_|_|___|_|_|___|_|  |___|___|_|  _|___|___|_|_|___|\n                                   |_|                  \n\n");
         }
     }
 }

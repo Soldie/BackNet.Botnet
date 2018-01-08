@@ -11,7 +11,6 @@ namespace Commands
         #region Variables
         /// <summary>
         /// Name of the command
-        /// if the command accepts multiple names, write them separated by '|' (ex: 'ls|dir')
         /// </summary>
         string name { get; }
 
@@ -61,7 +60,7 @@ namespace Commands
         /// </summary>
         /// <param name="args">Args passed with the command</param>
         /// <returns>Result of the operation</returns>
-        bool PreProcessCommand(List<string> args);
+        CommandsManager.PreProcessResult PreProcessCommand(List<string> args);
 
 
         /// <summary>

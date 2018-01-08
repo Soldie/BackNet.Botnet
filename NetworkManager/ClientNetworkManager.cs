@@ -54,10 +54,11 @@ namespace NetworkManager
         /// <summary>
         /// Close the Socket and TcpListener, call GlobalNetworkManager.Cleanup() for the stream cleanup
         /// </summary>
-        /// <param name="processingCommand"></param>
-        public void Cleanup(bool processingCommand)
+        /// <param name="processingCommand">Is the client processing a command</param>
+        /// <param name="isExit">Did the client use the exit method</param>
+        public void Cleanup(bool processingCommand, bool isExit)
         {
-            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped" : "\nDisconnected [ENTER]");
+            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped" : $"\nDisconnected {(isExit ? "" : "[ENTER]")}");
 
             connected = false;
 

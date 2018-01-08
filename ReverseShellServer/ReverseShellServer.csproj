@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -89,6 +92,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -105,6 +109,10 @@
     <ProjectReference Include="..\Commands\Commands.csproj">
       <Project>{7e0a8c84-ca50-4a9a-9b35-6da4e5640cda}</Project>
       <Name>Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConsoleColorTools\Shared.csproj">
+      <Project>{982DC5B6-1123-428A-83DD-D212490C859F}</Project>
+      <Name>Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Crypter\Crypter.csproj">
       <Project>{aaa22a7d-9c62-41f5-a275-5c8c38f723c6}</Project>

