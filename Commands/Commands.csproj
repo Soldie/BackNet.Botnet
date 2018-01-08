@@ -62,6 +62,7 @@
     <Compile Include="SysInfo.cs" />
     <Compile Include="Terminate.cs" />
     <Compile Include="UploadFile.cs" />
+    <Compile Include="Wallpaper.cs" />
     <Compile Include="Webcam.cs" />
   </ItemGroup>
   <ItemGroup>
