@@ -232,7 +232,7 @@ namespace ReverseShellClient
             var input = Console.ReadLine();
             Console.Clear();
 
-            return input == "n" || input == "N";
+            return input != "n" && input != "N";
         }
 
 
