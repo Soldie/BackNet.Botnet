@@ -78,7 +78,7 @@ namespace ReverseShellServer
         /// <param name="receivedData">Data sent by the client</param>
         void ProcessCommand(string receivedData)
         {
-            var splittedCommand = receivedData.Split(' ').ToList();
+            var splittedCommand = CommandsManager.GetSplittedCommand(receivedData);
             var commandName = splittedCommand[0];
             var arguments = new List<string>();
 

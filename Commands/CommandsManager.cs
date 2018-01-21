@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using KeyLogger;
 using Shared;
 
@@ -167,10 +168,18 @@ namespace Commands
         }
 
 
+        /// <summary>
+        /// Split the given string by using the space delimiter, this takes into account double quotes (ex : for file paths)
+        /// </summary>
+        /// <param name="commandString">String to process</param>
+        /// <returns>List of string</returns>
         public static List<string> GetSplittedCommand(string commandString)
         {
-            return commandString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            // TODO : edit to take into account " "
+            return Regex.Matches(commandString, @"[\""].+?[\""]|[^ ]+")
+                .Cast<Match>()
+                .Where(m => m.Value != "\"")
+                .Select(m => m.Value[0] == '\"' && m.Value[m.Length - 1] == '\"' ? m.Value.Substring(1, m.Value.Length - 2) : m.Value)
+                .ToList();
         }
     }
 }
