@@ -90,57 +90,6 @@ namespace ReverseShellClient
             }
         }
 
-        
-
-        /*void ProcessIncomingData()
-        {
-            while (true)
-            {
-                try
-                {
-                    var data = GlobalNetworkManager.ReadLine();
-                    if (data == null)
-                    {
-                        continue;
-                    }// to remove ??
-
-                    var command = CommandsManager.GetCommandByFlag(data);
-                    if (command != null)
-                    {
-                        // Call client method
-                        command.ClientMethod(null);
-                        command.savedData?.Clear();
-                        processingCommand = false;
-                    }
-                    else
-                    {
-                        // Normal output (text)
-                        // Check if the line isn't the one representing the path in the cmd
-                        if (data.Length > 0 && !(data[data.Length - 1] == '>' && data.Contains(@":\")))
-                        {
-                            // Add line return
-                            Console.WriteLine(data);
-                        }
-                        else
-                        {
-                            // Display cmd path without line return
-                            Console.Write(data);
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                    // An exception will be catched if the client used the "exit" command, the cleanup is already done
-                    if (GlobalNetworkManager.clientNetworkManager.IsConnected())
-                    {
-                        Cleanup(false);
-                    }
-                    
-                    break;
-                }
-            }
-        }*/
-
 
         void RunClient()
         {
@@ -286,7 +235,7 @@ namespace ReverseShellClient
         }
 
 
-        void DisplayCommandPrompt() => Console.Write("test>");
+        void DisplayCommandPrompt() => Console.Write("reverseshell>");
 
 
         #region Simulate user input

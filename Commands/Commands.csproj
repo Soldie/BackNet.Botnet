@@ -51,8 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cmd.cs" />
     <Compile Include="CommandsManager.cs" />
-    <Compile Include="DownloadFile.cs" />
+    <Compile Include="Download.cs" />
     <Compile Include="DownloadUrl.cs" />
     <Compile Include="Exit.cs" />
     <Compile Include="GetOpenPrograms.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="Screenshot.cs" />
     <Compile Include="SysInfo.cs" />
     <Compile Include="Terminate.cs" />
-    <Compile Include="UploadFile.cs" />
+    <Compile Include="Upload.cs" />
     <Compile Include="Wallpaper.cs" />
     <Compile Include="Webcam.cs" />
   </ItemGroup>
