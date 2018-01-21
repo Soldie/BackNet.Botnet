@@ -16,12 +16,20 @@ namespace ReverseShellClient
         bool waitingForUserInput { get; set; } = false;
 
 
+        /// <summary>
+        /// Constructor sets default console coloras Green
+        /// </summary>
         public ClientManager()
         {
             Console.ForegroundColor = ConsoleColor.Green;
         }
 
 
+        /// <summary>
+        /// Entry point of the client. Call methods to initiate port listening.
+        /// When a remote computer connects to us, initiate the prompt loop and monitor the connection.
+        /// If the other end disconnects, this will ask if the program should listen again
+        /// </summary>
         public void Start()
         {
             DisplayBanner();
@@ -62,6 +70,10 @@ namespace ReverseShellClient
         }
 
 
+        /// <summary>
+        /// Check every second if the other end of the connection is still active.
+        /// If it's not and the cleanup wasn't already made, cleanup and make the prompt loop exit
+        /// </summary>
         void MonitorConnection()
         {
             while (true)
@@ -91,6 +103,9 @@ namespace ReverseShellClient
         }
 
 
+        /// <summary>
+        /// Main loop waiting for user input and processing it. Call commands and communicate with the server.
+        /// </summary>
         void RunClient()
         {
             DisplayCommandPrompt();
@@ -206,16 +221,25 @@ namespace ReverseShellClient
         }
 
 
+        /// <summary>
+        /// Simple method to ask if the program should listen again on a port for an incomming connection
+        /// </summary>
+        /// <returns>User's choice</returns>
         bool AskListenAgain()
         {
-            Console.Write("Listen again ? (y/N) ");
+            // 'Yes' is the default choice
+            Console.Write("Listen again ? (Y/n) ");
             var input = Console.ReadLine();
             Console.Clear();
 
-            return input == "y" || input == "Y";
+            return input == "n" || input == "N";
         }
 
 
+        /// <summary>
+        /// Call the clientNetworkManager Cleanup Method to dispose the network stream and listener
+        /// </summary>
+        /// <param name="isCommandProcessing">Is the program currently processing user input ?</param>
         void Cleanup(bool isCommandProcessing)
         {
             try
@@ -229,12 +253,18 @@ namespace ReverseShellClient
         }
 
 
+        /// <summary>
+        /// Show the program's banner
+        /// </summary>
         void DisplayBanner()
         {
             Console.WriteLine(" _____ _     _       _      _     _             _       \n|     |_|___| |_ ___| |   _| |___| |___ ___ ___| |_ ___ \n| | | | |  _|   | -_| |  | . | -_| | . | -_|  _|   | -_|\n|_|_|_|_|___|_|_|___|_|  |___|___|_|  _|___|___|_|_|___|\n                                   |_|                  \n\n");
         }
 
 
+        /// <summary>
+        /// Print the cmd prompt of the program to indicate it's waiting for user input
+        /// </summary>
         void DisplayCommandPrompt() => Console.Write("reverseshell>");
 
 
