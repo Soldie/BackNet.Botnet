@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cmd.cs" />
     <Compile Include="CommandsManager.cs" />
     <Compile Include="Download.cs" />
     <Compile Include="DownloadUrl.cs" />

