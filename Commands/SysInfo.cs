@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using NetworkManager;
 
 namespace Commands
@@ -44,15 +45,12 @@ namespace Commands
                 new Tuple<string, string>("Machine name", Environment.MachineName),
                 new Tuple<string, string>("Current user's name", Environment.UserName),
                 new Tuple<string, string>("Current user's domain name", Environment.UserDomainName),
+                new Tuple<string, string>("Admin", IsAdministrator() ? "Administrator" : "Not administrator"),
                 new Tuple<string, string>("Os version", $"{Environment.OSVersion} , {(Environment.Is64BitOperatingSystem ? "64" : "32")}bit operating system"),
                 new Tuple<string, string>(".NET version", Environment.Version.ToString()),
                 new Tuple<string, string>("Number of processors", Environment.ProcessorCount.ToString()),
                 new Tuple<string, string>("Machine uptime", TimespanAsString(TimeSpan.FromMilliseconds(Environment.TickCount))),
                 new Tuple<string, string>("Drives", Environment.GetLogicalDrives().Aggregate((current, drive) => $"{current} , " + drive))
-                // TODO :
-                // Mac adress
-                // Ip adress
-                // IsCurrentUserAdmin
             };
 
             GlobalNetworkManager.WriteLine(CommandsManager.TableDisplay(infos));
@@ -77,6 +75,13 @@ namespace Commands
             }
 
             return result;
+        }
+
+        public bool IsAdministrator()
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }
