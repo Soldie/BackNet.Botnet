@@ -6,13 +6,13 @@ using Shared;
 
 namespace Commands
 {
-    internal class DownloadFile : ICommand
+    internal class Download : ICommand
     {
-        public string name { get; } = "downloadfile";
+        public string name { get; } = "download";
 
         public string description { get; } = "Download a file from the server";
 
-        public string syntaxHelper { get; } = "downloadfile [remoteFileName] [localFileName]";
+        public string syntaxHelper { get; } = "download [remoteFileName] [localFileName]";
 
         public bool isLocal { get; } = false;
 
@@ -24,18 +24,10 @@ namespace Commands
             }
         };
 
-        public List<string> clientFlags { get; } = new List<string>()
+
+        public bool PreProcessCommand(List<string> args)
         {
-            "{DownloadFile:init}"
-        };
-
-        public List<string> savedData { get; set; } = new List<string>();
-
-
-        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
-        {
-            savedData.AddRange(args);
-            return CommandsManager.PreProcessResult.OK;
+            throw new NotImplementedException();
         }
 
         public void ClientMethod(List<string> args)
@@ -47,8 +39,8 @@ namespace Commands
                 return;
             }
 
-            var path = savedData[1];
-            ColorTools.WriteCommandMessage($"Starting download of file '{savedData[0]}' from the server");
+            var path = args[1];
+            ColorTools.WriteCommandMessage($"Starting download of file '{args[0]}' from the server");
             
             var dataLength = int.Parse(GlobalNetworkManager.ReadLine());
 
@@ -56,7 +48,7 @@ namespace Commands
             {
                 using (var fs = new FileStream(path, FileMode.Create))
                 {
-                    GlobalNetworkManager.ReadNetworkStreamAndWriteToStream(fs, 4096, dataLength);
+                    GlobalNetworkManager.NetworkStreamToStream(fs, dataLength);
                 }
 
                 ColorTools.WriteCommandSuccess("File successfully downloaded from the server");
@@ -71,8 +63,6 @@ namespace Commands
 
         public void ServerMethod(List<string> args)
         {
-            GlobalNetworkManager.WriteLine(clientFlags[0]);
-
             if (!File.Exists(args[0]))
             {
                 GlobalNetworkManager.WriteLine("NotFound");
@@ -87,7 +77,7 @@ namespace Commands
 
                     // Send the data length first
                     GlobalNetworkManager.WriteLine(new FileInfo(args[0]).Length.ToString());
-                    GlobalNetworkManager.ReadStreamAndWriteToNetworkStream(readStream, 4096);
+                    GlobalNetworkManager.StreamToNetworkStream(readStream);
                 }
             }
             catch (IOException)

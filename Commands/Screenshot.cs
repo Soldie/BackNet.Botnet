@@ -1,15 +1,12 @@
-﻿using System;
+﻿using NetworkManager;
+using Shared;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using NetworkManager;
-using Shared;
 
 namespace Commands
 {
@@ -25,15 +22,8 @@ namespace Commands
 
         public List<List<Type>> validArguments { get; } = null;
 
-        public List<string> clientFlags { get; } = new List<string>()
-        {
-            "{Screenshot:init}"
-        };
 
-        public List<string> savedData { get; set; }
-
-
-        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
+        public bool PreProcessCommand(List<string> args)
         {
             throw new NotImplementedException();
         }
@@ -53,7 +43,7 @@ namespace Commands
             {
                 using (var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    GlobalNetworkManager.ReadNetworkStreamAndWriteToStream(fs, 4096, dataLength);
+                    GlobalNetworkManager.NetworkStreamToStream(fs, dataLength);
                 }
 
                 ColorTools.WriteCommandSuccess($"Screenshot saved : {fileName}");
@@ -68,8 +58,6 @@ namespace Commands
 
         public void ServerMethod(List<string> args)
         {
-            GlobalNetworkManager.WriteLine(clientFlags[0]);
-
             using (var ms = new MemoryStream())
             {
                 var bounds = GetScreenRectangle();
@@ -89,7 +77,7 @@ namespace Commands
 
                 // Reset memory stream position
                 ms.Position = 0;
-                GlobalNetworkManager.ReadStreamAndWriteToNetworkStream(ms, 4096);
+                GlobalNetworkManager.StreamToNetworkStream(ms);
             }
         }
 

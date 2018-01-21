@@ -21,7 +21,8 @@ namespace NetworkManager
 
         internal static BinaryReader binaryReader { get; set; }
 
-        const int DEFAULT_BUFFER_SIZE = 4046;   // to use
+
+        const int DEFAULT_BUFFER_SIZE = 4046;
 
 
         /// <summary>
@@ -32,38 +33,20 @@ namespace NetworkManager
             clientNetworkManager = new ClientNetworkManager();
             ServerNetworkManager = new ServerNetworkManager();
         }
-
-
-
-        #region Read
         
-        /// <summary>
-        /// Read a byte array of 'count' size from the network stream into the given buffer
-        /// </summary>
-        /// <param name="buffer">Buffer to write the byte array into</param>
-        /// <param name="count">Number of bytes to read</param>
-        /// <returns>Read lenght</returns>
-        public static int ReadBytesIntoBuffer(byte[] buffer, int count)
-            => binaryReader.Read(buffer, 0, count);
-
 
         /// <summary>
         /// Read one line from the network stream
         /// </summary>
-        /// <returns>String</returns>
+        /// <returns>String read from stream</returns>
         public static string ReadLine() => streamReader.ReadLine();
 
-        #endregion Read
-
-
-        #region Write
-
+        
         /// <summary>
         /// Read all the given ReadStream content and write it to the network stream as byte arrays, then flush
         /// </summary>
         /// <param name="stream">Stream to process, must be a readable stream</param>
-        /// <param name="bufferSize">Buffer size that will be used to send data</param>
-        public static void ReadStreamAndWriteToNetworkStream(Stream stream, int bufferSize)
+        public static void StreamToNetworkStream(Stream stream)
         {
             if (!stream.CanRead)
             {
@@ -71,7 +54,10 @@ namespace NetworkManager
                 throw new ArgumentException();
             }
 
-            var buffer = new byte[bufferSize];
+            // Wait for ready flag
+            ReadLine();
+
+            var buffer = new byte[DEFAULT_BUFFER_SIZE];
             int bytesRead;
             while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
             {
@@ -85,9 +71,8 @@ namespace NetworkManager
         /// Read all the network ReadStream content and write it to the given stream stream
         /// </summary>
         /// <param name="stream">Stream to process, must be a writable stream</param>
-        /// <param name="bufferSize">Buffer size that will be used to receive data</param>
         /// <param name="dataSize">Size of the data to write</param>
-        public static void ReadNetworkStreamAndWriteToStream(Stream stream, int bufferSize, int dataSize)
+        public static void NetworkStreamToStream(Stream stream, int dataSize)
         {
             if (!stream.CanWrite)
             {
@@ -95,10 +80,13 @@ namespace NetworkManager
                 throw new ArgumentException();
             }
 
-            var buffer = new byte[bufferSize];
+            // Send ready flag
+            WriteLine("OK");
+
+            var buffer = new byte[DEFAULT_BUFFER_SIZE];
             int bytesRead;
             var bytesWritten = 0;
-            while ((bytesRead = ReadBytesIntoBuffer(buffer, buffer.Length)) > 0)
+            while ((bytesRead = binaryReader.Read(buffer, 0, buffer.Length)) > 0)
             {
                 stream.Write(buffer, 0, bytesRead);
                 bytesWritten += bytesRead;
@@ -109,17 +97,6 @@ namespace NetworkManager
                     break;
                 }
             }
-        }
-
-
-        /// <summary>
-        /// Write the given byte array to the network stream, then flush
-        /// </summary>
-        /// <param name="data">Byte array to write</param>
-        public static void WriteByteArray(byte[] data)
-        {
-            binaryWriter.Write(data);
-            binaryWriter.Flush();
         }
 
 
@@ -135,23 +112,8 @@ namespace NetworkManager
 
 
         /// <summary>
-        /// Write a 'Hello !' message to the network stream and flush
+        /// Close the network stream
         /// </summary>
-        public static void SayHello() => WriteLine("Hello !");
-
-        #endregion Write
-
-
-        /// <summary>
-        /// Close the StreamReaders, StreamWriters and the network stream
-        /// </summary>
-        internal static void Cleanup()
-        {
-            streamReader.Close();
-            streamWriter.Close();
-            binaryReader.Close();
-            binaryWriter.Close();
-            networkStream.Close();
-        }
+        internal static void Cleanup() => networkStream.Close();
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Commands;
 using NetworkManager;
@@ -10,19 +13,18 @@ namespace ReverseShellClient
 {
     public class ClientManager
     {
-        bool processingCommand;
+        bool waitingForUserInput { get; set; } = false;
 
 
         public ClientManager()
         {
-            processingCommand = false;
             Console.ForegroundColor = ConsoleColor.Green;
         }
 
 
         public void Start()
         {
-            ShowBanner();
+            DisplayBanner();
 
             var listen = true;
 
@@ -35,22 +37,24 @@ namespace ReverseShellClient
                     try
                     {
                         port = int.Parse(Console.ReadLine());
+                        if(port < 1 || port > 65535)
+                            throw new ArgumentException();
                     }
                     catch (Exception)
                     {
-                        Console.WriteLine(@"... please ...");
+                        Console.Write("This is not a valid port, please type again\n>");
                     }
                 }
 
                 // Listen and start connection
                 GlobalNetworkManager.clientNetworkManager.ListenAndConnect(port);
 
-                // Process data sent by the server in a new task
-                var runClient = new Task(ProcessIncomingData);
-                runClient.Start();
+                // Check if the connection is still active in the background
+                var connectionMonitoringTask = new Task(MonitorConnection);
+                connectionMonitoringTask.Start();
 
                 // Process user input
-                ProcessInput();
+                RunClient();
                 
                 // Connection ended, ask listen again
                 listen = AskListenAgain();
@@ -58,7 +62,37 @@ namespace ReverseShellClient
         }
 
 
-        void ProcessIncomingData()
+        void MonitorConnection()
+        {
+            while (true)
+            {
+                // The program is waiting for the user to enter a command, but the other end of the connection disconnected
+                if (waitingForUserInput && !GlobalNetworkManager.clientNetworkManager.IsConnected())
+                {
+                    // Call cleanup method from ClientNetworkManager
+                    GlobalNetworkManager.clientNetworkManager.Cleanup(processingCommand: false);
+                    
+                    // Send [ENTER] key to bypass the console.ReadLine()
+                    var hWnd = Process.GetCurrentProcess().MainWindowHandle;
+                    PostMessage(hWnd, WM_KEYDOWN, VK_RETURN, 0);
+
+                    break;
+                }
+
+                // The program executed a method, but the other end of the connection disconnected, this was caught and the cleanup method was called was made
+                if (!waitingForUserInput && GlobalNetworkManager.clientNetworkManager.CleanupMade())
+                {
+                    break;
+                }
+
+                // The other of the connection is still connected, wait and try again
+                Thread.Sleep(1000);
+            }
+        }
+
+        
+
+        /*void ProcessIncomingData()
         {
             while (true)
             {
@@ -82,7 +116,7 @@ namespace ReverseShellClient
                     {
                         // Normal output (text)
                         // Check if the line isn't the one representing the path in the cmd
-                        if (!(data[data.Length - 1] == '>' && data.Contains(@":\")))
+                        if (data.Length > 0 && !(data[data.Length - 1] == '>' && data.Contains(@":\")))
                         {
                             // Add line return
                             Console.WriteLine(data);
@@ -105,28 +139,20 @@ namespace ReverseShellClient
                     break;
                 }
             }
-        }
+        }*/
 
 
-        void ProcessInput()
+        void RunClient()
         {
+            DisplayCommandPrompt();
+
             while (true)
             {
-                // If the connection was closed, break from the loop
-                if (!GlobalNetworkManager.clientNetworkManager.IsConnected())
-                {
-                    processingCommand = false;
-                    break;
-                }
-                // If not allowed to send commands, continue
-                if (processingCommand)
-                {
-                    continue;
-                }
-
+                waitingForUserInput = true;     // Used for the connectionMonitoringTask
                 var commandString = Console.ReadLine();
+                waitingForUserInput = false;
 
-                // Test again after the readline
+                // If the connection was closed, break from the loop
                 if (!GlobalNetworkManager.clientNetworkManager.IsConnected())
                 {
                     break;
@@ -137,24 +163,18 @@ namespace ReverseShellClient
                 {
                     // Clear console
                     Console.Clear();
-                    GlobalNetworkManager.SayHello();
-                }
-                else if (commandString == "")
-                {
-                    GlobalNetworkManager.SayHello();
                 }
                 else if (commandString == "help")
                 {
                     // Global help section
                     CommandsManager.ShowGlobalHelp();
-                    GlobalNetworkManager.SayHello();
                 }
-                else
+                else if (commandString != "")
                 {
-                    var splittedCommand = commandString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var splittedCommand = CommandsManager.GetSplittedCommand(commandString);
                     var commandName = splittedCommand[0];
 
-                    var command = CommandsManager.GetCommandByName(commandName);
+                    ICommand command = CommandsManager.GetCommandByName(commandName);
                     if (command != null)
                     {
                         var arguments = new List<string>();
@@ -167,24 +187,25 @@ namespace ReverseShellClient
 
                         if (arguments.Count == 1 && arguments[0] == "help")
                         {
-                            // Help commands section
+                            // Display command's help
                             CommandsManager.ShowCommandHelp(command);
 
-                            GlobalNetworkManager.SayHello();
+                            DisplayCommandPrompt();
                             continue;
                         }
 
 
                         if (!CommandsManager.CheckCommandSyntax(command, arguments))
                         {
-                            ColorTools.WriteCommandError($"Syntax error, check out the command's help page ({commandName} help)");
-                            // Still display cmd again
-                            GlobalNetworkManager.SayHello();
+                            ColorTools.WriteCommandError(
+                                $"Syntax error, check out the command's help page ({commandName} help)");
+
+                            DisplayCommandPrompt();
                             continue;
                         }
 
 
-                        var preProcessResult = CommandsManager.PreProcessResult.OK;
+                        var preProcessResult = true;
                         try
                         {
                             preProcessResult = command.PreProcessCommand(arguments);
@@ -194,41 +215,44 @@ namespace ReverseShellClient
                             // Ignored
                         }
 
-                        if (preProcessResult == CommandsManager.PreProcessResult.KO)
+                        if (preProcessResult == false)
                         {
                             // Error in the PreProcess method
-                            GlobalNetworkManager.SayHello();
+                            DisplayCommandPrompt();
                             continue;
                         }
 
 
-                        if (command.isLocal)
+                        try
                         {
-                            try
+                            if (!command.isLocal)
                             {
-                                command.ClientMethod(arguments);
-                                command.savedData?.Clear();
-                                GlobalNetworkManager.SayHello();
-                                continue;
+                                // Send the command to the server
+                                GlobalNetworkManager.WriteLine(commandString);
                             }
-                            catch (ExitException)
-                            {
-                                Cleanup(true);
-                                break;
-                            }
+
+                            command.ClientMethod(arguments);
                         }
-
-
-                        if (preProcessResult != CommandsManager.PreProcessResult.NoClientProcess)
+                        catch (ExitException)
                         {
-                            // Will have to wait for the process to finish in order to issue commands again
-                            processingCommand = true;
+                            // The client called the 'Exit' or 'Terminate' command
+                            Cleanup(isCommandProcessing: false);
+                            break;
+                        }
+                        catch (IOException)
+                        {
+                            // Most likely the server disconnected, or a command didn't catch its exception...
+                            Cleanup(isCommandProcessing: true);
+                            break;
                         }
                     }
-
-                    // Send the data to the server
-                    GlobalNetworkManager.WriteLine(commandString);
+                    else
+                    {
+                        ColorTools.WriteError($"'{commandName}' is not a known command");
+                    }
                 }
+
+                DisplayCommandPrompt();
             }
         }
 
@@ -243,11 +267,11 @@ namespace ReverseShellClient
         }
 
 
-        void Cleanup(bool IsExit)
+        void Cleanup(bool isCommandProcessing)
         {
             try
             {
-                GlobalNetworkManager.clientNetworkManager.Cleanup(processingCommand, IsExit);
+                GlobalNetworkManager.clientNetworkManager.Cleanup(isCommandProcessing);
             }
             catch (Exception)
             {
@@ -256,9 +280,23 @@ namespace ReverseShellClient
         }
 
 
-        void ShowBanner()
+        void DisplayBanner()
         {
             Console.WriteLine(" _____ _     _       _      _     _             _       \n|     |_|___| |_ ___| |   _| |___| |___ ___ ___| |_ ___ \n| | | | |  _|   | -_| |  | . | -_| | . | -_|  _|   | -_|\n|_|_|_|_|___|_|_|___|_|  |___|___|_|  _|___|___|_|_|___|\n                                   |_|                  \n\n");
         }
+
+
+        void DisplayCommandPrompt() => Console.Write("test>");
+
+
+        #region Simulate user input
+
+        [DllImport("User32.Dll", EntryPoint = "PostMessageA")]
+        static extern bool PostMessage(IntPtr hWnd, uint msg, int wParam, int lParam);
+
+        const int VK_RETURN = 0x0D;
+        const int WM_KEYDOWN = 0x100;
+
+        #endregion Simulate user input
     }
 }
