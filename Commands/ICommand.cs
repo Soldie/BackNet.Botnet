@@ -24,6 +24,7 @@ namespace Commands
 
         /// <summary>
         /// Correct syntax to use (example: upload [filePath])
+        /// Separate each possible syntax with a '\n'
         /// </summary>
         string syntaxHelper { get; }
 
@@ -37,41 +38,28 @@ namespace Commands
         /// <summary>
         /// List of all possible arguments type combinaisons (sorted), null if none
         /// </summary>
-        List<List<Type>> validArguments { get; }    // maybe generate dynamically when compiling, with all ClientMethod()(s) parameters
-
-
-        /// <summary>
-        /// Flags sent by the server to init a client-side function
-        /// </summary>
-        List<string> clientFlags { get; }
-
-
-        /// <summary>
-        /// List of data to save between the command beeing send to the server and the execution by the client,
-        /// example : a path for the file to upload to the server
-        /// </summary>
-        List<string> savedData { get; set; }
+        List<List<Type>> validArguments { get; }
         #endregion Variables
 
 
         #region Methods
         /// <summary>
-        /// Possibly check for files presence or do some preparations
+        /// Possibly check for files or do some preparations
         /// </summary>
         /// <param name="args">Args passed with the command</param>
         /// <returns>Result of the operation</returns>
-        CommandsManager.PreProcessResult PreProcessCommand(List<string> args);
+        bool PreProcessCommand(List<string> args);
 
 
         /// <summary>
-        /// Method executed by the client when a flag is received
+        /// Method executed by the client
         /// </summary>
         /// <param name="args">Args passed with the command</param>
         void ClientMethod(List<string> args);
 
 
         /// <summary>
-        /// Method executed by the server when a flag is received
+        /// Method executed by the server
         /// </summary>
         /// <param name="args">Args passed with the command</param>
         void ServerMethod(List<string> args);

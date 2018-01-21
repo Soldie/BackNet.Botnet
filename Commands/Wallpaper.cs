@@ -22,15 +22,8 @@ namespace Commands
             new List<Type>(){ typeof(string) }
         };
 
-        public List<string> clientFlags { get; } = new List<string>()
-        {
-            "{wallpaper:change}"
-        };
 
-        public List<string> savedData { get; set; }
-
-
-        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
+        public bool PreProcessCommand(List<string> args)
         {
             throw new NotImplementedException();
         }
@@ -50,7 +43,6 @@ namespace Commands
         public void ServerMethod(List<string> args)
         {
             var filename = args[0];
-            GlobalNetworkManager.WriteLine(clientFlags[0]);
 
             if (!File.Exists(filename))
             {

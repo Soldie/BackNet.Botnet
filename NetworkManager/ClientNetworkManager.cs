@@ -12,8 +12,7 @@ namespace NetworkManager
 
         TcpListener tcpListener { get; set; }
 
-        bool connected { get; set; }
-
+        bool cleanedUp { get; set; }
 
 
         /// <summary>
@@ -31,7 +30,8 @@ namespace NetworkManager
             ColorTools.WriteCommandMessage($"Listening on port {port} ...");
             // Wait for an incoming connection
             socketForServer = tcpListener.AcceptSocket();
-            connected = true;
+
+            cleanedUp = false;
 
             // Initiate streams
             GlobalNetworkManager.networkStream = new NetworkStream(socketForServer);
@@ -42,25 +42,17 @@ namespace NetworkManager
 
             ColorTools.WriteCommandMessage("Connected to " + (IPEndPoint)socketForServer.RemoteEndPoint + "\n");
         }
-        
-
-        /// <summary>
-        /// Return the current state of the connection
-        /// </summary>
-        /// <returns>Boolean</returns>
-        public bool IsConnected() => connected;
 
 
         /// <summary>
         /// Close the Socket and TcpListener, call GlobalNetworkManager.Cleanup() for the stream cleanup
         /// </summary>
-        /// <param name="processingCommand">Is the client processing a command</param>
-        /// <param name="isExit">Did the client use the exit method</param>
-        public void Cleanup(bool processingCommand, bool isExit)
+        /// <param name="processingCommand">Was a command beeing processed</param>
+        public void Cleanup(bool processingCommand)
         {
-            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped" : $"\nDisconnected {(isExit ? "" : "[ENTER]")}");
+            cleanedUp = true;
 
-            connected = false;
+            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped" : "\nDisconnected");
 
             try
             {
@@ -73,5 +65,31 @@ namespace NetworkManager
                 // ignored
             }
         }
+
+
+        /// <summary>
+        /// Send a simple line to know if the other end of the connection is still connected
+        /// This will throw an exception if the other end isn't connected
+        /// </summary>
+        /// <returns>Boolean stating the status of the connection</returns>
+        public bool IsConnected()
+        {
+            try
+            {
+                GlobalNetworkManager.WriteLine(".");
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// Inform if the cleanup method as been called since the beggining of the connection
+        /// </summary>
+        /// <returns>Boolean</returns>
+        public bool CleanupMade() => cleanedUp;
     }
 }

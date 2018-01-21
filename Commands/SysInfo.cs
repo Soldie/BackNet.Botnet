@@ -20,28 +20,25 @@ namespace Commands
             new List<Type>()
         };
 
-        public List<string> clientFlags { get; } = new List<string>()
-        {
-            "{sysinfo:init}"
-        };
 
-        public List<string> savedData { get; set; }
-
-
-        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
+        public bool PreProcessCommand(List<string> args)
         {
             throw new NotImplementedException();
         }
 
         public void ClientMethod(List<string> args)
         {
-            Console.WriteLine(GlobalNetworkManager.ReadLine());
+            var data = "";
+            while (data != "{end}")
+            {
+                if (data != "")
+                    Console.WriteLine(data);
+                data = GlobalNetworkManager.ReadLine();
+            }
         }
 
         public void ServerMethod(List<string> args)
         {
-            GlobalNetworkManager.WriteLine(clientFlags[0]);
-
             var infos = new List<Tuple<string, string>>
             {
                 new Tuple<string, string>("Machine name", Environment.MachineName),
@@ -52,9 +49,14 @@ namespace Commands
                 new Tuple<string, string>("Number of processors", Environment.ProcessorCount.ToString()),
                 new Tuple<string, string>("Machine uptime", TimespanAsString(TimeSpan.FromMilliseconds(Environment.TickCount))),
                 new Tuple<string, string>("Drives", Environment.GetLogicalDrives().Aggregate((current, drive) => $"{current} , " + drive))
+                // TODO :
+                // Mac adress
+                // Ip adress
+                // IsCurrentUserAdmin
             };
 
             GlobalNetworkManager.WriteLine(CommandsManager.TableDisplay(infos));
+            GlobalNetworkManager.WriteLine("{end}");
         }
 
         string TimespanAsString(TimeSpan t)

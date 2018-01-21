@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Commands
+namespace Shared
 {
     public class StopServerException : Exception
     {
