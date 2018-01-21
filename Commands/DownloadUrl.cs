@@ -1,12 +1,10 @@
-﻿using System;
+﻿using NetworkManager;
+using Shared;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using NetworkManager;
-using Shared;
 
 namespace Commands
 {
@@ -28,15 +26,8 @@ namespace Commands
             }
         };
 
-        public List<string> clientFlags { get; } = new List<string>()
-        {
-            "{DownloadUrl:init}"
-        };
 
-        public List<string> savedData { get; set; }
-
-
-        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
+        public bool PreProcessCommand(List<string> args)
         {
             throw new NotImplementedException();
         }
@@ -59,8 +50,6 @@ namespace Commands
 
         public void ServerMethod(List<string> args)
         {
-            GlobalNetworkManager.WriteLine(clientFlags[0]);
-
             var url = args[0];
             var newFile = url.Split('/').Last();
 

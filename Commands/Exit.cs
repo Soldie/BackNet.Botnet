@@ -1,9 +1,6 @@
-﻿using System;
+﻿using Shared;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Commands
 {
@@ -19,12 +16,8 @@ namespace Commands
 
         public List<List<Type>> validArguments { get; } = null;
 
-        public List<string> clientFlags { get; } = new List<string>();
 
-        public List<string> savedData { get; set; }
-
-
-        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
+        public bool PreProcessCommand(List<string> args)
         {
             throw new NotImplementedException();
         }

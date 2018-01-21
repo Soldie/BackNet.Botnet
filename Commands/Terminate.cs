@@ -1,9 +1,6 @@
-﻿using System;
+﻿using Shared;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NetworkManager;
 
 namespace Commands
 {
@@ -19,28 +16,14 @@ namespace Commands
 
         public List<List<Type>> validArguments { get; } = null;
 
-        public List<string> clientFlags { get; } = new List<string>()
+
+        public bool PreProcessCommand(List<string> args)
         {
-            "{Terminate}"
-        };
-
-        public List<string> savedData { get; set; }
-
-
-        public CommandsManager.PreProcessResult PreProcessCommand(List<string> args)
-        {
-            return CommandsManager.PreProcessResult.NoClientProcess;
+            throw new NotImplementedException();
         }
 
-        public void ClientMethod(List<string> args)
-        {
-            throw new ExitException();
-        }
+        public void ClientMethod(List<string> args) => throw new ExitException();
 
-        public void ServerMethod(List<string> args)
-        {
-            GlobalNetworkManager.WriteLine(clientFlags[0]);
-            throw new StopServerException();
-        }
+        public void ServerMethod(List<string> args) => throw new StopServerException();
     }
 }
