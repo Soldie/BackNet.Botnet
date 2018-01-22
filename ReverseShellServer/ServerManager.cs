@@ -61,7 +61,11 @@ namespace ReverseShellServer
             {
                 try
                 {
-                    ProcessCommand(GlobalNetworkManager.ReadLine());
+                    var incomingData = GlobalNetworkManager.ReadLine();
+                    // A simple dot beeing received is the client's connection monitoring sending a hearthbeat message
+                    if(incomingData == ".")
+                        continue;
+                    ProcessCommand(incomingData);
                 }
                 catch (Exception)
                 {
