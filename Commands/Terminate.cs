@@ -14,7 +14,7 @@ namespace Commands
 
         public bool isLocal { get; } = false;
 
-        public List<List<Type>> validArguments { get; } = null;
+        public List<string> validArguments { get; } = null;
 
 
         public bool PreProcessCommand(List<string> args)

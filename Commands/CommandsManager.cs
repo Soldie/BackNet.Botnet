@@ -67,15 +67,44 @@ namespace Commands
         /// <returns>Correct syntax boolean</returns>
         public static bool CheckCommandSyntax(ICommand command, List<string> arguments)
         {
-            if (command.validArguments == null && arguments.Count == 0)
+            if (command.validArguments == null)
             {
-                return true;
+                return arguments.Count == 0;
             }
 
-            int dummy;  // Only for use of int.TryParse()
-            var argsType = arguments.Select(s => int.TryParse(s, out dummy) ? typeof(int) : typeof(string)).ToList();
+            foreach (var validSyntax in command.validArguments)
+            {
+                var slittedValidSyntax = validSyntax.Split(' ');
+                if (slittedValidSyntax.Length != arguments.Count)
+                {
+                    continue;
+                }
 
-            return command.validArguments.Count(a => a.SequenceEqual(argsType)) != 0;
+                var error = false;
+                for (var i = 0; i < slittedValidSyntax.Length; i++)
+                {
+                    if (slittedValidSyntax[i] == "?") continue;
+
+                    if (slittedValidSyntax[i] == "0")
+                    {
+                        if (!int.TryParse(arguments[i], out int dummy))
+                        {
+                            error = true;
+                            break;
+                        }
+                    }
+                    else if (slittedValidSyntax[i] != arguments[i])
+                    {
+                        error = true;
+                        break;
+                    }
+                }
+
+                if(!error)
+                    return true;
+            }
+
+            return false;
         }
 
 
@@ -137,34 +166,6 @@ namespace Commands
                 result += $" {tuple.Item2}{spaces} |\n";
             }
             result += horizontalDelimiter;
-
-            return result;
-        }
-
-        
-        // TODO edit checksyntax to use below implementation
-        static bool CheckSyntax(string[] syntax, string[] toCheck)
-        {
-            var result = syntax.Length == toCheck.Length;
-
-            for (var i = 0; i < syntax.Length && result; i++)
-            {
-                if (syntax[i] == "?") continue;
-
-                if (syntax[i] == "0")
-                {
-                    if (!int.TryParse(toCheck[i], out int dummy))
-                    {
-                        result = false;
-                        break;
-                    }
-                }
-                else if (syntax[i] != toCheck[i])
-                {
-                    result = false;
-                    break;
-                }
-            }
 
             return result;
         }
