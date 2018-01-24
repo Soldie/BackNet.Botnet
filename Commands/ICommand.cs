@@ -36,9 +36,10 @@ namespace Commands
 
 
         /// <summary>
-        /// List of all possible arguments type combinaisons (sorted), null if none
+        /// List of all possible arguments combinaisons, null if none.
+        /// Explicitly name the argument, or '?' for a string, or '0' for an integer
         /// </summary>
-        List<List<Type>> validArguments { get; }
+        List<string> validArguments { get; }
         #endregion Variables
 
 

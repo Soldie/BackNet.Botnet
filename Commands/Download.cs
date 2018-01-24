@@ -16,12 +16,9 @@ namespace Commands
 
         public bool isLocal { get; } = false;
 
-        public List<List<Type>> validArguments { get; } = new List<List<Type>>()
+        public List<string> validArguments { get; } = new List<string>()
         {
-            new List<Type>()
-            {
-                typeof(string), typeof(string)
-            }
+            "? ?"
         };
 
 
