@@ -84,18 +84,20 @@ namespace Commands
         /// the help message is composed of the Command's description and its syntaxHelper
         /// </summary>
         /// <param name="command">Command to show the help for</param>
-        public static void ShowCommandHelp(ICommand command) => ColorTools.WriteMessage($"{command.description}\n---------------\nSyntax : {command.syntaxHelper}");
-        // todo : re-style
+        public static void ShowCommandHelp(ICommand command)
+        => ColorTools.WriteMessage($"{command.description}\nSyntax : {command.syntaxHelper}");
+        
 
         /// <summary>
         /// Display an help message for all the Commands on the client console, calls ShowCommandHelp
         /// </summary>
         public static void ShowGlobalHelp()
         {
-            ColorTools.WriteMessage("--- Global help ---");
+            ColorTools.WriteMessage("+-----------------+\n|   Global help   |\n+-----------------+");
             foreach (var command in commandList)
             {
-                Console.WriteLine("");
+                Console.WriteLine(" ");
+                ColorTools.WriteMessage($" - {command.name}");
                 ShowCommandHelp(command);
             }
         }
