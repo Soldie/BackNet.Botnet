@@ -61,7 +61,11 @@ namespace ReverseShellServer
             {
                 try
                 {
-                    ProcessCommand(GlobalNetworkManager.ReadLine());
+                    var incomingData = GlobalNetworkManager.ReadLine();
+                    // A simple dot beeing received is the client's connection monitoring sending a hearthbeat message
+                    if(incomingData == ".")
+                        continue;
+                    ProcessCommand(incomingData);
                 }
                 catch (Exception)
                 {
@@ -78,7 +82,7 @@ namespace ReverseShellServer
         /// <param name="receivedData">Data sent by the client</param>
         void ProcessCommand(string receivedData)
         {
-            var splittedCommand = receivedData.Split(' ').ToList();
+            var splittedCommand = CommandsManager.GetSplittedCommand(receivedData);
             var commandName = splittedCommand[0];
             var arguments = new List<string>();
 

@@ -14,19 +14,26 @@ namespace Shared
             WriteColorMessage(message, " [+] ", ConsoleColor.Cyan);
 
         public static void WriteMessage(string message) =>
-            WriteColorMessage(message, "", ConsoleColor.Gray);
+            WriteColorMessage(message, ConsoleColor.Gray);
 
         public static void WriteWarning(string message) =>
-            WriteColorMessage(message, "", ConsoleColor.Yellow);
+            WriteColorMessage(message, ConsoleColor.Yellow);
 
         public static void WriteError(string message) =>
-            WriteColorMessage(message, "", ConsoleColor.Red);
+            WriteColorMessage(message, ConsoleColor.Red);
 
 
         static void WriteColorMessage(string message, string prefix, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.WriteLine(prefix + message);
+            Console.ForegroundColor = ConsoleColor.Green;
+        }
+
+        static void WriteColorMessage(string message, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(message);
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management;
+using System.Security.Principal;
 using NetworkManager;
 
 namespace Commands
@@ -15,10 +17,7 @@ namespace Commands
 
         public bool isLocal { get; } = false;
 
-        public List<List<Type>> validArguments { get; } = new List<List<Type>>()
-        {
-            new List<Type>()
-        };
+        public List<string> validArguments { get; } = null;
 
 
         public bool PreProcessCommand(List<string> args)
@@ -42,17 +41,15 @@ namespace Commands
             var infos = new List<Tuple<string, string>>
             {
                 new Tuple<string, string>("Machine name", Environment.MachineName),
+                new Tuple<string, string>("Virtual machine", IsVirtualMachine() ? "Yes" : "No"),
                 new Tuple<string, string>("Current user's name", Environment.UserName),
                 new Tuple<string, string>("Current user's domain name", Environment.UserDomainName),
+                new Tuple<string, string>("Admin", IsAdministrator() ? "Administrator" : "Not administrator"),
                 new Tuple<string, string>("Os version", $"{Environment.OSVersion} , {(Environment.Is64BitOperatingSystem ? "64" : "32")}bit operating system"),
                 new Tuple<string, string>(".NET version", Environment.Version.ToString()),
-                new Tuple<string, string>("Number of processors", Environment.ProcessorCount.ToString()),
+                new Tuple<string, string>("Processor cores", Environment.ProcessorCount.ToString()),
                 new Tuple<string, string>("Machine uptime", TimespanAsString(TimeSpan.FromMilliseconds(Environment.TickCount))),
                 new Tuple<string, string>("Drives", Environment.GetLogicalDrives().Aggregate((current, drive) => $"{current} , " + drive))
-                // TODO :
-                // Mac adress
-                // Ip adress
-                // IsCurrentUserAdmin
             };
 
             GlobalNetworkManager.WriteLine(CommandsManager.TableDisplay(infos));
@@ -77,6 +74,44 @@ namespace Commands
             }
 
             return result;
+        }
+
+        public bool IsVirtualMachine()
+        {
+            using (var searcher = new ManagementObjectSearcher("Select * from Win32_ComputerSystem"))
+            {
+                using (var items = searcher.Get())
+                {
+                    foreach (var item in items)
+                    {
+                        var manufacturer = item["Manufacturer"].ToString().ToLower();
+                        if ((manufacturer == "microsoft corporation" && item["Model"].ToString().ToUpperInvariant().Contains("VIRTUAL"))
+                            || manufacturer.Contains("vmware")
+                            || item["Model"].ToString() == "VirtualBox")
+                        {
+                            return true;
+                        }
+
+                        // Check "HypervisorPresent" property, which is available in some cases.
+                        var hypervisorPresentProperty = item.Properties
+                            .OfType<PropertyData>()
+                            .FirstOrDefault(p => p.Name == "HypervisorPresent");
+
+                        if ((bool?)hypervisorPresentProperty?.Value == true)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool IsAdministrator()
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }

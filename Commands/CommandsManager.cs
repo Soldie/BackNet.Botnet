@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using KeyLogger;
 using Shared;
 
@@ -66,15 +67,44 @@ namespace Commands
         /// <returns>Correct syntax boolean</returns>
         public static bool CheckCommandSyntax(ICommand command, List<string> arguments)
         {
-            if (command.validArguments == null && arguments.Count == 0)
+            if (command.validArguments == null)
             {
-                return true;
+                return arguments.Count == 0;
             }
 
-            int dummy;  // Only for use of int.TryParse()
-            var argsType = arguments.Select(s => int.TryParse(s, out dummy) ? typeof(int) : typeof(string)).ToList();
+            foreach (var validSyntax in command.validArguments)
+            {
+                var slittedValidSyntax = validSyntax.Split(' ');
+                if (slittedValidSyntax.Length != arguments.Count)
+                {
+                    continue;
+                }
 
-            return command.validArguments.Count(a => a.SequenceEqual(argsType)) != 0;
+                var error = false;
+                for (var i = 0; i < slittedValidSyntax.Length; i++)
+                {
+                    if (slittedValidSyntax[i] == "?") continue;
+
+                    if (slittedValidSyntax[i] == "0")
+                    {
+                        if (!int.TryParse(arguments[i], out int dummy))
+                        {
+                            error = true;
+                            break;
+                        }
+                    }
+                    else if (slittedValidSyntax[i] != arguments[i])
+                    {
+                        error = true;
+                        break;
+                    }
+                }
+
+                if(!error)
+                    return true;
+            }
+
+            return false;
         }
 
 
@@ -83,18 +113,20 @@ namespace Commands
         /// the help message is composed of the Command's description and its syntaxHelper
         /// </summary>
         /// <param name="command">Command to show the help for</param>
-        public static void ShowCommandHelp(ICommand command) => ColorTools.WriteMessage($"{command.description}\n---------------\nSyntax : {command.syntaxHelper}");
-        // todo : re-style
+        public static void ShowCommandHelp(ICommand command)
+        => ColorTools.WriteMessage($"{command.description}\nSyntax : {command.syntaxHelper}");
+        
 
         /// <summary>
         /// Display an help message for all the Commands on the client console, calls ShowCommandHelp
         /// </summary>
         public static void ShowGlobalHelp()
         {
-            ColorTools.WriteMessage("--- Global help ---");
+            ColorTools.WriteMessage("+-----------------+\n|   Global help   |\n+-----------------+");
             foreach (var command in commandList)
             {
-                Console.WriteLine("");
+                Console.WriteLine(" ");
+                ColorTools.WriteMessage($" - {command.name}");
                 ShowCommandHelp(command);
             }
         }
@@ -138,39 +170,19 @@ namespace Commands
             return result;
         }
 
-        
-        // TODO edit checksyntax to use below implementation
-        static bool CheckSyntax(string[] syntax, string[] toCheck)
-        {
-            var result = syntax.Length == toCheck.Length;
 
-            for (var i = 0; i < syntax.Length && result; i++)
-            {
-                if (syntax[i] == "?") continue;
-
-                if (syntax[i] == "0")
-                {
-                    if (!int.TryParse(toCheck[i], out int dummy))
-                    {
-                        result = false;
-                        break;
-                    }
-                }
-                else if (syntax[i] != toCheck[i])
-                {
-                    result = false;
-                    break;
-                }
-            }
-
-            return result;
-        }
-
-
+        /// <summary>
+        /// Split the given string by using the space delimiter, this takes into account double quotes (ex : for file paths)
+        /// </summary>
+        /// <param name="commandString">String to process</param>
+        /// <returns>List of string</returns>
         public static List<string> GetSplittedCommand(string commandString)
         {
-            return commandString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            // TODO : edit to take into account " "
+            return Regex.Matches(commandString, @"[\""].+?[\""]|[^ ]+")
+                .Cast<Match>()
+                .Where(m => m.Value != "\"")
+                .Select(m => m.Value[0] == '\"' && m.Value[m.Length - 1] == '\"' ? m.Value.Substring(1, m.Value.Length - 2) : m.Value)
+                .ToList();
         }
     }
 }

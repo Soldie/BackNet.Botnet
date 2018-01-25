@@ -20,7 +20,7 @@ namespace Commands
 
         public bool isLocal { get; } = false;
 
-        public List<List<Type>> validArguments { get; } = null;
+        public List<string> validArguments { get; } = null;
 
 
         public bool PreProcessCommand(List<string> args)
@@ -38,6 +38,12 @@ namespace Commands
                 {
                     var receivedData = GlobalNetworkManager.ReadLine();
 
+                    // Main thread exited and notified this task to stop
+                    if (cancelToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
                     // Normal output (text)
                     // Check if the line isn't the one representing the path in the cmd
                     if (receivedData.Length > 0 && !(receivedData[receivedData.Length - 1] == '>' && receivedData.Contains(@":\")))
@@ -49,13 +55,6 @@ namespace Commands
                     {
                         // Display cmd path without line return
                         Console.Write(receivedData);
-                    }
-                    
-
-                    // Main thread exited and notified this task to stop
-                    if (cancelToken.IsCancellationRequested)
-                    {
-                        break;
                     }
                 }
             }, cancelToken);
@@ -110,7 +109,8 @@ namespace Commands
             while (true)
             {
                 var userInput = GlobalNetworkManager.ReadLine();
-                
+
+
                 if (userInput == "exit")
                 {
                     processCmd.Kill();
