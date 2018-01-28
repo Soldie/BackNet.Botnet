@@ -40,8 +40,7 @@ namespace Commands
             }
             else
             {
-                var error = result.Split(':')[1];
-                ColorTools.WriteCommandError($"Download failed : {(error == "IO" ? "IO exception" : "Network error")}");
+                ColorTools.WriteCommandError($"Download failed : {(result == "IO" ? "IO exception" : "Network error")}");
             }
         }
 
@@ -58,13 +57,13 @@ namespace Commands
             }
             catch (IOException)
             {
-                GlobalNetworkManager.WriteLine("Error:IO");
+                GlobalNetworkManager.WriteLine("IO");
             }
             catch (Exception)
             {
                 // Delete the partially created file
                 File.Delete(newFile);
-                GlobalNetworkManager.WriteLine("Error:Web");
+                GlobalNetworkManager.WriteLine("Web");
             }
         }
     }
