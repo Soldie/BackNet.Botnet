@@ -24,7 +24,17 @@ namespace Shared
         /// Read one line from the network stream
         /// </summary>
         /// <returns>String read from stream</returns>
-        public string ReadLine() => streamReader.ReadLine();
+        public string ReadLine()
+        {
+            try
+            {
+                return streamReader.ReadLine();
+            }
+            catch (Exception)
+            {
+                throw new NetworkException();
+            }
+        }
 
 
         /// <summary>
@@ -46,8 +56,15 @@ namespace Shared
             int bytesRead;
             while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
             {
-                binaryWriter.Write(buffer, 0, bytesRead);
-                binaryWriter.Flush();
+                try
+                {
+                    binaryWriter.Write(buffer, 0, bytesRead);
+                    binaryWriter.Flush();
+                }
+                catch (Exception)
+                {
+                    throw new NetworkException();
+                }
             }
         }
 
@@ -69,18 +86,25 @@ namespace Shared
             WriteLine("OK");
 
             var buffer = new byte[DEFAULT_BUFFER_SIZE];
-            int bytesRead;
             var bytesWritten = 0;
-            while ((bytesRead = binaryReader.Read(buffer, 0, buffer.Length)) > 0)
+            try
             {
-                stream.Write(buffer, 0, bytesRead);
-                bytesWritten += bytesRead;
-
-                // The file has been totally written
-                if (bytesWritten == dataSize)
+                int bytesRead;
+                while ((bytesRead = binaryReader.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    break;
+                    stream.Write(buffer, 0, bytesRead);
+                    bytesWritten += bytesRead;
+
+                    // The file has been totally written
+                    if (bytesWritten == dataSize)
+                    {
+                        break;
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                throw new NetworkException();
             }
         }
 
@@ -91,8 +115,15 @@ namespace Shared
         /// <param name="data">String to write</param>
         public void WriteLine(string data)
         {
-            streamWriter.WriteLine(data);
-            streamWriter.Flush();
+            try
+            {
+                streamWriter.WriteLine(data);
+                streamWriter.Flush();
+            }
+            catch (Exception)
+            {
+                throw new NetworkException();
+            }
         }
 
 
