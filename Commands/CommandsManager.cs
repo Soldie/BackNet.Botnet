@@ -67,7 +67,7 @@ namespace Commands
         /// <returns>Correct syntax boolean</returns>
         public static bool CheckCommandSyntax(ICommand command, List<string> arguments)
         {
-            if (command.validArguments == null)
+            if (command.validArguments == null || command.validArguments.Any(string.IsNullOrEmpty))
             {
                 return arguments.Count == 0;
             }
