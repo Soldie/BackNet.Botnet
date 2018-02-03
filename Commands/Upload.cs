@@ -1,5 +1,4 @@
-﻿using NetworkManager;
-using Shared;
+﻿using Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,14 +41,14 @@ namespace Commands
             ColorTools.WriteCommandMessage($"Starting upload of file '{path}' to the server");
 
             // Send the data length first
-            GlobalNetworkManager.WriteLine(new FileInfo(path).Length.ToString());
+            CommandsManager.networkManager.WriteLine(new FileInfo(path).Length.ToString());
 
             using (var readStream = new FileStream(path, FileMode.Open))
             {
-                GlobalNetworkManager.StreamToNetworkStream(readStream);
+                CommandsManager.networkManager.StreamToNetworkStream(readStream);
             }
 
-            var result = GlobalNetworkManager.ReadLine();
+            var result = CommandsManager.networkManager.ReadLine();
 
             if (result == "Success")
             {
@@ -62,22 +61,22 @@ namespace Commands
         }
         public void ServerMethod(List<string> args)
         {
-            var dataLength = int.Parse(GlobalNetworkManager.ReadLine());
+            var dataLength = int.Parse(CommandsManager.networkManager.ReadLine());
 
             try
             {
                 using (var fs = new FileStream(args[1], FileMode.Create))
                 {
-                    GlobalNetworkManager.NetworkStreamToStream(fs, dataLength);
+                    CommandsManager.networkManager.NetworkStreamToStream(fs, dataLength);
                 }
 
-                GlobalNetworkManager.WriteLine("Success");
+                CommandsManager.networkManager.WriteLine("Success");
             }
             catch (Exception)
             {
                 // Delete the partially created file
                 File.Delete(args[1]);
-                GlobalNetworkManager.WriteLine("Error");
+                CommandsManager.networkManager.WriteLine("Error");
             }
         }
         #endregion Methods

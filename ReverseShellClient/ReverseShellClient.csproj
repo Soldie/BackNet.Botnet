@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientManager.cs" />
+    <Compile Include="ClientNetworkManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -57,10 +58,6 @@
     <ProjectReference Include="..\ConsoleColorTools\Shared.csproj">
       <Project>{982dc5b6-1123-428a-83dd-d212490c859f}</Project>
       <Name>Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetworkManager\NetworkManager.csproj">
-      <Project>{4099dcc2-a969-4a5c-9f6d-eff87706995c}</Project>
-      <Name>NetworkManager</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

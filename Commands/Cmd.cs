@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NetworkManager;
 
 namespace Commands
 {
@@ -36,7 +34,7 @@ namespace Commands
             {
                 while (true)
                 {
-                    var receivedData = GlobalNetworkManager.ReadLine();
+                    var receivedData = CommandsManager.networkManager.ReadLine();
 
                     // Main thread exited and notified this task to stop
                     if (cancelToken.IsCancellationRequested)
@@ -70,7 +68,7 @@ namespace Commands
                     Console.Clear();
                 }
 
-                GlobalNetworkManager.WriteLine(userInput);
+                CommandsManager.networkManager.WriteLine(userInput);
                 if (userInput == "exit")
                 {
                     // Cancel the listening task
@@ -108,7 +106,7 @@ namespace Commands
 
             while (true)
             {
-                var userInput = GlobalNetworkManager.ReadLine();
+                var userInput = CommandsManager.networkManager.ReadLine();
 
 
                 if (userInput == "exit")
@@ -154,7 +152,7 @@ namespace Commands
                     Directory.SetCurrentDirectory(output.Substring(0, output.Length - 1));
                 }
 
-                GlobalNetworkManager.WriteLine(output);
+                CommandsManager.networkManager.WriteLine(output);
             }
             catch (Exception)
             {
@@ -169,7 +167,7 @@ namespace Commands
         /// <param name="e"></param>
         void CmdErrorDataHandler(object sender, DataReceivedEventArgs e)
         {
-            GlobalNetworkManager.WriteLine(e.Data);
+            CommandsManager.networkManager.WriteLine(e.Data);
         }
     }
 }

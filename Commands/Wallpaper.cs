@@ -1,5 +1,4 @@
-﻿using NetworkManager;
-using Shared;
+﻿using Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +29,7 @@ namespace Commands
 
         public void ClientMethod(List<string> args)
         {
-            if (GlobalNetworkManager.ReadLine() == "OK")
+            if (CommandsManager.networkManager.ReadLine() == "OK")
             {
                 ColorTools.WriteCommandSuccess("Wallpaper changed");
             }
@@ -46,14 +45,14 @@ namespace Commands
 
             if (!File.Exists(filename))
             {
-                GlobalNetworkManager.WriteLine("FileError");
+                CommandsManager.networkManager.WriteLine("FileError");
                 return;
             }
             var fileInfo = new FileInfo(filename);
 
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, fileInfo.FullName, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
 
-            GlobalNetworkManager.WriteLine("OK");
+            CommandsManager.networkManager.WriteLine("OK");
         }
 
 

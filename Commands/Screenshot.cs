@@ -1,5 +1,4 @@
-﻿using NetworkManager;
-using Shared;
+﻿using Shared;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -37,13 +36,13 @@ namespace Commands
                            + ".png";
 
             // Get data length
-            var dataLength = int.Parse(GlobalNetworkManager.ReadLine());
+            var dataLength = int.Parse(CommandsManager.networkManager.ReadLine());
 
             try
             {
                 using (var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    GlobalNetworkManager.NetworkStreamToStream(fs, dataLength);
+                    CommandsManager.networkManager.NetworkStreamToStream(fs, dataLength);
                 }
 
                 ColorTools.WriteCommandSuccess($"Screenshot saved : {fileName}");
@@ -73,11 +72,11 @@ namespace Commands
 
 
                 // Send the data length first
-                GlobalNetworkManager.WriteLine(ms.Length.ToString());
+                CommandsManager.networkManager.WriteLine(ms.Length.ToString());
 
                 // Reset memory stream position
                 ms.Position = 0;
-                GlobalNetworkManager.StreamToNetworkStream(ms);
+                CommandsManager.networkManager.StreamToNetworkStream(ms);
             }
         }
 

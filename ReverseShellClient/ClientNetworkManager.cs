@@ -4,9 +4,9 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 
-namespace NetworkManager
+namespace ReverseShellClient
 {
-    public class ClientNetworkManager
+    public class ClientNetworkManager : NetworkManager
     {
         Socket socketForServer { get; set; }
 
@@ -34,11 +34,11 @@ namespace NetworkManager
             cleanedUp = false;
 
             // Initiate streams
-            GlobalNetworkManager.networkStream = new NetworkStream(socketForServer);
-            GlobalNetworkManager.streamReader = new StreamReader(GlobalNetworkManager.networkStream);
-            GlobalNetworkManager.streamWriter = new StreamWriter(GlobalNetworkManager.networkStream);
-            GlobalNetworkManager.binaryWriter = new BinaryWriter(GlobalNetworkManager.networkStream);
-            GlobalNetworkManager.binaryReader = new BinaryReader(GlobalNetworkManager.networkStream);
+            networkStream = new NetworkStream(socketForServer);
+            streamReader = new StreamReader(networkStream);
+            streamWriter = new StreamWriter(networkStream);
+            binaryWriter = new BinaryWriter(networkStream);
+            binaryReader = new BinaryReader(networkStream);
 
             ColorTools.WriteCommandMessage("Connected to " + (IPEndPoint)socketForServer.RemoteEndPoint + "\n");
         }
@@ -56,7 +56,7 @@ namespace NetworkManager
 
             try
             {
-                GlobalNetworkManager.Cleanup();
+                base.Cleanup();
                 socketForServer.Close();
                 tcpListener.Stop();
             }
@@ -76,7 +76,7 @@ namespace NetworkManager
         {
             try
             {
-                GlobalNetworkManager.WriteLine(".");
+                WriteLine(".");
                 return true;
             }
             catch (Exception)

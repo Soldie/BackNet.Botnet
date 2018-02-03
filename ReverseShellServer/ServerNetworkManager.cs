@@ -2,10 +2,11 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using Shared;
 
-namespace NetworkManager
+namespace ReverseShellServer
 {
-    public class ServerNetworkManager
+    public class ServerNetworkManager : NetworkManager
     {
         TcpClient tcpClient { get; set; }
 
@@ -58,17 +59,11 @@ namespace NetworkManager
         /// </summary>
         void InitiateStreams()
         {
-            GlobalNetworkManager.networkStream = tcpClient.GetStream();
-            GlobalNetworkManager.streamReader = new StreamReader(GlobalNetworkManager.networkStream);
-            GlobalNetworkManager.streamWriter = new StreamWriter(GlobalNetworkManager.networkStream);
-            GlobalNetworkManager.binaryWriter = new BinaryWriter(GlobalNetworkManager.networkStream);
-            GlobalNetworkManager.binaryReader = new BinaryReader(GlobalNetworkManager.networkStream);
+            networkStream = tcpClient.GetStream();
+            streamReader = new StreamReader(networkStream);
+            streamWriter = new StreamWriter(networkStream);
+            binaryWriter = new BinaryWriter(networkStream);
+            binaryReader = new BinaryReader(networkStream);
         }
-
-
-        /// <summary>
-        /// Call the Cleanup method of GlobalNetworkManager to close the streams
-        /// </summary>
-        public void Cleanup() => GlobalNetworkManager.Cleanup();
     }
 }

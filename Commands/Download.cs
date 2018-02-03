@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using NetworkManager;
 using Shared;
 
 namespace Commands
@@ -29,7 +28,7 @@ namespace Commands
 
         public void ClientMethod(List<string> args)
         {
-            var initResult = GlobalNetworkManager.ReadLine();
+            var initResult = CommandsManager.networkManager.ReadLine();
             if (initResult != "OK")
             {
                 ColorTools.WriteCommandError(initResult == "NotFound" ? "The remote file doesn't exist" : "An IO exception occured");
@@ -39,13 +38,13 @@ namespace Commands
             var path = args[1];
             ColorTools.WriteCommandMessage($"Starting download of file '{args[0]}' from the server");
             
-            var dataLength = int.Parse(GlobalNetworkManager.ReadLine());
+            var dataLength = int.Parse(CommandsManager.networkManager.ReadLine());
 
             try
             {
                 using (var fs = new FileStream(path, FileMode.Create))
                 {
-                    GlobalNetworkManager.NetworkStreamToStream(fs, dataLength);
+                    CommandsManager.networkManager.NetworkStreamToStream(fs, dataLength);
                 }
 
                 ColorTools.WriteCommandSuccess("File successfully downloaded from the server");
@@ -62,7 +61,7 @@ namespace Commands
         {
             if (!File.Exists(args[0]))
             {
-                GlobalNetworkManager.WriteLine("NotFound");
+                CommandsManager.networkManager.WriteLine("NotFound");
                 return;
             }
 
@@ -70,16 +69,16 @@ namespace Commands
             {
                 using (var readStream = new FileStream(args[0], FileMode.Open))
                 {
-                    GlobalNetworkManager.WriteLine("OK");
+                    CommandsManager.networkManager.WriteLine("OK");
 
                     // Send the data length first
-                    GlobalNetworkManager.WriteLine(new FileInfo(args[0]).Length.ToString());
-                    GlobalNetworkManager.StreamToNetworkStream(readStream);
+                    CommandsManager.networkManager.WriteLine(new FileInfo(args[0]).Length.ToString());
+                    CommandsManager.networkManager.StreamToNetworkStream(readStream);
                 }
             }
             catch (IOException)
             {
-                GlobalNetworkManager.WriteLine("IOException");
+                CommandsManager.networkManager.WriteLine("IOException");
             }
         }
     }
