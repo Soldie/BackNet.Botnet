@@ -1,5 +1,4 @@
-﻿using NetworkManager;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -30,7 +29,7 @@ namespace Commands
             {
                 if(data != "")
                     Console.WriteLine(data);
-                data = GlobalNetworkManager.ReadLine();
+                data = CommandsManager.networkManager.ReadLine();
             }
         }
 
@@ -45,9 +44,9 @@ namespace Commands
                     processesInfos.Add(new Tuple<string, string>(process.Id.ToString(), process.ProcessName));
                 }
             }
-            
-            GlobalNetworkManager.WriteLine(CommandsManager.TableDisplay(processesInfos));
-            GlobalNetworkManager.WriteLine("{end}");
+
+            CommandsManager.networkManager.WriteLine(CommandsManager.TableDisplay(processesInfos));
+            CommandsManager.networkManager.WriteLine("{end}");
         }
     }
 }

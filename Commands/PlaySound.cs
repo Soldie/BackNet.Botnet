@@ -1,5 +1,4 @@
-﻿using NetworkManager;
-using Shared;
+﻿using Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +29,7 @@ namespace Commands
 
         public void ClientMethod(List<string> args)
         {
-            var result = GlobalNetworkManager.ReadLine();
+            var result = CommandsManager.networkManager.ReadLine();
 
             switch (result)
             {
@@ -52,7 +51,7 @@ namespace Commands
 
             if (!File.Exists(filename))
             {
-                GlobalNetworkManager.WriteLine("FileError");
+                CommandsManager.networkManager.WriteLine("FileError");
                 return;
             }
             
@@ -60,11 +59,11 @@ namespace Commands
             {
                 var player = new SoundPlayer(filename);
                 player.Play();
-                GlobalNetworkManager.WriteLine("OK");
+                CommandsManager.networkManager.WriteLine("OK");
             }
             catch (InvalidOperationException)
             {
-                GlobalNetworkManager.WriteLine("InvalidFormat");
+                CommandsManager.networkManager.WriteLine("InvalidFormat");
             }
         }
     }

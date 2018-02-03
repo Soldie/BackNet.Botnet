@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using System.Security.Principal;
-using NetworkManager;
 
 namespace Commands
 {
@@ -32,7 +31,7 @@ namespace Commands
             {
                 if (data != "")
                     Console.WriteLine(data);
-                data = GlobalNetworkManager.ReadLine();
+                data = CommandsManager.networkManager.ReadLine();
             }
         }
 
@@ -52,8 +51,8 @@ namespace Commands
                 new Tuple<string, string>("Drives", Environment.GetLogicalDrives().Aggregate((current, drive) => $"{current} , " + drive))
             };
 
-            GlobalNetworkManager.WriteLine(CommandsManager.TableDisplay(infos));
-            GlobalNetworkManager.WriteLine("{end}");
+            CommandsManager.networkManager.WriteLine(CommandsManager.TableDisplay(infos));
+            CommandsManager.networkManager.WriteLine("{end}");
         }
 
         string TimespanAsString(TimeSpan t)

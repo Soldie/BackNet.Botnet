@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ServerManager.cs" />
+    <Compile Include="ServerNetworkManager.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -120,10 +121,6 @@
     <ProjectReference Include="..\KeyLogger\KeyLogger.csproj">
       <Project>{12478b3e-455e-4bae-bde8-1f42970770a3}</Project>
       <Name>KeyLogger</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetworkManager\NetworkManager.csproj">
-      <Project>{4099DCC2-A969-4A5C-9F6D-EFF87706995C}</Project>
-      <Name>NetworkManager</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

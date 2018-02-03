@@ -78,10 +78,6 @@
       <Project>{12478B3E-455E-4BAE-BDE8-1F42970770A3}</Project>
       <Name>KeyLogger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetworkManager\NetworkManager.csproj">
-      <Project>{4099dcc2-a969-4a5c-9f6d-eff87706995c}</Project>
-      <Name>NetworkManager</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

