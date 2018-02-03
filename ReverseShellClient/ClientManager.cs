@@ -258,14 +258,14 @@ namespace ReverseShellClient
         /// </summary>
         void DisplayBanner()
         {
-            Console.WriteLine(" _____ _     _       _      _     _             _       \n|     |_|___| |_ ___| |   _| |___| |___ ___ ___| |_ ___ \n| | | | |  _|   | -_| |  | . | -_| | . | -_|  _|   | -_|\n|_|_|_|_|___|_|_|___|_|  |___|___|_|  _|___|___|_|_|___|\n                                   |_|                  \n\n");
+            Console.WriteLine("\n    ██████╗  █████╗  ██████╗██╗  ██╗███╗   ██╗███████╗████████╗\n    ██╔══██╗██╔══██╗██╔════╝██║ ██╔╝████╗  ██║██╔════╝╚══██╔══╝\n    ██████╔╝███████║██║     █████╔╝ ██╔██╗ ██║█████╗     ██║   \n    ██╔══██╗██╔══██║██║     ██╔═██╗ ██║╚██╗██║██╔══╝     ██║   \n    ██████╔╝██║  ██║╚██████╗██║  ██╗██║ ╚████║███████╗   ██║   \n    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝\n\n");
         }
 
 
         /// <summary>
         /// Print the cmd prompt of the program to indicate it's waiting for user input
         /// </summary>
-        void DisplayCommandPrompt() => Console.Write("reverseshell>");
+        void DisplayCommandPrompt() => Console.Write("BackNet>");
 
 
         #region Simulate user input
