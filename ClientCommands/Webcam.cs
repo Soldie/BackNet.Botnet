@@ -21,11 +21,6 @@ namespace ClientCommands
             "video ?"
         };
 
-        
-        public bool PreProcess(List<string> args)
-        {
-            throw  new NotImplementedException();
-        }
 
         public void Process(List<string> args)
         {

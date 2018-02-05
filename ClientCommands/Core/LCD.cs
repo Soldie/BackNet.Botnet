@@ -20,11 +20,6 @@ namespace ClientCommands
         };
 
 
-        public bool PreProcess(List<string> args)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Process(List<string> args)
         {
             if (Directory.Exists(args[0]))

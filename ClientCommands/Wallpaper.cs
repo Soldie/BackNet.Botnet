@@ -22,11 +22,6 @@ namespace ClientCommands
         };
 
 
-        public bool PreProcess(List<string> args)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Process(List<string> args)
         {
             if (ClientCommandsManager.networkManager.ReadLine() == "OK")

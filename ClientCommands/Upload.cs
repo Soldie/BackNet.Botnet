@@ -21,20 +21,18 @@ namespace ClientCommands
         };
 
         
-        public bool PreProcess(List<string> args)
-        {
-            var result = File.Exists(args[0]);
-            if (!result)
-            {
-                ColorTools.WriteCommandError("The specified file doesn't exist");
-            }
-
-            return result;
-        }
-        
         public void Process(List<string> args)
         {
             var path = args[0];
+
+            if (!File.Exists(path))
+            {
+                ClientCommandsManager.networkManager.WriteLine("KO");
+                ColorTools.WriteCommandError("The specified file doesn't exist");
+                return;
+            }
+            ClientCommandsManager.networkManager.WriteLine("OK");
+
             ColorTools.WriteCommandMessage($"Starting upload of file '{path}' to the server");
 
             // Send the data length first

@@ -17,11 +17,6 @@ namespace ClientCommands
         public List<string> validArguments { get; } = null;
 
 
-        public bool PreProcess(List<string> args)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Process(List<string> args)
         {
             throw new ExitException();

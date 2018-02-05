@@ -174,24 +174,6 @@ namespace ReverseShellClient
                         }
 
 
-                        var preProcessResult = true;
-                        try
-                        {
-                            preProcessResult = command.PreProcess(arguments);
-                        }
-                        catch (NotImplementedException)
-                        {
-                            // Ignored
-                        }
-
-                        if (preProcessResult == false)
-                        {
-                            // Error in the PreProcess method
-                            DisplayCommandPrompt();
-                            continue;
-                        }
-
-
                         try
                         {
                             if (!command.isLocal)

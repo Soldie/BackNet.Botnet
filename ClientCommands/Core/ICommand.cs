@@ -4,7 +4,6 @@ namespace ClientCommands
 {
     public interface ICommand
     {
-        #region Variables
         /// <summary>
         /// Name of the command
         /// </summary>
@@ -36,16 +35,6 @@ namespace ClientCommands
         /// Explicitly name the argument, or '?' for a string, or '0' for an integer
         /// </summary>
         List<string> validArguments { get; }
-        #endregion Variables
-
-
-        #region Methods
-        /// <summary>
-        /// Possibly check for files or do some preparations
-        /// </summary>
-        /// <param name="args">Args passed with the command</param>
-        /// <returns>Result of the operation</returns>
-        bool PreProcess(List<string> args);
 
 
         /// <summary>
@@ -53,6 +42,5 @@ namespace ClientCommands
         /// </summary>
         /// <param name="args">Args passed with the command</param>
         void Process(List<string> args);
-        #endregion Methods
     }
 }

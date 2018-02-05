@@ -17,11 +17,6 @@ namespace ClientCommands
         public List<string> validArguments { get; set; } = null;
 
 
-        public bool PreProcess(List<string> args)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Process(List<string> args)
         {
             var data = "";
