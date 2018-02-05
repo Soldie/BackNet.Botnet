@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Commands;
+using ClientCommands;
 using Shared;
 
 namespace ReverseShellClient
@@ -14,7 +14,7 @@ namespace ReverseShellClient
     {
         ClientNetworkManager networkManager { get; }
 
-        CommandsManager commandsManager { get; }
+        ClientCommandsManager commandsManager { get; }
 
         bool waitingForUserInput { get; set; } = false;
 
@@ -25,7 +25,7 @@ namespace ReverseShellClient
         public ClientManager()
         {
             networkManager = new ClientNetworkManager();
-            commandsManager = new CommandsManager(networkManager);
+            commandsManager = new ClientCommandsManager(networkManager);
             Console.ForegroundColor = ConsoleColor.Green;
         }
 
@@ -177,7 +177,7 @@ namespace ReverseShellClient
                         var preProcessResult = true;
                         try
                         {
-                            preProcessResult = command.PreProcessCommand(arguments);
+                            preProcessResult = command.PreProcess(arguments);
                         }
                         catch (NotImplementedException)
                         {
@@ -200,7 +200,7 @@ namespace ReverseShellClient
                                 networkManager.WriteLine(commandString);
                             }
 
-                            command.ClientMethod(arguments);
+                            command.Process(arguments);
                         }
                         catch (ExitException)
                         {

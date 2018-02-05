@@ -1,8 +1,8 @@
-﻿using Commands;
-using Shared;
+﻿using Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using ServerCommands;
 
 namespace ReverseShellServer
 {
@@ -10,7 +10,7 @@ namespace ReverseShellServer
     {
         internal ServerNetworkManager networkManager { get; set; }
 
-        internal CommandsManager commandsManager { get; set; }
+        internal ServerCommandsManager commandsManager { get; set; }
 
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace ReverseShellServer
             {
                 try
                 {
-                    command.ServerMethod(arguments);
+                    command.Process(arguments);
                 }
                 catch (StopServerException)
                 {

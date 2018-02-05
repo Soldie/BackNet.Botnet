@@ -106,10 +106,6 @@
       <Project>{d3b9e3b8-3b47-430f-9e16-965f9d4391d0}</Project>
       <Name>BrowserTornado</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Commands\Commands.csproj">
-      <Project>{7e0a8c84-ca50-4a9a-9b35-6da4e5640cda}</Project>
-      <Name>Commands</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ConsoleColorTools\Shared.csproj">
       <Project>{982DC5B6-1123-428A-83DD-D212490C859F}</Project>
       <Name>Shared</Name>
@@ -121,6 +117,10 @@
     <ProjectReference Include="..\KeyLogger\KeyLogger.csproj">
       <Project>{12478b3e-455e-4bae-bde8-1f42970770a3}</Project>
       <Name>KeyLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServerCommands\ServerCommands.csproj">
+      <Project>{247F4125-B3E1-4D1B-BAED-1381C2C8630B}</Project>
+      <Name>ServerCommands</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
