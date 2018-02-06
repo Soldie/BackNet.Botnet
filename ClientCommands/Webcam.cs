@@ -1,7 +1,7 @@
-﻿using Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Shared;
 
 namespace ClientCommands
 {

@@ -1,12 +1,12 @@
-﻿using AForge.Video;
-using AForge.Video.DirectShow;
-using Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
 using System.Timers;
+using AForge.Video;
+using AForge.Video.DirectShow;
+using Shared;
 using Timer = System.Timers.Timer;
 
 namespace ServerCommands

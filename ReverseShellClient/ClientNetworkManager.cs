@@ -1,8 +1,8 @@
-﻿using Shared;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using Shared;
 
 namespace ReverseShellClient
 {

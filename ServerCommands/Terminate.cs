@@ -1,6 +1,5 @@
-﻿using Shared;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Shared;
 
 namespace ServerCommands
 {
