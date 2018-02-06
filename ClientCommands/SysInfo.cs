@@ -6,7 +6,7 @@ using System.Security.Principal;
 
 namespace ClientCommands
 {
-    internal class SysInfo : ICommand
+    internal class SysInfo : IClientCommand
     {
         public string name { get; } = "sysinfo";
 

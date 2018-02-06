@@ -5,7 +5,7 @@ using Shared;
 
 namespace ClientCommands
 {
-    internal class Execute : ICommand
+    internal class Execute : IClientCommand
     {
         public string name { get; set; } = "exec";
 

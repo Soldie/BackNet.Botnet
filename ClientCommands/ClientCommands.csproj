@@ -43,7 +43,7 @@
     <Compile Include="Core\ClientCommandsManager.cs" />
     <Compile Include="Cmd.cs" />
     <Compile Include="Core\CD.cs" />
-    <Compile Include="Core\ICommand.cs" />
+    <Compile Include="Core\IClientCommand.cs" />
     <Compile Include="Core\LCD.cs" />
     <Compile Include="Core\LLS.cs" />
     <Compile Include="Core\LPWD.cs" />

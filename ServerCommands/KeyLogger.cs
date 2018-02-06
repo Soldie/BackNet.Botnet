@@ -1,6 +1,7 @@
 ﻿using KeyLogger;
 using System;
 using System.Collections.Generic;
+using Shared;
 
 namespace ServerCommands
 {

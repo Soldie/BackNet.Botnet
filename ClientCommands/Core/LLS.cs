@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ClientCommands
 {
-    internal class LLS : ICommand
+    internal class LLS : IClientCommand
     {
         public string name { get; set; } = "lls";
 

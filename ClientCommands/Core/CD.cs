@@ -5,7 +5,7 @@ using System.IO;
 
 namespace ClientCommands
 {
-    internal class CD : ICommand
+    internal class CD : IClientCommand
     {
         public string name { get; set; } = "cd";
 

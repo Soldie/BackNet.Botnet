@@ -5,7 +5,7 @@ using System.IO;
 
 namespace ClientCommands
 {
-    internal class Webcam : ICommand
+    internal class Webcam : IClientCommand
     {
         public string name { get; } = "webcam";
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ClientCommands
 {
-    internal class Terminate : ICommand
+    internal class Terminate : IClientCommand
     {
         public string name { get; } = "terminate";
 

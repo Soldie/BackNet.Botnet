@@ -1,15 +1,10 @@
 ﻿using System.Collections.Generic;
+using Shared;
 
 namespace ClientCommands
 {
-    public interface ICommand
+    public interface IClientCommand : ICommand
     {
-        /// <summary>
-        /// Name of the command
-        /// </summary>
-        string name { get; }
-
-
         /// <summary>
         /// Complete description of the command,
         /// doesn't include the syntax, it will be added with the syntaxHelper variable
@@ -35,12 +30,5 @@ namespace ClientCommands
         /// Explicitly name the argument, or '?' for a string, or '0' for an integer
         /// </summary>
         List<string> validArguments { get; }
-
-
-        /// <summary>
-        /// Method executed by the client
-        /// </summary>
-        /// <param name="args">Args passed with the command</param>
-        void Process(List<string> args);
     }
 }

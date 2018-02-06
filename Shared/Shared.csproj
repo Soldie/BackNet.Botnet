@@ -41,7 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorTools.cs" />
+    <Compile Include="CommandsManager.cs" />
     <Compile Include="ExitException.cs" />
+    <Compile Include="ICommand.cs" />
     <Compile Include="NetworkException.cs" />
     <Compile Include="NetworkManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

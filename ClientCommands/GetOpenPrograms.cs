@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace ClientCommands
 {
-    internal class GetOpenPrograms : ICommand
+    internal class GetOpenPrograms : IClientCommand
     {
         public string name { get; } = "getopenprograms";
 

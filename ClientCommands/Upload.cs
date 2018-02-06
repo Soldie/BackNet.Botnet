@@ -5,7 +5,7 @@ using System.IO;
 
 namespace ClientCommands
 {
-    internal class Upload : ICommand
+    internal class Upload : IClientCommand
     {
         public string name { get; } = "upload";
         

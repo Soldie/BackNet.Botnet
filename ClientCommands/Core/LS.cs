@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ClientCommands
 {
-    internal class LS : ICommand
+    internal class LS : IClientCommand
     {
         public string name { get; set; } = "ls";
 

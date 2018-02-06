@@ -25,7 +25,7 @@ namespace ReverseShellServer
             manager.networkManager = new ServerNetworkManager();
             manager.commandsManager = new ServerCommandsManager(manager.networkManager);
 
-            // Give the KeyloggerManager instance to the KeyLogger ICommand
+            // Give the KeyloggerManager instance to the KeyLogger IServerCommand
             keyLoggerManager = new KeyLoggerManager();
             manager.commandsManager.PassKeyloggerManagerInstance(keyLoggerManager);
 

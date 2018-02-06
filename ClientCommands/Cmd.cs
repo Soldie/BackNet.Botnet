@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ClientCommands
 {
-    internal class Cmd : ICommand
+    internal class Cmd : IClientCommand
     {
         public string name { get; } = "cmd";
 

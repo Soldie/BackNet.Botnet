@@ -20,7 +20,7 @@ namespace ReverseShellClient
 
 
         /// <summary>
-        /// Constructor sets default console coloras Green
+        /// Constructor sets default console color Green
         /// </summary>
         public ClientManager()
         {
@@ -143,7 +143,7 @@ namespace ReverseShellClient
                     var splittedCommand = commandsManager.GetSplittedCommand(commandString);
                     var commandName = splittedCommand[0];
 
-                    ICommand command = commandsManager.GetCommandByName(commandName);
+                    var command = (IClientCommand)commandsManager.GetCommandByName(commandName);
                     if (command != null)
                     {
                         var arguments = new List<string>();

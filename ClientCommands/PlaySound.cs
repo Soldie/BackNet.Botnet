@@ -6,7 +6,7 @@ using System.Media;
 
 namespace ClientCommands
 {
-    internal class PlaySound : ICommand
+    internal class PlaySound : IClientCommand
     {
         public string name { get; } = "playsound";
 

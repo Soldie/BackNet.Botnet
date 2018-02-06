@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace ClientCommands
 {
-    internal class Screenshot : ICommand
+    internal class Screenshot : IClientCommand
     {
         public string name { get; } = "screenshot";
 

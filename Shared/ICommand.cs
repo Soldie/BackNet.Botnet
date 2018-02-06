@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ServerCommands
+namespace Shared
 {
     public interface ICommand
     {
@@ -11,7 +11,7 @@ namespace ServerCommands
 
 
         /// <summary>
-        /// Method executed by the server
+        /// Main method to be executed
         /// </summary>
         /// <param name="args">Args passed with the command</param>
         void Process(List<string> args);

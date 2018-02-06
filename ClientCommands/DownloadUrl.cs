@@ -7,7 +7,7 @@ using System.Net;
 
 namespace ClientCommands
 {
-    internal class DownloadUrl : ICommand
+    internal class DownloadUrl : IClientCommand
     {
         public string name { get; } = "downloadurl";
 

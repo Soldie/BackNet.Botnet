@@ -5,7 +5,7 @@ using Shared;
 
 namespace ClientCommands
 {
-    internal class Download : ICommand
+    internal class Download : IClientCommand
     {
         public string name { get; } = "download";
 

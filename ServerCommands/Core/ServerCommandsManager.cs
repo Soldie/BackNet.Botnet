@@ -7,64 +7,13 @@ using System.Text.RegularExpressions;
 
 namespace ServerCommands
 {
-    public class ServerCommandsManager
+    public class ServerCommandsManager : CommandsManager<ServerCommandsManager>
     {
-        /// <summary>
-        /// List of all command classes
-        /// </summary>
-        public List<ICommand> commandList;
-
-        internal static NetworkManager networkManager { get; set; }
+        public ServerCommandsManager(NetworkManager networkManager) : base(networkManager) { }
 
 
         /// <summary>
-        /// Constructor, fill commandList with the classes implementing the ICommand interface
-        /// </summary>
-        public ServerCommandsManager(NetworkManager networkManager)
-        {
-            var type = typeof(ICommand);
-
-            commandList = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => type.IsAssignableFrom(t) && !t.IsInterface)
-                .Select(t => (ICommand)Activator.CreateInstance(t))
-                .ToList();
-
-            ServerCommandsManager.networkManager = networkManager;
-        }
-
-
-        /// <summary>   
-        /// Return the ICommand whose name was given as a parameter, or null if it doesn't exist
-        /// </summary>
-        /// <param name="commandName">ICommand name to find</param>
-        /// <returns>Found ICommand or null</returns>
-        public ICommand GetCommandByName(string commandName) => SearchCommand(s => s.name == commandName);
-
-
-        /// <summary>
-        /// Search a command in the commandList matching the given predicate
-        /// </summary>
-        /// <param name="predicate">Predicate to use to find the command</param>
-        /// <returns>Found ICommand or null</returns>
-        public ICommand SearchCommand(Func<ICommand, bool> predicate)
-        {
-            ICommand foundCommand;
-            try
-            {
-                foundCommand = commandList.First(predicate);
-            }
-            catch (Exception)
-            {
-                foundCommand = null;
-            }
-
-            return foundCommand;
-        }
-
-
-        /// <summary>
-        /// Find the ICommand keylogger in the commandList and give it the KeyLoggerManager instance
+        /// Find the keylogger ICommand in the commandList and give it the KeyLoggerManager instance
         /// This method should only be called by the MainWindow
         /// </summary>
         /// <param name="manager">KeyLoggerManager instance</param>
@@ -99,21 +48,6 @@ namespace ServerCommands
             result += horizontalDelimiter;
 
             return result;
-        }
-
-
-        /// <summary>
-        /// Split the given string by using the space delimiter, this takes into account double quotes (ex : for file paths)
-        /// </summary>
-        /// <param name="commandString">String to process</param>
-        /// <returns>List of string</returns>
-        public List<string> GetSplittedCommand(string commandString)
-        {
-            return Regex.Matches(commandString, @"[\""].+?[\""]|[^ ]+")
-                .Cast<Match>()
-                .Where(m => m.Value != "\"")
-                .Select(m => m.Value[0] == '\"' && m.Value[m.Length - 1] == '\"' ? m.Value.Substring(1, m.Value.Length - 2) : m.Value)
-                .ToList();
         }
     }
 }

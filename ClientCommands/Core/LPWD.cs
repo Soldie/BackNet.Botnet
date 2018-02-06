@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ClientCommands
 {
-    internal class LPWD : ICommand
+    internal class LPWD : IClientCommand
     {
         public string name { get; set; } = "lpwd";
 

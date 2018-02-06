@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ClientCommands
 {
-    internal class LCD : ICommand
+    internal class LCD : IClientCommand
     {
         public string name { get; set; } = "lcd";
 

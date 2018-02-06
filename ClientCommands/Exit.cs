@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ClientCommands
 {
-    internal class Exit : ICommand
+    internal class Exit : IClientCommand
     {
         public string name { get; } = "exit";
 

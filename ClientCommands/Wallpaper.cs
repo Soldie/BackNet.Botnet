@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace ClientCommands
 {
-    internal class Wallpaper : ICommand
+    internal class Wallpaper : IClientCommand
     {
         public string name { get; } = "wallpaper";
 

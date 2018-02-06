@@ -56,7 +56,6 @@
     <Compile Include="Core\CD.cs" />
     <Compile Include="Core\LS.cs" />
     <Compile Include="Core\PWD.cs" />
-    <Compile Include="Core\ICommand.cs" />
     <Compile Include="Download.cs" />
     <Compile Include="DownloadUrl.cs" />
     <Compile Include="Execute.cs" />
