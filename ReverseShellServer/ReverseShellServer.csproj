@@ -106,10 +106,6 @@
       <Project>{d3b9e3b8-3b47-430f-9e16-965f9d4391d0}</Project>
       <Name>BrowserTornado</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ConsoleColorTools\Shared.csproj">
-      <Project>{982DC5B6-1123-428A-83DD-D212490C859F}</Project>
-      <Name>Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Crypter\Crypter.csproj">
       <Project>{aaa22a7d-9c62-41f5-a275-5c8c38f723c6}</Project>
       <Name>Crypter</Name>
@@ -121,6 +117,10 @@
     <ProjectReference Include="..\ServerCommands\ServerCommands.csproj">
       <Project>{247F4125-B3E1-4D1B-BAED-1381C2C8630B}</Project>
       <Name>ServerCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{982dc5b6-1123-428a-83dd-d212490c859f}</Project>
+      <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

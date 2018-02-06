@@ -72,13 +72,13 @@
     <Compile Include="Webcam.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleColorTools\Shared.csproj">
-      <Project>{982DC5B6-1123-428A-83DD-D212490C859F}</Project>
-      <Name>Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\KeyLogger\KeyLogger.csproj">
       <Project>{12478B3E-455E-4BAE-BDE8-1F42970770A3}</Project>
       <Name>KeyLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{982dc5b6-1123-428a-83dd-d212490c859f}</Project>
+      <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

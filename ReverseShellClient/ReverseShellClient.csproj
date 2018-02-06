@@ -55,7 +55,7 @@
       <Project>{344B0F42-2B3B-4D8A-8188-364F76A3D9E0}</Project>
       <Name>ClientCommands</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ConsoleColorTools\Shared.csproj">
+    <ProjectReference Include="..\Shared\Shared.csproj">
       <Project>{982dc5b6-1123-428a-83dd-d212490c859f}</Project>
       <Name>Shared</Name>
     </ProjectReference>
