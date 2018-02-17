@@ -65,6 +65,10 @@
     <Compile Include="Webcam.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AdvancedConsole\AdvancedConsole.csproj">
+      <Project>{692a7c90-b8ff-44b3-94b4-6f6b4b5370b7}</Project>
+      <Name>AdvancedConsole</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\Shared.csproj">
       <Project>{982dc5b6-1123-428a-83dd-d212490c859f}</Project>
       <Name>Shared</Name>

@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorTools.cs" />
     <Compile Include="CommandsManager.cs" />
     <Compile Include="ExitException.cs" />
     <Compile Include="ICommand.cs" />

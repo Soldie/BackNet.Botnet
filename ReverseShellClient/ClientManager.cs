@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using AdvancedConsole;
 using ClientCommands;
 using Shared;
 
@@ -36,7 +37,7 @@ namespace ReverseShellClient
         /// </summary>
         public void Start()
         {
-            DisplayBanner();
+            DisplayTools.DisplayBanner();
 
             var listen = true;
 
@@ -112,12 +113,12 @@ namespace ReverseShellClient
         /// </summary>
         void RunClient()
         {
-            DisplayCommandPrompt();
+            DisplayTools.DisplayCommandPrompt();
 
             while (true)
             {
                 waitingForUserInput = true;     // Used for the connectionMonitoringTask
-                var commandString = Console.ReadLine();
+                var commandString = CustomConsole.ReadLine();
                 waitingForUserInput = false;
 
                 // If the connection was closed, break from the loop
@@ -158,7 +159,7 @@ namespace ReverseShellClient
                             // Display command's help
                             commandsManager.ShowCommandHelp(command);
 
-                            DisplayCommandPrompt();
+                            DisplayTools.DisplayCommandPrompt();
                             continue;
                         }
 
@@ -168,7 +169,7 @@ namespace ReverseShellClient
                             ColorTools.WriteCommandError(
                                 $"Syntax error, check out the command's help page ({commandName} help)");
 
-                            DisplayCommandPrompt();
+                            DisplayTools.DisplayCommandPrompt();
                             continue;
                         }
 
@@ -208,7 +209,7 @@ namespace ReverseShellClient
                     }
                 }
 
-                DisplayCommandPrompt();
+                DisplayTools.DisplayCommandPrompt();
             }
         }
 
@@ -243,21 +244,6 @@ namespace ReverseShellClient
                 // Ignored
             }
         }
-
-
-        /// <summary>
-        /// Show the program's banner
-        /// </summary>
-        void DisplayBanner()
-        {
-            Console.WriteLine("\n    ██████╗  █████╗  ██████╗██╗  ██╗███╗   ██╗███████╗████████╗\n    ██╔══██╗██╔══██╗██╔════╝██║ ██╔╝████╗  ██║██╔════╝╚══██╔══╝\n    ██████╔╝███████║██║     █████╔╝ ██╔██╗ ██║█████╗     ██║   \n    ██╔══██╗██╔══██║██║     ██╔═██╗ ██║╚██╗██║██╔══╝     ██║   \n    ██████╔╝██║  ██║╚██████╗██║  ██╗██║ ╚████║███████╗   ██║   \n    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝\n\n");
-        }
-
-
-        /// <summary>
-        /// Print the cmd prompt of the program to indicate it's waiting for user input
-        /// </summary>
-        void DisplayCommandPrompt() => Console.Write("BackNet>");
 
 
         #region Simulate user input

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Shared
+namespace AdvancedConsole
 {
     public static class ColorTools
     {

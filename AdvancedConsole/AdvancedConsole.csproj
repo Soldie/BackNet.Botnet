@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9FDAE122-CD1E-467D-A6FA-A98C26E76348}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>ReverseShellClient</RootNamespace>
-    <AssemblyName>ReverseShellClient</AssemblyName>
+    <ProjectGuid>{692A7C90-B8FF-44B3-94B4-6F6B4B5370B7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AdvancedConsole</RootNamespace>
+    <AssemblyName>AdvancedConsole</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,27 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientManager.cs" />
-    <Compile Include="ClientNetworkManager.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="AutoCompletionManager.cs" />
+    <Compile Include="ColorTools.cs" />
+    <Compile Include="CommandsHistory.cs" />
+    <Compile Include="CustomConsole.cs" />
+    <Compile Include="DisplayTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AdvancedConsole\AdvancedConsole.csproj">
-      <Project>{692a7c90-b8ff-44b3-94b4-6f6b4b5370b7}</Project>
-      <Name>AdvancedConsole</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ClientCommands\ClientCommands.csproj">
-      <Project>{344B0F42-2B3B-4D8A-8188-364F76A3D9E0}</Project>
-      <Name>ClientCommands</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{982dc5b6-1123-428a-83dd-d212490c859f}</Project>
-      <Name>Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

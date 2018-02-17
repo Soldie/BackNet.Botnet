@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdvancedConsole;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Shared;
@@ -7,7 +8,11 @@ namespace ClientCommands
 {
     public class ClientCommandsManager : CommandsManager<ClientCommandsManager>
     {
-        public ClientCommandsManager(NetworkManager networkManager) : base(networkManager) { }
+        // Call base constructor and fill AdvancedConsole AutoCOmpletionManager command list
+        public ClientCommandsManager(NetworkManager networkManager) : base(networkManager)
+        {
+            AutoCompletionManager.commands = commandList.Select(x => x.name).ToList();
+        }
 
 
         /// <summary>
