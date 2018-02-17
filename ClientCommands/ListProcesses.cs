@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace ClientCommands
 {
-    internal class GetOpenPrograms : IClientCommand
+    internal class ListProcesses : IClientCommand
     {
-        public string name { get; } = "getopenprograms";
+        public string name { get; } = "ps";
 
-        public string description { get; } = "Displays a list of all open programs on the remote computer";
+        public string description { get; } = "Displays a list of all processes on the remote computer";
 
-        public string syntaxHelper { get; } = "getopenprograms";
+        public string syntaxHelper { get; } = "ps";
 
         public bool isLocal { get; } = false;
 

@@ -53,7 +53,7 @@
     <Compile Include="DownloadUrl.cs" />
     <Compile Include="Execute.cs" />
     <Compile Include="Exit.cs" />
-    <Compile Include="GetOpenPrograms.cs" />
+    <Compile Include="ListProcesses.cs" />
     <Compile Include="KeyLogger.cs" />
     <Compile Include="PlaySound.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
