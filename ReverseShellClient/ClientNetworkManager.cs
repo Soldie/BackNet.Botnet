@@ -52,7 +52,7 @@ namespace ReverseShellClient
         {
             cleanedUp = true;
 
-            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped" : "\nDisconnected");
+            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped" : "\n\nDisconnected");
 
             try
             {
