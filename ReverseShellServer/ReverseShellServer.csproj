@@ -106,10 +106,6 @@
       <Project>{d3b9e3b8-3b47-430f-9e16-965f9d4391d0}</Project>
       <Name>BrowserTornado</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Crypter\Crypter.csproj">
-      <Project>{aaa22a7d-9c62-41f5-a275-5c8c38f723c6}</Project>
-      <Name>Crypter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\KeyLogger\KeyLogger.csproj">
       <Project>{12478b3e-455e-4bae-bde8-1f42970770a3}</Project>
       <Name>KeyLogger</Name>
