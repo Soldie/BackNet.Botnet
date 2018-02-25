@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedConsole", "AdvancedConsole\AdvancedConsole.csproj", "{692A7C90-B8FF-44B3-94B4-6F6B4B5370B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientBotnet", "ClientBotnet\ClientBotnet.csproj", "{F860EFC0-6573-4894-80B6-E53BC24FAD48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerBotnet", "ServerBotnet\ServerBotnet.csproj", "{57DD95F1-8DBC-4F0F-AA05-5F689155C24A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{692A7C90-B8FF-44B3-94B4-6F6B4B5370B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{692A7C90-B8FF-44B3-94B4-6F6B4B5370B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{692A7C90-B8FF-44B3-94B4-6F6B4B5370B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F860EFC0-6573-4894-80B6-E53BC24FAD48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F860EFC0-6573-4894-80B6-E53BC24FAD48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F860EFC0-6573-4894-80B6-E53BC24FAD48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F860EFC0-6573-4894-80B6-E53BC24FAD48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57DD95F1-8DBC-4F0F-AA05-5F689155C24A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57DD95F1-8DBC-4F0F-AA05-5F689155C24A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57DD95F1-8DBC-4F0F-AA05-5F689155C24A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57DD95F1-8DBC-4F0F-AA05-5F689155C24A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

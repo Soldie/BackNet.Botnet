@@ -45,7 +45,7 @@
     <Compile Include="ColorTools.cs" />
     <Compile Include="CommandsHistory.cs" />
     <Compile Include="CustomConsole.cs" />
-    <Compile Include="DisplayTools.cs" />
+    <Compile Include="ConsoleTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

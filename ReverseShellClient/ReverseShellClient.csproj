@@ -55,6 +55,10 @@
       <Project>{692a7c90-b8ff-44b3-94b4-6f6b4b5370b7}</Project>
       <Name>AdvancedConsole</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ClientBotnet\ClientBotnet.csproj">
+      <Project>{f860efc0-6573-4894-80b6-e53bc24fad48}</Project>
+      <Name>ClientBotnet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ClientCommands\ClientCommands.csproj">
       <Project>{344B0F42-2B3B-4D8A-8188-364F76A3D9E0}</Project>
       <Name>ClientCommands</Name>

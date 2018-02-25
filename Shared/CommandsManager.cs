@@ -38,20 +38,12 @@ namespace Shared
         /// </summary>
         /// <param name="commandName">ICommand name to find</param>
         /// <returns>Found ICommand or null</returns>
-        public ICommand GetCommandByName(string commandName) => SearchCommand(s => s.name == commandName);
-
-
-        /// <summary>
-        /// Search a command in the commandList matching the given predicate
-        /// </summary>
-        /// <param name="predicate">Predicate to use to find the command</param>
-        /// <returns>Found ICommand or null</returns>
-        public ICommand SearchCommand(Func<ICommand, bool> predicate)
+        public ICommand GetCommandByName(string commandName)
         {
             ICommand foundCommand;
             try
             {
-                foundCommand = commandList.First(predicate);
+                foundCommand = commandList.First(s => s.name == commandName);
             }
             catch (Exception)
             {

@@ -114,6 +114,10 @@
       <Project>{12478b3e-455e-4bae-bde8-1f42970770a3}</Project>
       <Name>KeyLogger</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ServerBotnet\ServerBotnet.csproj">
+      <Project>{57DD95F1-8DBC-4F0F-AA05-5F689155C24A}</Project>
+      <Name>ServerBotnet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ServerCommands\ServerCommands.csproj">
       <Project>{247F4125-B3E1-4D1B-BAED-1381C2C8630B}</Project>
       <Name>ServerCommands</Name>

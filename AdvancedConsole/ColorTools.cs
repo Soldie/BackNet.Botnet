@@ -4,6 +4,15 @@ namespace AdvancedConsole
 {
     public static class ColorTools
     {
+        /// <summary>
+        /// Sets the default consolecolor to green
+        /// </summary>
+        public static void SetDefaultConsoleColor()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+        }
+
+
         public static void WriteCommandMessage(string message) =>
             WriteColorMessage(message, " [+] ", ConsoleColor.Gray);
 
@@ -34,6 +43,13 @@ namespace AdvancedConsole
         {
             Console.ForegroundColor = color;
             Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.Green;
+        }
+
+        public static void WriteInlineMessage(string message, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.Write(message);
             Console.ForegroundColor = ConsoleColor.Green;
         }
     }

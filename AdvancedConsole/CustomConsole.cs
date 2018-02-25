@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace AdvancedConsole
@@ -13,13 +14,13 @@ namespace AdvancedConsole
         internal static int firstCharHeight;
 
         internal static int lastCharHeight
-            => firstCharHeight + (currentText.Length + DisplayTools.PROMPT.Length) / Console.BufferWidth;
+            => firstCharHeight + (currentText.Length + ConsoleTools.PROMPT.Length) / Console.BufferWidth;
 
         static int lineLenght
-            => currentText.Length - (Console.CursorTop - firstCharHeight) * Console.BufferWidth + DisplayTools.PROMPT.Length;
+            => currentText.Length - (Console.CursorTop - firstCharHeight) * Console.BufferWidth + ConsoleTools.PROMPT.Length;
 
         static int cursorPositionInString
-            => (Console.CursorTop - firstCharHeight) * Console.BufferWidth + Console.CursorLeft - DisplayTools.PROMPT.Length;
+            => (Console.CursorTop - firstCharHeight) * Console.BufferWidth + Console.CursorLeft - ConsoleTools.PROMPT.Length;
 
         #endregion Current text
 
@@ -40,7 +41,7 @@ namespace AdvancedConsole
         
 
         /// <summary>
-        /// Console.WriteLine() replacement with auto-completion, clear command (CTRL + L) and paste (CTRL + V)
+        /// Console.WriteLine() replacement with auto-completion and clear console (CTRL + L)
         /// </summary>
         /// <returns>Command issued by the user</returns>
         public static string ReadLine()
@@ -57,7 +58,8 @@ namespace AdvancedConsole
                     case ConsoleKey.Enter:
                         CommandsHistory.AddCommand(currentText);
                         Console.Write('\n');
-                        return currentText;
+                        // Don't return whitespaces only
+                        return currentText.All(x => x == ' ') ? "" : currentText;
 
                     case ConsoleKey.Tab:
                         AutoCompletionManager.AutoComplete(ref currentText);
@@ -80,11 +82,11 @@ namespace AdvancedConsole
                         break;
 
                     case ConsoleKey.Home:
-                        Console.SetCursorPosition(DisplayTools.PROMPT.Length, firstCharHeight);
+                        Console.SetCursorPosition(ConsoleTools.PROMPT.Length, firstCharHeight);
                         break;
 
                     case ConsoleKey.End:
-                        Console.SetCursorPosition(DisplayTools.PROMPT.Length, lastCharHeight);
+                        Console.SetCursorPosition(ConsoleTools.PROMPT.Length, lastCharHeight);
                         Console.SetCursorPosition(lineLenght, lastCharHeight);
                         break;
 
@@ -125,7 +127,7 @@ namespace AdvancedConsole
 
         static void MoveCursorLeft()
         {
-            if (Console.CursorLeft != DisplayTools.PROMPT.Length)
+            if (Console.CursorLeft != ConsoleTools.PROMPT.Length)
             {
                 Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
             }
@@ -182,7 +184,7 @@ namespace AdvancedConsole
         static void ClearConsole()
         {
             Console.Clear();
-            DisplayTools.DisplayCommandPrompt();
+            ConsoleTools.DisplayCommandPrompt();
             Console.Write(currentText);
         }
 
@@ -261,14 +263,11 @@ namespace AdvancedConsole
 
         internal static void EraseCurrentCommand()
         {
-            Console.SetCursorPosition(0, firstCharHeight);
+            Console.SetCursorPosition(ConsoleTools.PROMPT.Length, firstCharHeight);
             while (cursorPositionInString != currentText.Length)
                 Console.Write(' ');
 
-            Console.SetCursorPosition(0, firstCharHeight);
-            DisplayTools.DisplayCommandPrompt();
-
-            firstCharHeight = Console.CursorTop;
+            Console.SetCursorPosition(ConsoleTools.PROMPT.Length, firstCharHeight);
         }
     }
 }

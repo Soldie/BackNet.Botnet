@@ -30,12 +30,15 @@ namespace AdvancedConsole
                 {
                     // Display possibilities
                     Console.Write('\n');
-                    autoCompleteResults.ForEach(x => Console.Write("{0}  ", x));
-                    Console.Write('\n');
+                    foreach (var result in autoCompleteResults)
+                    {
+                        ColorTools.WriteInlineMessage($"    {currentText}", ConsoleColor.Cyan);
+                        ColorTools.WriteMessage(result.Substring(currentText.Length));
+                    }
 
                     CustomConsole.firstCharHeight = Console.CursorTop;
 
-                    DisplayTools.DisplayCommandPrompt();
+                    ConsoleTools.DisplayCommandPrompt();
                     Console.Write(currentText);
                 }
             }
