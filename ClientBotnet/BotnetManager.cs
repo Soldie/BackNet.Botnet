@@ -104,7 +104,7 @@ namespace ClientBotnet
             var response = PostJsonToServer<List<InfectedHostJson>>(data);
             if(response == null) return;
 
-            var path = Path.Combine(Environment.CurrentDirectory, "infected_hosts.json");
+            var path = Path.Combine(Environment.CurrentDirectory, "infected_hosts.txt");
             try
             {
                 File.WriteAllLines(path, response.Select(x => x.ToString()));

