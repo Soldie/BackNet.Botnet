@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Shared
 {
-    public abstract class CommandsManager<T>
+    public abstract class CommandsManager
     {
         public static NetworkManager networkManager { get; set; }
 
@@ -27,9 +27,10 @@ namespace Shared
                 .SelectMany(a => a.GetTypes())
                 .Where(t => type.IsAssignableFrom(t) && !t.IsInterface)
                 .Select(t => (ICommand)Activator.CreateInstance(t))
+                .OrderBy(x => x.name)
                 .ToList();
 
-            CommandsManager<T>.networkManager = networkManager;
+            CommandsManager.networkManager = networkManager;
         }
 
 
