@@ -17,7 +17,7 @@ namespace ReverseShellClient
 
         ClientCommandsManager commandsManager { get; }
 
-        bool waitingForUserInput { get; set; } = false;
+        bool waitingForUserCommandInput { get; set; } = false;
 
 
         /// <summary>
@@ -59,9 +59,10 @@ namespace ReverseShellClient
                     {
                         case "1":
                             port = BotnetManager.Process() ?? 0;
-                            if(port == 0) break;
-
-                            ListenForIncomingConnection(port);
+                            if (port != 0)
+                            {
+                                ListenForIncomingConnection(port);
+                            }
                             break;
 
                         case "2":
@@ -78,6 +79,8 @@ namespace ReverseShellClient
                             break;
                     }
                 }
+
+                waitingForUserCommandInput = false;
             }
         }
 
@@ -110,7 +113,7 @@ namespace ReverseShellClient
             while (true)
             {
                 // The program is waiting for the user to enter a command, but the other end of the connection disconnected
-                if (waitingForUserInput && !networkManager.IsConnected())
+                if (waitingForUserCommandInput && !networkManager.IsConnected())
                 {
                     // Call cleanup method from ClientNetworkManager
                     networkManager.Cleanup(processingCommand: false);
@@ -123,7 +126,7 @@ namespace ReverseShellClient
                 }
 
                 // The program executed a method, but the other end of the connection disconnected, this was caught and the cleanup method was called was made
-                if (!waitingForUserInput && networkManager.CleanupMade())
+                if (!waitingForUserCommandInput && networkManager.CleanupMade())
                 {
                     break;
                 }
@@ -143,9 +146,9 @@ namespace ReverseShellClient
 
             while (true)
             {
-                waitingForUserInput = true;     // Used for the connectionMonitoringTask
+                waitingForUserCommandInput = true;     // Used for the connectionMonitoringTask
                 var commandString = CustomConsole.ReadLine();
-                waitingForUserInput = false;
+                waitingForUserCommandInput = false;
 
                 // If the connection was closed, break from the loop
                 if (!networkManager.IsConnected())
