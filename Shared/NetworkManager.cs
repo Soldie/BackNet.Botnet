@@ -31,7 +31,12 @@ namespace Shared
         {
             try
             {
-                return streamReader.ReadLine();
+                var data = streamReader.ReadLine();
+                if (data == null)
+                {
+                    throw new NetworkException();
+                }
+                return data;
             }
             catch (Exception)
             {
