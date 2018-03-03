@@ -140,7 +140,7 @@ namespace ClientBotnet
 
             if (!response.result)
             {
-                ColorTools.WriteCommandError("The server responded with an error");
+                ColorTools.WriteCommandError("The server responded with an error, verify the host_id");
                 return null;
             }
 
