@@ -23,7 +23,8 @@ namespace ClientCommands
         /// <returns>Correct syntax boolean</returns>
         public bool CheckCommandSyntax(IClientCommand command, List<string> arguments)
         {
-            if (command.validArguments == null || command.validArguments.Any(string.IsNullOrEmpty))
+            if (command.validArguments == null ||
+                (arguments.Count == 0 && command.validArguments.Any(string.IsNullOrEmpty)))
             {
                 return arguments.Count == 0;
             }
