@@ -64,6 +64,7 @@
     <Compile Include="Upload.cs" />
     <Compile Include="Wallpaper.cs" />
     <Compile Include="Webcam.cs" />
+    <Compile Include="WifiInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AdvancedConsole\AdvancedConsole.csproj">
