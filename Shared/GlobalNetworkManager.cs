@@ -4,7 +4,7 @@ using System.Net.Sockets;
 
 namespace Shared
 {
-    public abstract class NetworkManager
+    public abstract class GlobalNetworkManager
     {
         public NetworkStream networkStream { get; set; }
 

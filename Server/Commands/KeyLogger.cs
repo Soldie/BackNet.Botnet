@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Server.Commands.Core;
-using Server.Keylogger;
+using Server.Commands.Keylogger;
 using Shared;
 
 namespace Server.Commands

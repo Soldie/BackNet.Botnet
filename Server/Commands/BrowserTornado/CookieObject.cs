@@ -1,4 +1,4 @@
-﻿namespace Server.BrowserTornado
+﻿namespace Server.Commands.BrowserTornado
 {
     /// <summary>
     /// Class used to instanciate cookies

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Server.Keylogger;
+using Server.Commands.Keylogger;
 using Shared;
 
 namespace Server.Commands.Core
 {
-    public class ServerCommandsManager : CommandsManager
+    public class ServerCommandsManager : GlobalCommandsManager
     {
-        public ServerCommandsManager(NetworkManager networkManager) : base(networkManager) { }
+        public ServerCommandsManager(GlobalNetworkManager networkManager) : base(networkManager) { }
 
 
         /// <summary>

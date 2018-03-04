@@ -1,4 +1,4 @@
-﻿namespace Server.Keylogger
+﻿namespace Server.Commands.Keylogger
 {
     /// <summary>
     /// Class managing the logging of the keys in the memory

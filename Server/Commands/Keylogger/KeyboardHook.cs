@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Server.Keylogger
+namespace Server.Commands.Keylogger
 {
     /// <summary>
     /// Class for intercepting low level keyboard hooks

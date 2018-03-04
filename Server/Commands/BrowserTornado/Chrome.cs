@@ -5,7 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Server.BrowserTornado
+namespace Server.Commands.BrowserTornado
 {
     public static class Chrome
     {

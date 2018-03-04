@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Server.BrowserTornado
+namespace Server.Commands.BrowserTornado
 {
     public static class CopyUtility
     {

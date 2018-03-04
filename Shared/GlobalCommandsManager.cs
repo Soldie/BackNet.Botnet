@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace Shared
 {
-    public abstract class CommandsManager
+    public abstract class GlobalCommandsManager
     {
-        public static NetworkManager networkManager { get; set; }
+        public static GlobalNetworkManager networkManager { get; set; }
 
         /// <summary>
         /// List of all instanciated command classes
@@ -19,7 +19,7 @@ namespace Shared
         /// Constructor, fill commandList with the classes implementing the ICommand interface.
         /// Instantiate the network manager.
         /// </summary>
-        protected CommandsManager(NetworkManager networkManager)
+        protected GlobalCommandsManager(GlobalNetworkManager networkManager)
         {
             var type = typeof(ICommand);
 
@@ -30,7 +30,7 @@ namespace Shared
                 .OrderBy(x => x.name)
                 .ToList();
 
-            CommandsManager.networkManager = networkManager;
+            GlobalCommandsManager.networkManager = networkManager;
         }
 
 

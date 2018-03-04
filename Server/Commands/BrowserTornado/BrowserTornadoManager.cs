@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
 
-namespace Server.BrowserTornado
+namespace Server.Commands.BrowserTornado
 {
     public class BrowserTornadoManager
     {

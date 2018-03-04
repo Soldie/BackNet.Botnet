@@ -80,11 +80,11 @@
     </ApplicationDefinition>
     <Compile Include="Botnet\BotnetManager.cs" />
     <Compile Include="Botnet\GetCommandFromServerJson.cs" />
-    <Compile Include="BrowserTornado\BrowserTornadoManager.cs" />
-    <Compile Include="BrowserTornado\Chrome.cs" />
-    <Compile Include="BrowserTornado\CookieObject.cs" />
-    <Compile Include="BrowserTornado\CopyUtility.cs" />
-    <Compile Include="BrowserTornado\Firefox.cs" />
+    <Compile Include="Commands\BrowserTornado\BrowserTornadoManager.cs" />
+    <Compile Include="Commands\BrowserTornado\Chrome.cs" />
+    <Compile Include="Commands\BrowserTornado\CookieObject.cs" />
+    <Compile Include="Commands\BrowserTornado\CopyUtility.cs" />
+    <Compile Include="Commands\BrowserTornado\Firefox.cs" />
     <Compile Include="Commands\Cmd.cs" />
     <Compile Include="Commands\Core\CD.cs" />
     <Compile Include="Commands\Core\LS.cs" />
@@ -114,10 +114,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Keylogger\KeyboardHook.cs" />
-    <Compile Include="Keylogger\KeyboardKeys.cs" />
-    <Compile Include="Keylogger\KeyLoggerManager.cs" />
-    <Compile Include="Keylogger\Logger.cs" />
+    <Compile Include="Commands\Keylogger\KeyboardHook.cs" />
+    <Compile Include="Commands\Keylogger\KeyboardKeys.cs" />
+    <Compile Include="Commands\Keylogger\KeyLoggerManager.cs" />
+    <Compile Include="Commands\Keylogger\Logger.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -157,7 +157,10 @@
       <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BrowserTornado\" />
+    <Folder Include="Keylogger\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Server.Keylogger
+namespace Server.Commands.Keylogger
 {
     /// <summary>
     /// Class handling the key pressed events sent by the KeyboardHook

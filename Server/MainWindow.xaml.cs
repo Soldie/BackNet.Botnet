@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
 using Server.Commands.Core;
+using Server.Commands.Keylogger;
 using Server.Core;
-using Server.Keylogger;
 
 namespace Server
 {

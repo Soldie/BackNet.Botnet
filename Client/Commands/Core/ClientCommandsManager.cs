@@ -6,10 +6,10 @@ using Shared;
 
 namespace Client.Commands.Core
 {
-    public class ClientCommandsManager : CommandsManager
+    public class ClientCommandsManager : GlobalCommandsManager
     {
         // Call base constructor and fill AdvancedConsole AutoCOmpletionManager command list
-        public ClientCommandsManager(NetworkManager networkManager) : base(networkManager)
+        public ClientCommandsManager(GlobalNetworkManager networkManager) : base(networkManager)
         {
             AutoCompletionManager.commands = commandList.Select(x => x.name).ToList();
         }

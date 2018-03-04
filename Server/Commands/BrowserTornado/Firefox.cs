@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 
-namespace Server.BrowserTornado
+namespace Server.Commands.BrowserTornado
 {
     public static class Firefox
     {

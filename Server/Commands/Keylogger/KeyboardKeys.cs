@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Server.Keylogger
+namespace Server.Commands.Keylogger
 {
     internal static class KeyboardKeys
     {

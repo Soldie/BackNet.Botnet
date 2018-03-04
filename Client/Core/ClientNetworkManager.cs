@@ -7,7 +7,7 @@ using Shared;
 
 namespace Client.Core
 {
-    public class ClientNetworkManager : NetworkManager
+    public class ClientNetworkManager : GlobalNetworkManager
     {
         Socket socketForServer { get; set; }
 
