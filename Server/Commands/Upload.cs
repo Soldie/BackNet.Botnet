@@ -16,7 +16,7 @@ namespace Server.Commands
             // The file doesn't exist on the client side
             if (ServerCommandsManager.networkManager.ReadLine() == "KO") return;
 
-            var dataLength = int.Parse(ServerCommandsManager.networkManager.ReadLine());
+            var dataLength = long.Parse(ServerCommandsManager.networkManager.ReadLine());
 
             try
             {

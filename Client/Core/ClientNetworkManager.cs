@@ -13,7 +13,16 @@ namespace Client.Core
 
         TcpListener tcpListener { get; set; }
 
-        bool cleanedUp { get; set; }
+        bool cleanedUp;
+
+
+        /// <summary>
+        /// Implement the StreamTransfertProgressEvent handler to display a completion meter
+        /// </summary>
+        public ClientNetworkManager()
+        {
+            StreamTransfertProgressEvent += StreamTransfertProgressEventHandler;
+        }
 
 
         /// <summary>
@@ -92,5 +101,15 @@ namespace Client.Core
         /// </summary>
         /// <returns>Boolean</returns>
         public bool CleanupMade() => cleanedUp;
+
+
+        /// <summary>
+        /// GlobalNetworkManager StreamTransfertProgress event handler.
+        /// Calls ProgressDisplayer.DisplayCompletionMeter for the stream to stream transfert methods progress.
+        /// </summary>
+        /// <param name="current">Number of bytes copied</param>
+        /// <param name="total">Total number of bytes</param>
+        void StreamTransfertProgressEventHandler(long current, long total)
+            => ProgressDisplayer.DisplayCompletionMeter(current, total);
     }
 }

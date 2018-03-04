@@ -34,7 +34,7 @@ namespace Client.Commands
             var path = args[1];
             ColorTools.WriteCommandMessage($"Starting download of file '{args[0]}' from the server");
             
-            var dataLength = int.Parse(ClientCommandsManager.networkManager.ReadLine());
+            var dataLength = long.Parse(ClientCommandsManager.networkManager.ReadLine());
 
             try
             {

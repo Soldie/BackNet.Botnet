@@ -28,7 +28,7 @@ namespace Client.Commands
                            + ".png";
 
             // Get data length
-            var dataLength = int.Parse(ClientCommandsManager.networkManager.ReadLine());
+            var dataLength = long.Parse(ClientCommandsManager.networkManager.ReadLine());
 
             try
             {

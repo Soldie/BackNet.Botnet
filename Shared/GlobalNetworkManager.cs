@@ -6,6 +6,8 @@ namespace Shared
 {
     public abstract class GlobalNetworkManager
     {
+        const int DEFAULT_BUFFER_SIZE = 4046;
+
         public NetworkStream networkStream { get; set; }
 
         public StreamWriter streamWriter { get; set; }
@@ -16,8 +18,9 @@ namespace Shared
 
         public BinaryReader binaryReader { get; set; }
 
+        public delegate void ProgressHandler(long current, long total);
 
-        const int DEFAULT_BUFFER_SIZE = 4046;
+        public event ProgressHandler StreamTransfertProgressEvent;
 
 
         /// <summary>
@@ -43,7 +46,7 @@ namespace Shared
 
 
         /// <summary>
-        /// Read all the given ReadStream content and write it to the network stream as byte arrays, then flush
+        /// Read all the given ReadStream content and write it to the network stream as byte arrays, flushing each time
         /// </summary>
         /// <param name="stream">Stream to process, must be a readable stream</param>
         public void StreamToNetworkStream(Stream stream)
@@ -59,12 +62,21 @@ namespace Shared
 
             var buffer = new byte[DEFAULT_BUFFER_SIZE];
             int bytesRead;
+            long bytesWritten = 0;
+
+            // Notify that the stream transfert started if the handler has been implemented
+            StreamTransfertProgressEvent?.Invoke(0, stream.Length);
+
             while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
             {
                 try
                 {
                     binaryWriter.Write(buffer, 0, bytesRead);
                     binaryWriter.Flush();
+                    bytesWritten += bytesRead;
+
+                    // Notify that the stream transfert progress changed if the handler has been implemented
+                    StreamTransfertProgressEvent?.Invoke(bytesWritten, stream.Length);
                 }
                 catch (Exception)
                 {
@@ -75,15 +87,15 @@ namespace Shared
 
 
         /// <summary>
-        /// Read all the network ReadStream content and write it to the given stream stream
+        /// Read all the network ReadStream content and write it to the given stream
         /// </summary>
         /// <param name="stream">Stream to process, must be a writable stream</param>
         /// <param name="dataSize">Size of the data to write</param>
-        public void NetworkStreamToStream(Stream stream, int dataSize)
+        public void NetworkStreamToStream(Stream stream, long dataSize)
         {
             if (!stream.CanWrite)
             {
-                // The stream can't write : invalid argument
+                // The stream can't be written : invalid argument
                 throw new ArgumentException();
             }
 
@@ -91,14 +103,20 @@ namespace Shared
             WriteLine("OK");
 
             var buffer = new byte[DEFAULT_BUFFER_SIZE];
-            var bytesWritten = 0;
+            long bytesWritten = 0;
             try
             {
+                // Notify that the stream transfert started if the handler has been implemented
+                StreamTransfertProgressEvent?.Invoke(0, dataSize);
+
                 int bytesRead;
                 while ((bytesRead = binaryReader.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     stream.Write(buffer, 0, bytesRead);
                     bytesWritten += bytesRead;
+
+                    // Notify that the stream transfert progress changed if the handler has been implemented
+                    StreamTransfertProgressEvent?.Invoke(bytesWritten, dataSize);
 
                     // The file has been totally written
                     if (bytesWritten == dataSize)

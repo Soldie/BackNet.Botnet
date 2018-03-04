@@ -51,6 +51,7 @@
     <Compile Include="AdvancedConsole\CommandsHistory.cs" />
     <Compile Include="AdvancedConsole\ConsoleTools.cs" />
     <Compile Include="AdvancedConsole\CustomConsole.cs" />
+    <Compile Include="AdvancedConsole\ProgressDisplayer.cs" />
     <Compile Include="Botnet\BotnetManager.cs" />
     <Compile Include="Botnet\JSON\BaseJson.cs" />
     <Compile Include="Botnet\JSON\CheckServerJson.cs" />
