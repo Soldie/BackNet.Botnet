@@ -23,12 +23,12 @@ namespace Client.Commands.Core
             foreach(var dir in Directory.GetDirectories(cwd))
             {
                 var dirInfo = new DirectoryInfo(dir);
-                Console.WriteLine($"{dirInfo.LastWriteTime:MM/dd/yy  H:mm:ss}   <DIR>   {dirInfo.Name}");
+                Console.WriteLine($"{dirInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}   <DIR>   {dirInfo.Name}");
             }
             foreach (var file in Directory.GetFiles(cwd))
             {
                 var fileInfo = new DirectoryInfo(file);
-                Console.WriteLine($"{fileInfo.LastWriteTime:MM/dd/yy  H:mm:ss}           {fileInfo.Name}");
+                Console.WriteLine($"{fileInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}           {fileInfo.Name}");
             }
         }
     }
