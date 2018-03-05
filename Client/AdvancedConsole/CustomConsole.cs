@@ -186,6 +186,7 @@ namespace Client.AdvancedConsole
             Console.Clear();
             ConsoleTools.DisplayCommandPrompt();
             Console.Write(currentText);
+            firstCharHeight = Console.CursorTop;
         }
 
         static void PasteText()
