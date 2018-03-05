@@ -15,22 +15,26 @@ namespace Client.AdvancedConsole
         {
             var newCompletion = (int)((decimal)current / total * 100);
 
+            // Transfert started
             if (newCompletion == 0 && Console.CursorLeft != 1)
             {
-                // Transfert started
                 Console.Write($"[{ new string(' ', 50) }]   0%");
                 Console.SetCursorPosition(1, Console.CursorTop);
                 completion = newCompletion;
             }
-            else if (completion != newCompletion && newCompletion % 2 == 0)
+            // Transfert progressed
+            else if (completion != newCompletion)
             {
-                // Transfert progressed
-                Console.Write(new string('>', (newCompletion - completion) / 2));
+                if (newCompletion % 2 == 0)
+                {
+                    Console.Write(new string('>', (newCompletion - completion + 1) / 2));
+                }
+                
                 completion = newCompletion;
 
-                var leftStart = 53 + (completion == 100 ? 0 : completion >= 10 ? 1 : 2);
+                var leftStart = 53 + (newCompletion == 100 ? 0 : newCompletion >= 10 ? 1 : 2);
                 Console.SetCursorPosition(leftStart, Console.CursorTop);
-                Console.Write(completion);
+                Console.Write(newCompletion);
 
 
                 // Transfert finished
