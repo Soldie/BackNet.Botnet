@@ -28,18 +28,7 @@ namespace Client.AdvancedConsole
             {
                 if (autoCompleteResults.Count != 0)
                 {
-                    // Display possibilities
-                    Console.Write('\n');
-                    foreach (var result in autoCompleteResults)
-                    {
-                        ColorTools.WriteInlineMessage($"    {currentText}", ConsoleColor.Cyan);
-                        ColorTools.WriteMessage(result.Substring(currentText.Length));
-                    }
-
-                    CustomConsole.firstCharHeight = Console.CursorTop;
-
-                    ConsoleTools.DisplayCommandPrompt();
-                    Console.Write(currentText);
+                    DisplayPossibilities(currentText);
                 }
             }
             else
@@ -97,6 +86,28 @@ namespace Client.AdvancedConsole
             }
 
             return baseCommands[0].Substring(0, index);
+        }
+
+
+        static void DisplayPossibilities(string currentText)
+        {
+            // Avoid displaying possibilities when text changed
+            if (autoCompleteResults.Count < 1 ||
+                autoCompleteResults[0].Substring(0, currentText.Length) != currentText) return;
+
+            Console.Write('\n');
+            foreach (var result in autoCompleteResults)
+            {
+                ColorTools.WriteInlineMessage($"    {currentText}", ConsoleColor.Cyan);
+                ColorTools.WriteMessage(result.Substring(currentText.Length));
+            }
+
+            CustomConsole.firstCharHeight = Console.CursorTop;
+
+            ConsoleTools.DisplayCommandPrompt();
+            Console.Write(currentText);
+
+            autoCompleteResults.Clear();
         }
     }
 }
