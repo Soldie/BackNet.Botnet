@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Client.AdvancedConsole;
 using Shared;
 
@@ -16,12 +17,14 @@ namespace Client.Commands.Core
 
 
         /// <summary>
-        /// Check if the given arguments match at least one validArguments combinaison of the given IClientCommand class
+        /// Check if the given arguments match at least one validArguments combinaison of the given IClientCommand class.
+        /// The given command string can be modified to avoid disclosing user's infos.
         /// </summary>
         /// <param name="command">Invoked Command</param>
         /// <param name="arguments">Passed arguments</param>
+        /// <param name="commandString">Command from user input</param>
         /// <returns>Correct syntax boolean</returns>
-        public bool CheckCommandSyntax(IClientCommand command, List<string> arguments)
+        public bool CheckCommandSyntax(IClientCommand command, List<string> arguments, ref string commandString)
         {
             if (command.validArguments == null ||
                 (arguments.Count == 0 && command.validArguments.Any(string.IsNullOrEmpty)))
@@ -31,18 +34,18 @@ namespace Client.Commands.Core
 
             foreach (var validSyntax in command.validArguments)
             {
-                var slittedValidSyntax = validSyntax.Split(' ');
-                if (slittedValidSyntax.Length != arguments.Count)
+                var splittedValidSyntax = validSyntax.Split(' ');
+                if (splittedValidSyntax.Length != arguments.Count)
                 {
                     continue;
                 }
 
                 var error = false;
-                for (var i = 0; i < slittedValidSyntax.Length; i++)
+                for (var i = 0; i < splittedValidSyntax.Length; i++)
                 {
-                    if (slittedValidSyntax[i] == "?") continue;
+                    if (splittedValidSyntax[i] == "?" || splittedValidSyntax[i] == "?*") continue;
 
-                    if (slittedValidSyntax[i] == "0")
+                    if (splittedValidSyntax[i] == "0")
                     {
                         if (!int.TryParse(arguments[i], out int dummy))
                         {
@@ -50,7 +53,7 @@ namespace Client.Commands.Core
                             break;
                         }
                     }
-                    else if (slittedValidSyntax[i] != arguments[i])
+                    else if (splittedValidSyntax[i] != arguments[i])
                     {
                         error = true;
                         break;
@@ -58,7 +61,18 @@ namespace Client.Commands.Core
                 }
 
                 if (!error)
+                {
+                    var splittedString = commandString.Split(' ');
+                    var list = new List<string> { splittedString[0] };
+
+                    // Remove personnal informations (marked with '*' mark)
+                    for (int i = 0; i < splittedValidSyntax.Length; i++)
+                    {
+                        list.Add(splittedValidSyntax[i] == "?*" ? "*" : splittedString[i + 1]);
+                    }
+                    commandString = list.Aggregate((x, y) => $"{x} {y}");
                     return true;
+                }
             }
 
             return false;

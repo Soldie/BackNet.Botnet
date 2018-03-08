@@ -17,7 +17,7 @@ namespace Client.Commands
         
         public List<string> validArguments { get; } = new List<string>()
         {
-            "? ?"
+            "?* ?"
         };
 
         

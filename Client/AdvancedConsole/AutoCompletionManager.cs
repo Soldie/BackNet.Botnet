@@ -93,7 +93,7 @@ namespace Client.AdvancedConsole
         {
             // Avoid displaying possibilities when text changed
             if (autoCompleteResults.Count < 1 ||
-                autoCompleteResults[0].Substring(0, currentText.Length) != currentText) return;
+                autoCompleteResults.Any(x => x.Substring(0, currentText.Length) != currentText)) return;
 
             Console.Write('\n');
             foreach (var result in autoCompleteResults)

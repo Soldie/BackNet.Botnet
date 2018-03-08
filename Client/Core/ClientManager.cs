@@ -193,7 +193,7 @@ namespace Client.Core
                         }
 
 
-                        if (!commandsManager.CheckCommandSyntax(command, arguments))
+                        if (!commandsManager.CheckCommandSyntax(command, arguments,  ref commandString))
                         {
                             ColorTools.WriteCommandError(
                                 $"Syntax error, check out the command's help page ({commandName} help)");
