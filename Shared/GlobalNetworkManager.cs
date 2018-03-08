@@ -18,9 +18,21 @@ namespace Shared
 
         public BinaryReader binaryReader { get; set; }
 
-        public delegate void ProgressHandler(long current, long total);
+        #region Events
 
-        public event ProgressHandler StreamTransfertProgressEvent;
+        public delegate void TransfertStartHandler(long total);
+
+        public event TransfertStartHandler StreamTransfertStartEvent;
+
+        public delegate void TransfertProgressHandler(long current);
+
+        public event TransfertProgressHandler StreamTransfertProgressEvent;
+
+        public delegate void TransfertFailHandler();
+
+        public event TransfertFailHandler StreamTransfertFailEvent;
+
+        #endregion Event
 
 
         /// <summary>
@@ -65,7 +77,7 @@ namespace Shared
             long bytesWritten = 0;
 
             // Notify that the stream transfert started if the handler has been implemented
-            StreamTransfertProgressEvent?.Invoke(0, stream.Length);
+            StreamTransfertStartEvent?.Invoke(stream.Length);
 
             while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
             {
@@ -76,10 +88,11 @@ namespace Shared
                     bytesWritten += bytesRead;
 
                     // Notify that the stream transfert progress changed if the handler has been implemented
-                    StreamTransfertProgressEvent?.Invoke(bytesWritten, stream.Length);
+                    StreamTransfertProgressEvent?.Invoke(bytesWritten);
                 }
                 catch (Exception)
                 {
+                    StreamTransfertFailEvent?.Invoke();
                     throw new NetworkException();
                 }
             }
@@ -107,7 +120,7 @@ namespace Shared
             try
             {
                 // Notify that the stream transfert started if the handler has been implemented
-                StreamTransfertProgressEvent?.Invoke(0, dataSize);
+                StreamTransfertStartEvent?.Invoke(dataSize);
 
                 int bytesRead;
                 while ((bytesRead = binaryReader.Read(buffer, 0, buffer.Length)) > 0)
@@ -116,7 +129,7 @@ namespace Shared
                     bytesWritten += bytesRead;
 
                     // Notify that the stream transfert progress changed if the handler has been implemented
-                    StreamTransfertProgressEvent?.Invoke(bytesWritten, dataSize);
+                    StreamTransfertProgressEvent?.Invoke(bytesWritten);
 
                     // The file has been totally written
                     if (bytesWritten == dataSize)
@@ -127,6 +140,7 @@ namespace Shared
             }
             catch (Exception)
             {
+                StreamTransfertFailEvent?.Invoke();
                 throw new NetworkException();
             }
         }

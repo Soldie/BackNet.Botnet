@@ -6,50 +6,74 @@ namespace Client.AdvancedConsole
     {
         static int completion = 0;
 
+        static long total = 0;
+
+        static int lastLine;
+
+
         /// <summary>
-        /// Displays a completion meter with a gauge and a percentage
+        /// Hide cursor to avoid annoying blink and set total. Show the base gauge and percentage.
+        /// </summary>
+        /// <param name="newTotal">Total value to reach</param>
+        public static void Init(long newTotal)
+        {
+            Console.CursorVisible = false;
+            total = newTotal;
+
+            // Display base gauge
+            Console.Write($"[{ new string(' ', 50) }]\n{ new string(' ', 52 - total.ToString().Length - 7) }/{total} bytes");
+            Console.SetCursorPosition(1, Console.CursorTop);
+            lastLine = Console.CursorTop;
+        }
+
+
+        /// <summary>
+        /// Updates the completion meter with a gauge and a percentage
         /// </summary>
         /// <param name="current">Current value</param>
-        /// <param name="total">Total value to reach</param>
-        public static void DisplayCompletionMeter(long current, long total)
+        public static void Update(long current)
         {
             var newCompletion = (int)((decimal)current / total * 100);
-
-            // Transfert started
-            if (newCompletion == 0 && Console.CursorLeft != 1)
-            {
-                Console.Write($"[{ new string(' ', 50) }]   0%");
-                Console.SetCursorPosition(1, Console.CursorTop);
-                completion = newCompletion;
-            }
+            
             // Transfert progressed
-            else if (completion != newCompletion)
+            if (completion != newCompletion)
             {
-                if (newCompletion % 2 == 0)
-                {
-                    Console.Write(new string('>', (newCompletion - completion + 1) / 2));
-                }
-                
                 completion = newCompletion;
 
-                var leftStart = 53 + (newCompletion == 100 ? 0 : newCompletion >= 10 ? 1 : 2);
-                Console.SetCursorPosition(leftStart, Console.CursorTop);
-                Console.Write(newCompletion);
+                if (completion % 2 == 0)
+                {
+                    Console.SetCursorPosition(1, lastLine - 1);
+                    Console.Write(new string('=', completion / 2 - 1));
+                    Console.Write('>');
+                }
+
+                var leftStart = 52 - total.ToString().Length - 7 - current.ToString().Length;
+                Console.SetCursorPosition(leftStart, lastLine);
+                Console.Write(current);
 
 
                 // Transfert finished
                 if (completion == 100)
                 {
-                    completion = 0;
-                    // Return cursor
-                    Console.SetCursorPosition(0, Console.CursorTop + 1);
-                }
-                else
-                {
-                    // Set cursor position at the end of the inner gauge completion
-                    Console.SetCursorPosition(completion / 2 + 1, Console.CursorTop);
+                    Console.SetCursorPosition(50, lastLine - 1);
+                    Console.Write('=');
+
+                    End();
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Reset completion and cursor
+        /// </summary>
+        public static void End()
+        {
+            completion = 0;
+
+            // Return cursor
+            Console.SetCursorPosition(0, lastLine + 1);
+            Console.CursorVisible = true;
         }
     }
 }
