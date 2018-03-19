@@ -61,6 +61,7 @@
     <Compile Include="Commands\Core\CD.cs" />
     <Compile Include="Commands\Core\ClientCommandsManager.cs" />
     <Compile Include="Commands\Core\IClientCommand.cs" />
+    <Compile Include="Commands\Core\IPreProcessCommand.cs" />
     <Compile Include="Commands\Core\LCD.cs" />
     <Compile Include="Commands\Core\LLS.cs" />
     <Compile Include="Commands\Core\LPWD.cs" />

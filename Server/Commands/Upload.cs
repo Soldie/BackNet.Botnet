@@ -13,9 +13,6 @@ namespace Server.Commands
         
         public void Process(List<string> args)
         {
-            // The file doesn't exist on the client side
-            if (ServerCommandsManager.networkManager.ReadLine() == "KO") return;
-
             var dataLength = long.Parse(ServerCommandsManager.networkManager.ReadLine());
 
             try

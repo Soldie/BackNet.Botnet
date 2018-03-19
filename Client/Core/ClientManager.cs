@@ -125,7 +125,7 @@ namespace Client.Core
                     break;
                 }
 
-                // The program executed a method, but the other end of the connection disconnected, this was caught and the cleanup method was called was made
+                // The program executed a method, but the other end of the connection disconnected, this was caught and the cleanup method was called
                 if (!waitingForUserCommandInput && networkManager.CleanupMade())
                 {
                     break;
@@ -205,6 +205,9 @@ namespace Client.Core
 
                         try
                         {
+                            // If the command implements the IPreProcessCommand interface, execute it's PreProcess() method
+                            if ((command as IPreProcessCommand)?.PreProcess(arguments) !=  false) continue;
+
                             if (!command.isLocal)
                             {
                                 // Send the command to the server
