@@ -206,7 +206,11 @@ namespace Client.Core
                         try
                         {
                             // If the command implements the IPreProcessCommand interface, execute it's PreProcess() method
-                            if ((command as IPreProcessCommand)?.PreProcess(arguments) !=  false) continue;
+                            if ((command as IPreProcessCommand)?.PreProcess(arguments) == false)
+                            {
+                                ConsoleTools.DisplayCommandPrompt();
+                                continue;
+                            }
 
                             if (!command.isLocal)
                             {
