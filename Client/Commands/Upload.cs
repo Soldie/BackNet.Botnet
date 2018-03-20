@@ -41,11 +41,7 @@ namespace Client.Commands
         public void Process(List<string> args)
         {
             var path = args[0];
-
             ColorTools.WriteCommandMessage($"Starting upload of file '{path}' to the server");
-
-            // Send the data length first
-            ClientCommandsManager.networkManager.WriteLine(new FileInfo(path).Length.ToString());
 
             using (var readStream = new FileStream(path, FileMode.Open))
             {

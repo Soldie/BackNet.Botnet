@@ -45,14 +45,11 @@ namespace Client.Commands
                 ClientCommandsManager.networkManager.WriteLine("STOP");
             }
 
-            // Get data length
-            var dataLength = long.Parse(ClientCommandsManager.networkManager.ReadLine());
-
             try
             {
                 using (var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    ClientCommandsManager.networkManager.NetworkStreamToStream(fs, dataLength);
+                    ClientCommandsManager.networkManager.NetworkStreamToStream(fs);
                 }
 
                 ColorTools.WriteCommandSuccess($"{(args[0] == "video" ? "Video" : "Webcam shot")} saved : {fileName}");

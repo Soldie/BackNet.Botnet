@@ -94,8 +94,6 @@ namespace Server.Commands
 
             using (var fs = new FileStream(videoFileName, FileMode.Open))
             {
-                // Send the data length first
-                ServerCommandsManager.networkManager.WriteLine(fs.Length.ToString());
                 ServerCommandsManager.networkManager.StreamToNetworkStream(fs);
             }
 
@@ -123,12 +121,6 @@ namespace Server.Commands
             using (var ms = new MemoryStream())
             {
                 eventArgs.Frame.Save(ms, ImageFormat.Png);
-
-                // Send the data length first
-                ServerCommandsManager.networkManager.WriteLine(ms.Length.ToString());
-
-                // Reset memory stream position
-                ms.Position = 0;
                 ServerCommandsManager.networkManager.StreamToNetworkStream(ms);
             }
 

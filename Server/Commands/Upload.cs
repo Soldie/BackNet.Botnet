@@ -13,13 +13,11 @@ namespace Server.Commands
         
         public void Process(List<string> args)
         {
-            var dataLength = long.Parse(ServerCommandsManager.networkManager.ReadLine());
-
             try
             {
                 using (var fs = new FileStream(args[1], FileMode.Create))
                 {
-                    ServerCommandsManager.networkManager.NetworkStreamToStream(fs, dataLength);
+                    ServerCommandsManager.networkManager.NetworkStreamToStream(fs);
                 }
 
                 ServerCommandsManager.networkManager.WriteLine("Success");

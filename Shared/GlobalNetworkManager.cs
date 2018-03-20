@@ -39,6 +39,7 @@ namespace Shared
         /// Read one line from the network stream
         /// </summary>
         /// <returns>String read from stream</returns>
+        /// <exception cref="NetworkException"></exception>
         public string ReadLine()
         {
             try
@@ -61,6 +62,8 @@ namespace Shared
         /// Read all the given ReadStream content and write it to the network stream as byte arrays, flushing each time
         /// </summary>
         /// <param name="stream">Stream to process, must be a readable stream</param>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="NetworkException"></exception>
         public void StreamToNetworkStream(Stream stream)
         {
             if (!stream.CanRead)
@@ -68,6 +71,9 @@ namespace Shared
                 // The stream can't be read : invalid argument
                 throw new ArgumentException();
             }
+
+            WriteLine(stream.Length.ToString());
+            stream.Position = 0;
 
             // Wait for ready flag
             ReadLine();
@@ -103,14 +109,18 @@ namespace Shared
         /// Read all the network ReadStream content and write it to the given stream
         /// </summary>
         /// <param name="stream">Stream to process, must be a writable stream</param>
-        /// <param name="dataSize">Size of the data to write</param>
-        public void NetworkStreamToStream(Stream stream, long dataSize)
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="NetworkException"></exception>
+        public void NetworkStreamToStream(Stream stream)
         {
             if (!stream.CanWrite)
             {
                 // The stream can't be written : invalid argument
                 throw new ArgumentException();
             }
+
+            // Get the data lenght first
+            var dataLength = long.Parse(ReadLine());
 
             // Send ready flag
             WriteLine("OK");
@@ -120,7 +130,7 @@ namespace Shared
             try
             {
                 // Notify that the stream transfert started if the handler has been implemented
-                StreamTransfertStartEvent?.Invoke(dataSize);
+                StreamTransfertStartEvent?.Invoke(dataLength);
 
                 int bytesRead;
                 while ((bytesRead = binaryReader.Read(buffer, 0, buffer.Length)) > 0)
@@ -132,7 +142,7 @@ namespace Shared
                     StreamTransfertProgressEvent?.Invoke(bytesWritten);
 
                     // The file has been totally written
-                    if (bytesWritten == dataSize)
+                    if (bytesWritten == dataLength)
                     {
                         break;
                     }
@@ -150,6 +160,7 @@ namespace Shared
         /// Write the given string to the network stream, then flush
         /// </summary>
         /// <param name="data">String to write</param>
+        /// <exception cref="NetworkException"></exception>
         public void WriteLine(string data)
         {
             try
