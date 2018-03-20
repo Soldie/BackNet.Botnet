@@ -52,7 +52,7 @@ namespace Client.Core
             binaryWriter = new BinaryWriter(networkStream);
             binaryReader = new BinaryReader(networkStream);
 
-            ColorTools.WriteCommandMessage("Connected to " + (IPEndPoint)socketForServer.RemoteEndPoint + "\n");
+            ColorTools.WriteCommandSuccess("Connected to " + (IPEndPoint)socketForServer.RemoteEndPoint + "\n");
         }
 
 
