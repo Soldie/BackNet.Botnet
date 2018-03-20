@@ -12,14 +12,12 @@ namespace Client.Commands
 
         public string description { get; } = "Webcam control utility, able to take pictures and record videos";
 
-        public string syntaxHelper { get; } = "webcam [picture|video] [fileToWrite]";
-
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = new List<string>()
         {
-            "picture ?*",
-            "video ?*"
+            "picture ?*:[filename.png]",
+            "video ?*:[filename.mp4]"
         };
 
 

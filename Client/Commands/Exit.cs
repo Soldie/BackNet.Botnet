@@ -10,8 +10,6 @@ namespace Client.Commands
 
         public string description { get; } = "Stop the connection\nThe server remains active, allowing further connections if wanted";
 
-        public string syntaxHelper { get; } = "exit";
-
         public bool isLocal { get; } = true;
 
         public List<string> validArguments { get; } = null;

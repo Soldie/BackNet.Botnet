@@ -12,8 +12,6 @@ namespace Client.Commands
 
         public string description { get; } = "Opens a Windows command prompt to interact with, use 'exit' to exit the cmd prompt and return";
 
-        public string syntaxHelper { get; } = "cmd";
-
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = null;

@@ -10,8 +10,6 @@ namespace Client.Commands.Core
 
         public string description { get; set; } = "Display the files and folders name of the local current working directory";
 
-        public string syntaxHelper { get; set; } = "ls";
-
         public bool isLocal { get; set; } = true;
 
         public List<string> validArguments { get; set; } = null;

@@ -12,13 +12,11 @@ namespace Client.Commands
 
         public string description { get; } = "Download a file from the server";
 
-        public string syntaxHelper { get; } = "download [remoteFileName] [localFileName]";
-
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = new List<string>()
         {
-            "? ?*"
+            "?:[remoteFileName] ?*:[localFileName]"
         };
 
 

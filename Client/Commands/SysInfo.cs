@@ -10,8 +10,6 @@ namespace Client.Commands
 
         public string description { get; } = "Display the remote system's informations";
 
-        public string syntaxHelper { get; } = "sysinfo";
-
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = null;

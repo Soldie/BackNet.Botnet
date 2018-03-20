@@ -39,40 +39,34 @@ namespace Client.Commands.Core
                 {
                     continue;
                 }
-
-                var error = false;
+                
                 for (var i = 0; i < splittedValidSyntax.Length; i++)
                 {
-                    if (splittedValidSyntax[i] == "?" || splittedValidSyntax[i] == "?*") continue;
+                    if (splittedValidSyntax[i].Contains("?") || splittedValidSyntax[i].Contains("?*")) continue;
 
                     if (splittedValidSyntax[i] == "0")
                     {
                         if (!int.TryParse(arguments[i], out int dummy))
                         {
-                            error = true;
                             break;
                         }
                     }
                     else if (splittedValidSyntax[i] != arguments[i])
                     {
-                        error = true;
                         break;
                     }
                 }
+                
+                var splittedString = commandString.Split(' ');
+                var list = new List<string> { splittedString[0] };
 
-                if (!error)
+                // Remove private informations (marked with '*' mark)
+                for (int i = 0; i < splittedValidSyntax.Length; i++)
                 {
-                    var splittedString = commandString.Split(' ');
-                    var list = new List<string> { splittedString[0] };
-
-                    // Remove personnal informations (marked with '*' mark)
-                    for (int i = 0; i < splittedValidSyntax.Length; i++)
-                    {
-                        list.Add(splittedValidSyntax[i] == "?*" ? "*" : splittedString[i + 1]);
-                    }
-                    commandString = list.Aggregate((x, y) => $"{x} {y}");
-                    return true;
+                    list.Add(splittedValidSyntax[i].Contains("?*") ? "*" : splittedString[i + 1]);
                 }
+                commandString = list.Aggregate((x, y) => $"{x} {y}");
+                return true;
             }
 
             return false;
@@ -80,12 +74,39 @@ namespace Client.Commands.Core
 
 
         /// <summary>
-        /// Display an help message for the given IClientCommand on the client console,
-        /// the help message is composed of the command's description and its syntaxHelper
+        /// Display an help message for the given IClientCommand on the client console
         /// </summary>
         /// <param name="command">Command to show the help for</param>
         public void ShowCommandHelp(IClientCommand command)
-        => ColorTools.WriteMessage($"{command.description}\nSyntax : {command.syntaxHelper}");
+        {
+            var help = new StringBuilder();
+            help.AppendLine(command.description);
+            
+            help.Append("Syntax: ");
+
+            if (command.validArguments == null) help.Append(command.name);
+
+            for (int i = 0; i < command.validArguments?.Count; i++)
+            {
+                if (i != 0)
+                {
+                    help.Append(new string(' ', 8));
+                }
+                var syntax = command.name + ' ' + command.validArguments[i].Replace("?", "").Replace("*", "").Replace(":", "");
+
+                if (i == command.validArguments.Count - 1)
+                {
+                    // Don't add a line return for the last syntax
+                    help.Append(syntax);
+                }
+                else
+                {
+                    help.AppendLine(syntax);
+                }
+            }
+
+            ColorTools.WriteMessage(help.ToString());
+        } 
 
 
         /// <summary>
@@ -93,11 +114,10 @@ namespace Client.Commands.Core
         /// </summary>
         public void ShowGlobalHelp()
         {
-            ColorTools.WriteMessage("+-----------------+\n|   Global help   |\n+-----------------+");
             foreach (var command in commandList)
             {
                 Console.WriteLine(" ");
-                ColorTools.WriteMessage($" - {command.name}");
+                ColorTools.WriteMessage($"-- {command.name} --");
                 ShowCommandHelp((IClientCommand)command);
             }
         }

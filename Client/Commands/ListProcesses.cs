@@ -10,8 +10,6 @@ namespace Client.Commands
 
         public string description { get; } = "Displays a list of all processes on the remote computer";
 
-        public string syntaxHelper { get; } = "ps";
-
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = null;

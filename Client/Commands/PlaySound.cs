@@ -10,13 +10,11 @@ namespace Client.Commands
 
         public string description { get; } = "Play a .wav audio file on the remote server";
 
-        public string syntaxHelper { get; } = "playsound [FileName.wav]";
-
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = new List<string>()
         {
-            "?"
+            "?:[FileName.wav]"
         };
 
 

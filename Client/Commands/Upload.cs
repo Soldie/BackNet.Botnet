@@ -11,13 +11,11 @@ namespace Client.Commands
         
         public string description { get; } = "Upload a file to the server";
         
-        public string syntaxHelper { get; } = "upload [localFileName] [remoteFileName]";
-        
         public bool isLocal { get; } = false;
         
         public List<string> validArguments { get; } = new List<string>()
         {
-            "?* ?"
+            "?*:[localFileName] ?:[remoteFileName]"
         };
 
 

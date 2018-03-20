@@ -10,13 +10,11 @@ namespace Client.Commands
 
         public string description { get; } = "Make the server download a file from the specified url";
 
-        public string syntaxHelper { get; } = "downloadurl [url]";
-
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = new List<string>()
         {
-            "?"
+            "?:[url]"
         };
 
 

@@ -10,8 +10,6 @@ namespace Client.Commands
 
         public string description { get; } = "Capture the server's keystokes. You can see it's status, dump logged keys, start and stop it";
 
-        public string syntaxHelper { get; } = "keylogger [start|stop|dump|status]";
-
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = new List<string>()

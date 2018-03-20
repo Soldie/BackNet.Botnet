@@ -10,13 +10,11 @@ namespace Client.Commands.Core
 
         public string description { get; set; } = "Change the local current working directory";
 
-        public string syntaxHelper { get; set; } = "lcd [newPath]";
-
         public bool isLocal { get; set; } = true;
 
         public List<string> validArguments { get; set; } = new List<string>()
         {
-            "?"
+            "?:[directory]"
         };
 
 

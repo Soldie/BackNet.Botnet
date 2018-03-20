@@ -6,20 +6,20 @@ using Client.Commands.Core;
 
 namespace Client.Commands
 {
-    internal class WifiInfo : IClientCommand
+    internal class NetInfo : IClientCommand
     {
-        public string name { get; } = "wifiinfo";
+        public string name { get; } = "netinfo";
 
-        public string description { get; } = "Get informations about the stored wifi profiles on the remote host, including clear wifi keys";
-
-        public string syntaxHelper { get; } = "wifiinfo [fileName]";
+        public string description { get; } = "Get informations about the stored wifi profiles on the remote host, including clear wifi keys\nAlso discovers hosts based on a network addr and a mask";
 
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = new List<string>()
         {
-            "",
-            "?*"
+            "wifi",
+            "wifi ?*:[filename]",
+            "scan",
+            "scan ?*:[filename]"
         };
 
         
