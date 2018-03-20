@@ -106,7 +106,7 @@
     <Compile Include="Commands\Upload.cs" />
     <Compile Include="Commands\Wallpaper.cs" />
     <Compile Include="Commands\Webcam.cs" />
-    <Compile Include="Commands\WifiInfo.cs" />
+    <Compile Include="Commands\NetInfo.cs" />
     <Compile Include="Core\ServerManager.cs" />
     <Compile Include="Core\ServerNetworkManager.cs" />
     <Page Include="MainWindow.xaml">
