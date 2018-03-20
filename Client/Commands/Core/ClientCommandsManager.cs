@@ -39,7 +39,9 @@ namespace Client.Commands.Core
                 {
                     continue;
                 }
-                
+
+                var error = false;
+
                 for (var i = 0; i < splittedValidSyntax.Length; i++)
                 {
                     if (splittedValidSyntax[i].Contains("?") || splittedValidSyntax[i].Contains("?*")) continue;
@@ -48,25 +50,30 @@ namespace Client.Commands.Core
                     {
                         if (!int.TryParse(arguments[i], out int dummy))
                         {
+                            error = true;
                             break;
                         }
                     }
                     else if (splittedValidSyntax[i] != arguments[i])
                     {
+                        error = true;
                         break;
                     }
                 }
                 
-                var splittedString = commandString.Split(' ');
-                var list = new List<string> { splittedString[0] };
-
-                // Remove private informations (marked with '*' mark)
-                for (int i = 0; i < splittedValidSyntax.Length; i++)
+                if (!error)
                 {
-                    list.Add(splittedValidSyntax[i].Contains("?*") ? "*" : splittedString[i + 1]);
+                    var splittedString = commandString.Split(' ');
+                    var list = new List<string> { splittedString[0] };
+
+                    // Remove private informations (marked with '*' mark)
+                    for (int i = 0; i < splittedValidSyntax.Length; i++)
+                    {
+                        list.Add(splittedValidSyntax[i].Contains("?*") ? "*" : splittedString[i + 1]);
+                    }
+                    commandString = list.Aggregate((x, y) => $"{x} {y}");
+                    return true;
                 }
-                commandString = list.Aggregate((x, y) => $"{x} {y}");
-                return true;
             }
 
             return false;
