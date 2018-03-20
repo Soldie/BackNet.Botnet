@@ -14,7 +14,7 @@ namespace Client.AdvancedConsole
 
 
         public static void WriteCommandMessage(string message) =>
-            WriteColorMessage(message, " [+] ", ConsoleColor.Gray);
+            WriteColorMessage(message, " [ ] ", ConsoleColor.Gray);
 
         public static void WriteCommandError(string message) =>
             WriteColorMessage(message, " [-] ", ConsoleColor.Red);
