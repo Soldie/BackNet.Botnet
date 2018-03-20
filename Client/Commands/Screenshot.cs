@@ -26,15 +26,12 @@ namespace Client.Commands
                            + "_"
                            + DateTime.Now.Hour + '-' + DateTime.Now.Minute + '-' + DateTime.Now.Second
                            + ".png";
-
-            // Get data length
-            var dataLength = int.Parse(ClientCommandsManager.networkManager.ReadLine());
-
+            
             try
             {
                 using (var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    ClientCommandsManager.networkManager.NetworkStreamToStream(fs, dataLength);
+                    ClientCommandsManager.networkManager.NetworkStreamToStream(fs);
                 }
 
                 ColorTools.WriteCommandSuccess($"Screenshot saved : {fileName}");

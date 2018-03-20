@@ -57,6 +57,7 @@ namespace Client.AdvancedConsole
                 catch (Exception)
                 {
                     Console.Write($"{errorMessage}\n> ");
+                    input = -1;
                 }
             }
 

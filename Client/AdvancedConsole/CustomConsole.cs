@@ -74,11 +74,25 @@ namespace Client.AdvancedConsole
                         break;
 
                     case ConsoleKey.LeftArrow:
-                        MoveCursorLeft();
+                        if (keyInfo.Modifiers == ConsoleModifiers.Control)
+                        {
+                            SkipLeft();
+                        }
+                        else
+                        {
+                            MoveCursorLeft();
+                        }
                         break;
 
                     case ConsoleKey.RightArrow:
-                        MoveCursorRight();
+                        if (keyInfo.Modifiers == ConsoleModifiers.Control)
+                        {
+                            SkipRight();
+                        }
+                        else
+                        {
+                            MoveCursorRight();
+                        }
                         break;
 
                     case ConsoleKey.Home:
@@ -149,6 +163,57 @@ namespace Client.AdvancedConsole
             }
         }
 
+        static void SkipLeft()
+        {
+            var wordsBegginning = new List<int>();
+
+            for (int i = 1; i < cursorPositionInString - 2; i++)
+            {
+                if(currentText[i] == ' ' && currentText[i + 1] != ' ') wordsBegginning.Add(i + 1);
+            }
+
+            if (wordsBegginning.Count == 0)
+            {
+                // Go to begginning
+                Console.SetCursorPosition(ConsoleTools.PROMPT.Length, firstCharHeight);
+            }
+            else
+            {
+                // Go to closest word begginning
+                wordsBegginning = wordsBegginning.OrderByDescending(x => x).ToList();
+
+                while (cursorPositionInString != wordsBegginning[0])
+                {
+                    MoveCursorLeft();
+                }
+            }
+        }
+
+        static void SkipRight()
+        {
+            var wordsBegginning = new List<int>();
+
+            for (int i = cursorPositionInString; i < currentText.Length - 2; i++)
+            {
+                if (currentText[i] == ' ' && currentText[i + 1] != ' ') wordsBegginning.Add(i + 1);
+            }
+
+            if (wordsBegginning.Count == 0)
+            {
+                // Go to end
+                Console.SetCursorPosition(ConsoleTools.PROMPT.Length, lastCharHeight);
+                Console.SetCursorPosition(lineLenght, lastCharHeight);
+            }
+            else
+            {
+                // Go to closest word begginning
+                while (cursorPositionInString != wordsBegginning[0])
+                {
+                    MoveCursorRight();
+                }
+            }
+        }
+
         static void ErasePreviousChar()
         {
             if (cursorPositionInString == 0) return;
@@ -186,6 +251,7 @@ namespace Client.AdvancedConsole
             Console.Clear();
             ConsoleTools.DisplayCommandPrompt();
             Console.Write(currentText);
+            firstCharHeight = Console.CursorTop;
         }
 
         static void PasteText()

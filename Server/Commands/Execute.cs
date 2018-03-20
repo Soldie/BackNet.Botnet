@@ -18,12 +18,13 @@ namespace Server.Commands
             {
                 if (args.Contains("hidden"))
                 {
-                    if (args.Count == 3)
-                    {
-                        startInfo.Arguments = args[1];
-                    }
                     startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     startInfo.CreateNoWindow = true;
+                }
+
+                if (args.Count == 3)
+                {
+                    startInfo.Arguments = args[1];
                 }
             }
 

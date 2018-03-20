@@ -16,7 +16,6 @@ namespace Server.Commands
 
         public void Process(List<string> args)
         {
-            // todo : virtual machine bug ? + fix administrator detection + know if prgm is launched as admin
             var infos = new List<Tuple<string, string>>
             {
                 new Tuple<string, string>("Machine name", Environment.MachineName),

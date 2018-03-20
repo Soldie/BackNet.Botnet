@@ -23,9 +23,7 @@ namespace Server.Commands
                 using (var readStream = new FileStream(args[0], FileMode.Open))
                 {
                     ServerCommandsManager.networkManager.WriteLine("OK");
-
-                    // Send the data length first
-                    ServerCommandsManager.networkManager.WriteLine(new FileInfo(args[0]).Length.ToString());
+                    
                     ServerCommandsManager.networkManager.StreamToNetworkStream(readStream);
                 }
             }

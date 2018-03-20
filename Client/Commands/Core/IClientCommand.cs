@@ -27,7 +27,8 @@ namespace Client.Commands.Core
 
         /// <summary>
         /// List of all possible arguments combinaisons, null if none.
-        /// Explicitly name the argument, or '?' for a string, or '0' for an integer
+        /// Explicitly name the argument, or '?' for a string, or '0' for an integer.
+        /// If a string is confidential, add a '*' => '?*', this way, it will not be sent to the server as is.
         /// </summary>
         List<string> validArguments { get; }
     }

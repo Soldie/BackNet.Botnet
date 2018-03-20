@@ -51,6 +51,7 @@
     <Compile Include="AdvancedConsole\CommandsHistory.cs" />
     <Compile Include="AdvancedConsole\ConsoleTools.cs" />
     <Compile Include="AdvancedConsole\CustomConsole.cs" />
+    <Compile Include="AdvancedConsole\ProgressDisplayer.cs" />
     <Compile Include="Botnet\BotnetManager.cs" />
     <Compile Include="Botnet\JSON\BaseJson.cs" />
     <Compile Include="Botnet\JSON\CheckServerJson.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Commands\Core\CD.cs" />
     <Compile Include="Commands\Core\ClientCommandsManager.cs" />
     <Compile Include="Commands\Core\IClientCommand.cs" />
+    <Compile Include="Commands\Core\IPreProcessCommand.cs" />
     <Compile Include="Commands\Core\LCD.cs" />
     <Compile Include="Commands\Core\LLS.cs" />
     <Compile Include="Commands\Core\LPWD.cs" />

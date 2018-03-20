@@ -6,7 +6,7 @@ using Shared;
 
 namespace Server.Core
 {
-    public class ServerNetworkManager : NetworkManager
+    public class ServerNetworkManager : GlobalNetworkManager
     {
         TcpClient tcpClient { get; set; }
 

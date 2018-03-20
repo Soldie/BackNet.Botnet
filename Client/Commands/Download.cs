@@ -18,7 +18,7 @@ namespace Client.Commands
 
         public List<string> validArguments { get; } = new List<string>()
         {
-            "? ?"
+            "? ?*"
         };
 
 
@@ -34,13 +34,11 @@ namespace Client.Commands
             var path = args[1];
             ColorTools.WriteCommandMessage($"Starting download of file '{args[0]}' from the server");
             
-            var dataLength = int.Parse(ClientCommandsManager.networkManager.ReadLine());
-
             try
             {
                 using (var fs = new FileStream(path, FileMode.Create))
                 {
-                    ClientCommandsManager.networkManager.NetworkStreamToStream(fs, dataLength);
+                    ClientCommandsManager.networkManager.NetworkStreamToStream(fs);
                 }
 
                 ColorTools.WriteCommandSuccess("File successfully downloaded from the server");

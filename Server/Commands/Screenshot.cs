@@ -29,13 +29,7 @@ namespace Server.Commands
 
                     bitmap.Save(ms, ImageFormat.Png);
                 }
-
-
-                // Send the data length first
-                ServerCommandsManager.networkManager.WriteLine(ms.Length.ToString());
-
-                // Reset memory stream position
-                ms.Position = 0;
+                
                 ServerCommandsManager.networkManager.StreamToNetworkStream(ms);
             }
         }

@@ -5,7 +5,7 @@ using Client.Commands.Core;
 
 namespace Client.Commands
 {
-    internal class Upload : IClientCommand
+    internal class Upload : IClientCommand, IPreProcessCommand
     {
         public string name { get; } = "upload";
         
@@ -17,26 +17,31 @@ namespace Client.Commands
         
         public List<string> validArguments { get; } = new List<string>()
         {
-            "? ?"
+            "?* ?"
         };
+
+
+        /// <summary>
+        /// Check if the specified local file exists
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public bool PreProcess(List<string> args)
+        {
+            if (File.Exists(args[0]))
+            {
+                return true;
+            }
+
+            ColorTools.WriteCommandError("The specified file doesn't exist");
+            return false;
+        }
 
         
         public void Process(List<string> args)
         {
             var path = args[0];
-
-            if (!File.Exists(path))
-            {
-                ClientCommandsManager.networkManager.WriteLine("KO");
-                ColorTools.WriteCommandError("The specified file doesn't exist");
-                return;
-            }
-            ClientCommandsManager.networkManager.WriteLine("OK");
-
             ColorTools.WriteCommandMessage($"Starting upload of file '{path}' to the server");
-
-            // Send the data length first
-            ClientCommandsManager.networkManager.WriteLine(new FileInfo(path).Length.ToString());
 
             using (var readStream = new FileStream(path, FileMode.Open))
             {

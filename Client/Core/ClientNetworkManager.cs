@@ -7,13 +7,24 @@ using Shared;
 
 namespace Client.Core
 {
-    public class ClientNetworkManager : NetworkManager
+    public class ClientNetworkManager : GlobalNetworkManager
     {
         Socket socketForServer { get; set; }
 
         TcpListener tcpListener { get; set; }
 
-        bool cleanedUp { get; set; }
+        bool cleanedUp;
+
+
+        /// <summary>
+        /// Implement the event handlers to display a completion meter
+        /// </summary>
+        public ClientNetworkManager()
+        {
+            StreamTransfertStartEvent += StreamTransfertStartEventHandler;
+            StreamTransfertProgressEvent += StreamTransfertProgressEventHandler;
+            StreamTransfertFailEvent += StreamTransfertFailEventHandler;
+        }
 
 
         /// <summary>
@@ -92,5 +103,31 @@ namespace Client.Core
         /// </summary>
         /// <returns>Boolean</returns>
         public bool CleanupMade() => cleanedUp;
+
+
+        /// <summary>
+        /// GlobalNetworkManager StreamTransfertStartEvent handler.
+        /// Calls ProgressDisplayer.Init()
+        /// </summary>
+        /// <param name="total">Total number of bytes</param>
+        void StreamTransfertStartEventHandler(long total)
+            => ProgressDisplayer.Init(total);
+
+
+        /// <summary>
+        /// GlobalNetworkManager StreamTransfertProgressEvent handler.
+        /// Calls ProgressDisplayer.Update()
+        /// </summary>
+        /// <param name="current">Number of bytes copied</param>
+        void StreamTransfertProgressEventHandler(long current)
+            => ProgressDisplayer.Update(current);
+
+
+        /// <summary>
+        /// GlobalNetworkManager StreamTransfertFailEvent handler.
+        /// Calls ProgressDisplayer.End()
+        /// </summary>
+        void StreamTransfertFailEventHandler()
+            => ProgressDisplayer.End();
     }
 }
