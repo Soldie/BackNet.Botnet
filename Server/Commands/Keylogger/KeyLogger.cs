@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Server.Commands.Core;
-using Server.Commands.Keylogger;
 using Shared;
 
-namespace Server.Commands
+namespace Server.Commands.Keylogger
 {
     internal class KeyLogger : ICommand
     {

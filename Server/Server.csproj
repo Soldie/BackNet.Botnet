@@ -96,7 +96,7 @@
     <Compile Include="Commands\Download.cs" />
     <Compile Include="Commands\DownloadUrl.cs" />
     <Compile Include="Commands\Execute.cs" />
-    <Compile Include="Commands\KeyLogger.cs" />
+    <Compile Include="Commands\Keylogger\KeyLogger.cs" />
     <Compile Include="Commands\ListProcesses.cs" />
     <Compile Include="Commands\PlaySound.cs" />
     <Compile Include="Commands\Screenshot.cs" />

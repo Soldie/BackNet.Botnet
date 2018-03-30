@@ -14,7 +14,7 @@ namespace Server
         /// <summary>
         /// The keyLoggerManager must be instanciated from this thread
         /// </summary>
-        public static KeyLoggerManager keyLoggerManager;
+        public static KeyLoggerManager keyLoggerManager { get; set; }
 
 
         public MainWindow()
