@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{9FDAE122-CD1E-467D-A6FA-A98C26E76348}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Master", "Master\Master.csproj", "{9FDAE122-CD1E-467D-A6FA-A98C26E76348}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slave", "Slave\Slave.csproj", "{B3DE9A4F-07E0-4DA1-BD06-D4A86878182C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{982DC5B6-1123-428A-83DD-D212490C859F}"
 EndProject
