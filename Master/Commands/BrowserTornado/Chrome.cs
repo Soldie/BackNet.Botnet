@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Master.Commands.BrowserTornado
 {
-    public static class Chrome
+    internal static class Chrome
     {
         #region Bookmarks
         /// <summary>

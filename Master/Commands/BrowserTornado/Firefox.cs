@@ -4,7 +4,7 @@ using System.Data.SQLite;
 
 namespace Master.Commands.BrowserTornado
 {
-    public static class Firefox
+    internal static class Firefox
     {
         /// <summary>
         /// Dump all bookmarks inside the given places database

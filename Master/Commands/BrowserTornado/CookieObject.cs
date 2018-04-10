@@ -3,7 +3,7 @@
     /// <summary>
     /// Class used to instanciate cookies
     /// </summary>
-    public class CookieObject
+    internal class CookieObject
     {
         public string name { get; set; }
 

