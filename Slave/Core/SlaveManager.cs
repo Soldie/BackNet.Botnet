@@ -129,7 +129,7 @@ namespace Slave.Core
         /// <param name="receivedData">Data sent by the master</param>
         void ProcessCommand(string receivedData)
         {
-            var splittedCommand = commandsManager.GetSplittedCommand(receivedData);
+            var splittedCommand = commandsManager.GetSplittedCommandWithoutQuotes(receivedData);
             var commandName = splittedCommand[0];
             var arguments = new List<string>();
 

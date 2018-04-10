@@ -169,7 +169,7 @@ namespace Master.Core
                 }
                 else if (commandString != "")
                 {
-                    var splittedCommand = commandsManager.GetSplittedCommand(commandString);
+                    var splittedCommand = commandsManager.GetSplittedCommandWithoutQuotes(commandString);
                     var commandName = splittedCommand[0];
 
                     var command = (IMasterCommand)commandsManager.GetCommandByName(commandName);
@@ -193,7 +193,7 @@ namespace Master.Core
                         }
 
 
-                        if (!commandsManager.CheckCommandSyntax(command, arguments,  ref commandString))
+                        if (!commandsManager.CheckCommandSyntax(command, arguments, ref commandString))
                         {
                             ColorTools.WriteCommandError(
                                 $"Syntax error, check out the command's help page ({commandName} help)");

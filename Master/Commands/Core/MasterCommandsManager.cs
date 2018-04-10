@@ -63,7 +63,7 @@ namespace Master.Commands.Core
                 
                 if (!error)
                 {
-                    var splittedString = commandString.Split(' ');
+                    var splittedString = GetSplittedCommandWithQuotes(commandString);
                     var list = new List<string> { splittedString[0] };
 
                     // Remove private informations (marked with '*' mark)
