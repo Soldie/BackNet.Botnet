@@ -124,9 +124,8 @@ namespace Slave.Core
                 }
                 catch (ExitException)
                 {
-                    Cleanup();
-                    // The master asked to stop the connection, break from the connection loop
-                    break;
+                    // The master asked to stop the connection, just exit
+                    StopSlave();
                 }
             }
         }
