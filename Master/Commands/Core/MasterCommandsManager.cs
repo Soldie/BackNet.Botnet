@@ -124,7 +124,7 @@ namespace Master.Commands.Core
             foreach (var command in commandList)
             {
                 Console.WriteLine(" ");
-                ColorTools.WriteMessage($"-- {command.name} --");
+                ColorTools.WriteInlineMessage($"-- {command.name} --\n", ConsoleColor.Cyan);
                 ShowCommandHelp((IMasterCommand)command);
             }
         }
