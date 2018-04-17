@@ -9,7 +9,6 @@ namespace Shared
     {
         public NetworkException()
         {
-            
         }
     }
 }

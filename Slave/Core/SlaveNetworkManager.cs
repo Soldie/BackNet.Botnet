@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Shared;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using Shared;
 
 namespace Slave.Core
 {
     public class SlaveNetworkManager : GlobalNetworkManager
     {
         TcpClient tcpClient { get; set; }
-
 
         /// <summary>
         /// Try to connect to the master with the given ip and port number
@@ -52,7 +51,6 @@ namespace Slave.Core
 
             return true;
         }
-
 
         /// <summary>
         /// Instanciate the network stream, and based on it StreamReaders and StreamWriters

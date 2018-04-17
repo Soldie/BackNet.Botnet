@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Shared;
+﻿using Shared;
 using Slave.Commands.Core;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Slave.Commands
 {
     internal class Download : ICommand
     {
         public string name { get; } = "download";
-
 
         public void Process(List<string> args)
         {
@@ -23,7 +22,7 @@ namespace Slave.Commands
                 using (var readStream = new FileStream(args[0], FileMode.Open))
                 {
                     SlaveCommandsManager.networkManager.WriteLine("OK");
-                    
+
                     SlaveCommandsManager.networkManager.StreamToNetworkStream(readStream);
                 }
             }

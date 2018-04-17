@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Master.AdvancedConsole;
+using Master.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Master.AdvancedConsole;
-using Master.Commands.Core;
 
 namespace Master.Commands
 {
@@ -19,7 +19,6 @@ namespace Master.Commands
             "?:[remoteFileName] ?*:[localFileName]"
         };
 
-
         public void Process(List<string> args)
         {
             var initResult = MasterCommandsManager.networkManager.ReadLine();
@@ -31,7 +30,7 @@ namespace Master.Commands
 
             var path = args[1];
             ColorTools.WriteCommandMessage($"Starting download of file '{args[0]}' from the slave");
-            
+
             try
             {
                 using (var fs = new FileStream(path, FileMode.Create))

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Master.AdvancedConsole;
+using Master.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Master.AdvancedConsole;
-using Master.Commands.Core;
 
 namespace Master.Commands
 {
@@ -20,7 +20,6 @@ namespace Master.Commands
             "?*:[filename.png]"
         };
 
-
         public void Process(List<string> args)
         {
             ColorTools.WriteCommandMessage("Waiting for screenshot data...");
@@ -30,7 +29,7 @@ namespace Master.Commands
                                              + '-' + DateTime.Now.Minute
                                              + '-' + DateTime.Now.Second
                                              + ".png";
-            
+
             try
             {
                 using (var fs = new FileStream(fileName, FileMode.Create))

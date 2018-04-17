@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Shared;
+using Slave.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Shared;
-using Slave.Commands.Core;
 
 namespace Slave.Commands
 {
@@ -12,7 +12,6 @@ namespace Slave.Commands
     {
         public string name { get; } = "downloadurl";
 
-        
         public void Process(List<string> args)
         {
             var url = args[0];

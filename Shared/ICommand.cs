@@ -9,7 +9,6 @@ namespace Shared
         /// </summary>
         string name { get; }
 
-
         /// <summary>
         /// Main method to be executed
         /// </summary>

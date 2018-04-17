@@ -12,7 +12,6 @@ namespace Master.AdvancedConsole
             Console.ForegroundColor = ConsoleColor.Green;
         }
 
-
         public static void WriteCommandMessage(string message) =>
             WriteColorMessage(message, " [ ] ", ConsoleColor.Gray);
 
@@ -30,7 +29,6 @@ namespace Master.AdvancedConsole
 
         public static void WriteError(string message) =>
             WriteColorMessage(message, ConsoleColor.Red);
-
 
         static void WriteColorMessage(string message, string prefix, ConsoleColor color)
         {

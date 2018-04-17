@@ -41,7 +41,6 @@ namespace Master.Commands.BrowserTornado
             }
         }
 
-
         /// <summary>
         /// Get the value part of a given line (structure of the line : "key" : "value")
         /// </summary>
@@ -58,7 +57,6 @@ namespace Master.Commands.BrowserTornado
             return line.Substring(positions[2] + 1, positions[3] - positions[2] - 1);
         }
         #endregion Bookmarks
-
 
         #region Cookies
         /// <summary>
@@ -84,7 +82,6 @@ namespace Master.Commands.BrowserTornado
             }
         }
 
-
         /// <summary>
         /// Decrypt the given encrypted cookie value
         /// </summary>
@@ -97,7 +94,6 @@ namespace Master.Commands.BrowserTornado
         }
         #endregion Cookies
 
-        
         /// <summary>
         /// Dump all urls from the given history database
         /// </summary>

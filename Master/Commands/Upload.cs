@@ -1,23 +1,22 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Master.AdvancedConsole;
+﻿using Master.AdvancedConsole;
 using Master.Commands.Core;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Master.Commands
 {
     internal class Upload : IMasterCommand, IPreProcessCommand
     {
         public string name { get; } = "upload";
-        
+
         public string description { get; } = "Upload a file to the slave";
-        
+
         public bool isLocal { get; } = false;
-        
+
         public List<string> validArguments { get; } = new List<string>()
         {
             "?*:[localFileName] ?:[remoteFileName]"
         };
-
 
         /// <summary>
         /// Check if the specified local file exists
@@ -35,7 +34,6 @@ namespace Master.Commands
             return false;
         }
 
-        
         public void Process(List<string> args)
         {
             var path = args[0];

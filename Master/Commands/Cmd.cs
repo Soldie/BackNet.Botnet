@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Master.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Master.Commands.Core;
 
 namespace Master.Commands
 {
@@ -15,7 +15,6 @@ namespace Master.Commands
         public bool isLocal { get; } = false;
 
         public List<string> validArguments { get; } = null;
-
 
         public void Process(List<string> args)
         {
@@ -47,7 +46,6 @@ namespace Master.Commands
                     }
                 }
             }, cancelToken);
-
 
             while (true)
             {

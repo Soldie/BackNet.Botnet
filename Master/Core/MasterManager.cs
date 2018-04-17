@@ -1,13 +1,13 @@
+using Master.AdvancedConsole;
+using Master.Botnet;
+using Master.Commands.Core;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Master.AdvancedConsole;
-using Master.Botnet;
-using Master.Commands.Core;
-using Shared;
 
 namespace Master.Core
 {
@@ -19,7 +19,6 @@ namespace Master.Core
 
         bool waitingForUserCommandInput { get; set; } = false;
 
-
         /// <summary>
         /// Constructor sets default console color Green
         /// </summary>
@@ -29,7 +28,6 @@ namespace Master.Core
             commandsManager = new MasterCommandsManager(networkManager);
             ColorTools.SetDefaultConsoleColor();
         }
-
 
         /// <summary>
         /// Entry point of the master. Call methods to initiate port listening.
@@ -84,7 +82,6 @@ namespace Master.Core
             }
         }
 
-
         /// <summary>
         /// Call the master network manager ListenAndConnect() method.
         /// When the connection is established, call RunMaster() in the current thread and MonitorConnection() in another thread
@@ -103,7 +100,6 @@ namespace Master.Core
             RunMaster();
         }
 
-
         /// <summary>
         /// Check every second if the other end of the connection is still active.
         /// If it's not and the cleanup wasn't already made, cleanup and make the prompt loop exit
@@ -117,7 +113,7 @@ namespace Master.Core
                 {
                     // Call cleanup method from MasterNetworkManager
                     networkManager.Cleanup(processingCommand: false);
-                    
+
                     // Send [ENTER] key to bypass the console.ReadLine()
                     var hWnd = Process.GetCurrentProcess().MainWindowHandle;
                     PostMessage(hWnd, WM_KEYDOWN, VK_RETURN, 0);
@@ -135,7 +131,6 @@ namespace Master.Core
                 Thread.Sleep(1000);
             }
         }
-
 
         /// <summary>
         /// Main loop waiting for user input and processing it. Call commands and communicate with the slave.
@@ -155,7 +150,6 @@ namespace Master.Core
                 {
                     break;
                 }
-
 
                 if (commandString == "clear" || commandString == "cls")
                 {
@@ -182,7 +176,6 @@ namespace Master.Core
                             arguments = splittedCommand.GetRange(1, splittedCommand.Count - 1);
                         }
 
-
                         if (arguments.Count == 1 && arguments[0] == "help")
                         {
                             // Display command's help
@@ -192,7 +185,6 @@ namespace Master.Core
                             continue;
                         }
 
-
                         if (!commandsManager.CheckCommandSyntax(command, arguments, ref commandString))
                         {
                             ColorTools.WriteCommandError(
@@ -201,7 +193,6 @@ namespace Master.Core
                             ConsoleTools.DisplayCommandPrompt();
                             continue;
                         }
-
 
                         try
                         {
@@ -249,7 +240,6 @@ namespace Master.Core
             }
         }
 
-
         /// <summary>
         /// Call the MasterNetworkManager Cleanup Method to dispose of the network stream and listener
         /// </summary>
@@ -265,7 +255,6 @@ namespace Master.Core
                 // Ignored
             }
         }
-
 
         #region Simulate user input
 

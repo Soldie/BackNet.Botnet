@@ -8,7 +8,6 @@ namespace Master.AdvancedConsole
 
         internal const string PROMPT = "BackNet>";
 
-
         /// <summary>
         /// Show the program's banner
         /// </summary>
@@ -17,12 +16,10 @@ namespace Master.AdvancedConsole
             Console.WriteLine(BANNER);
         }
 
-
         /// <summary>
         /// Print the cmd prompt of the program to indicate it's waiting for user input
         /// </summary>
         public static void DisplayCommandPrompt() => Console.Write(PROMPT);
-
 
         /// <summary>
         /// Ask the user to type a port number, this will loop until the user entered a valid port number
@@ -34,7 +31,6 @@ namespace Master.AdvancedConsole
             Console.Write($"{promptMessage} : ");
             return PromptInt((input) => input > 0 && input <= 65535, "Invalid port, please type again");
         }
-
 
         /// <summary>
         /// Loop until the user enters a valid integer,
@@ -64,7 +60,6 @@ namespace Master.AdvancedConsole
             return input;
         }
 
-
         /// <summary>
         /// Loop until the user enters a non-empty string
         /// </summary>
@@ -75,7 +70,7 @@ namespace Master.AdvancedConsole
             while (input == "")
             {
                 input = Console.ReadLine();
-                if(input == "") Console.Write("Empty string is not valid\n> ");
+                if (input == "") Console.Write("Empty string is not valid\n> ");
             }
 
             return input;

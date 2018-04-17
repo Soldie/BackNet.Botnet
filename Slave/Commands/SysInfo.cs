@@ -1,18 +1,17 @@
-﻿using System;
+﻿using Shared;
+using Slave.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using Shared;
-using Slave.Commands.Core;
 
 namespace Slave.Commands
 {
     internal class SysInfo : ICommand
     {
         public string name { get; } = "sysinfo";
-
 
         public void Process(List<string> args)
         {
@@ -75,7 +74,6 @@ namespace Slave.Commands
             }
             return false;
         }
-
 
         /// <summary>
         /// Check if the current user is an administrator.
@@ -147,7 +145,6 @@ namespace Slave.Commands
                 return false;
             }
         }
-
 
         #region WinAPI
 

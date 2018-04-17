@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Master.AdvancedConsole;
+﻿using Master.AdvancedConsole;
 using Master.Commands.Core;
+using System.Collections.Generic;
 
 namespace Master.Commands
 {
@@ -19,7 +19,6 @@ namespace Master.Commands
             "?:[remoteProgramPath] hidden",
             "?:[remoteProgramPath] ?:[\"arguments\"] hidden"
         };
-
 
         public void Process(List<string> args)
         {

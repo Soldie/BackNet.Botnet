@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Master.AdvancedConsole;
+using System;
 using System.Collections.Generic;
-using Master.AdvancedConsole;
 
 namespace Master.Commands.Core
 {
@@ -16,7 +16,6 @@ namespace Master.Commands.Core
         {
             "?:[directory]"
         };
-
 
         public void Process(List<string> args)
         {

@@ -14,11 +14,10 @@ namespace Master.Commands.Core
 
         public List<string> validArguments { get; set; } = null;
 
-
         public void Process(List<string> args)
         {
             var cwd = Directory.GetCurrentDirectory();
-            foreach(var dir in Directory.GetDirectories(cwd))
+            foreach (var dir in Directory.GetDirectories(cwd))
             {
                 var dirInfo = new DirectoryInfo(dir);
                 Console.WriteLine($"{dirInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}   <DIR>   {dirInfo.Name}");

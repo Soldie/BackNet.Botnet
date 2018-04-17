@@ -121,14 +121,14 @@ namespace Slave.Commands.KeyLogger
             { 0x7D, "F14" },         // F14 key
             { 0x7E, "F15" },         // F15 key
             { 0x7F, "F16" },         // F16 key
-            { 0x80, "F17" },         // F17 key  
-            { 0x81, "F18" },         // F18 key  
-            { 0x82, "F19" },         // F19 key  
-            { 0x83, "F20" },         // F20 key  
-            { 0x84, "F21" },         // F21 key  
+            { 0x80, "F17" },         // F17 key
+            { 0x81, "F18" },         // F18 key
+            { 0x82, "F19" },         // F19 key
+            { 0x83, "F20" },         // F20 key
+            { 0x84, "F21" },         // F21 key
             { 0x85, "F22" },         // F22 key, (PPC only) Key used to lock device.
-            { 0x86, "F23" },         // F23 key  
-            { 0x87, "F24" },         // F24 key  
+            { 0x86, "F23" },         // F23 key
+            { 0x87, "F24" },         // F24 key
             { 0x90, "NUMLOCK" },     // NUM LOCK key
             { 0x91, "SCROLL" },      // SCROLL LOCK key
             { 0xA0, "LSHIFT" },      // Left SHIFT key
@@ -181,7 +181,6 @@ namespace Slave.Commands.KeyLogger
             { 0xFE, "OEM_CLEAR" }    // Clear key
         };
 
-
         /// <summary>
         /// SHIFT equivalent of keys, no letters
         /// </summary>
@@ -210,7 +209,6 @@ namespace Slave.Commands.KeyLogger
             { ":SPC_21", ">" }
         };
 
-
         /// <summary>
         /// ALT equivalent of keys
         /// </summary>
@@ -230,7 +228,6 @@ namespace Slave.Commands.KeyLogger
             { ":SPC_14", "¤" }
         };
 
-
         /// <summary>
         /// Equivalent of special keys that are of interest to print
         /// </summary>
@@ -240,7 +237,7 @@ namespace Slave.Commands.KeyLogger
             { ":SPC_1", "&" },
             { ":SPC_2", "é" },
             { ":SPC_3", "\"" },
-			{ ":SPC_4", "'" },
+            { ":SPC_4", "'" },
             { ":SPC_5", "(" },
             { ":SPC_6", "-" },
             { ":SPC_7", "è" },

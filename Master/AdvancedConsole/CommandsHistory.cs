@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Master.AdvancedConsole
@@ -11,7 +10,6 @@ namespace Master.AdvancedConsole
         const int LIMIT = 30;
 
         static int currentCommandIndex = 0;
-
 
         /// <summary>
         /// Add a command to the history list (limited to LIMIT commands)
@@ -32,7 +30,6 @@ namespace Master.AdvancedConsole
             GoToLastCommand();
         }
 
-
         /// <summary>
         /// Get the command at currentCommandIndex - 1 from the history list
         /// </summary>
@@ -44,7 +41,6 @@ namespace Master.AdvancedConsole
             currentCommandIndex--;
             return history[currentCommandIndex];
         }
-
 
         /// <summary>
         /// Get the command at currentCommandIndex + 1 from the history list
@@ -58,7 +54,6 @@ namespace Master.AdvancedConsole
             currentCommandIndex++;
             return history[currentCommandIndex];
         }
-
 
         /// <summary>
         /// Set the current command index to the last command position

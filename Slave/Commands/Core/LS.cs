@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Shared;
+using System.Collections.Generic;
 using System.IO;
-using Shared;
 
 namespace Slave.Commands.Core
 {
     internal class LS : ICommand
     {
         public string name { get; set; } = "ls";
-
 
         public void Process(List<string> args)
         {

