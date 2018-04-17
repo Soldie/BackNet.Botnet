@@ -123,7 +123,7 @@ namespace Shared
             var dataLength = long.Parse(ReadLine());
 
             // Send ready flag
-            WriteLine("OK");
+            WriteLine("{OK}");
 
             var buffer = new byte[DEFAULT_BUFFER_SIZE];
             long bytesWritten = 0;

