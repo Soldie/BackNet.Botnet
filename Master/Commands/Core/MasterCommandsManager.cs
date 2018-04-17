@@ -86,10 +86,10 @@ namespace Master.Commands.Core
         /// <param name="command">Command to show the help for</param>
         public void ShowCommandHelp(IMasterCommand command)
         {
+            ColorTools.WriteMessage(command.description);
+            ColorTools.WriteInlineMessage("Syntax: ", ConsoleColor.DarkCyan);
+
             var help = new StringBuilder();
-            help.AppendLine(command.description);
-            
-            help.Append("Syntax: ");
 
             if (command.validArguments == null) help.Append(command.name);
 
@@ -124,7 +124,7 @@ namespace Master.Commands.Core
             foreach (var command in commandList)
             {
                 Console.WriteLine(" ");
-                ColorTools.WriteMessage($"-- {command.name} --");
+                ColorTools.WriteInlineMessage($"-- {command.name} --\n", ConsoleColor.Cyan);
                 ShowCommandHelp((IMasterCommand)command);
             }
         }

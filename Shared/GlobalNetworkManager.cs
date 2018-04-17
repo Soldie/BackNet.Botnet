@@ -6,7 +6,7 @@ namespace Shared
 {
     public abstract class GlobalNetworkManager
     {
-        const int DEFAULT_BUFFER_SIZE = 4046;
+        const int DEFAULT_BUFFER_SIZE = 4096;
 
         public NetworkStream networkStream { get; set; }
 
@@ -123,7 +123,7 @@ namespace Shared
             var dataLength = long.Parse(ReadLine());
 
             // Send ready flag
-            WriteLine("OK");
+            WriteLine("{OK}");
 
             var buffer = new byte[DEFAULT_BUFFER_SIZE];
             long bytesWritten = 0;

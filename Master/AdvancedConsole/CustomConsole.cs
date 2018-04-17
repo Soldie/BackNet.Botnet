@@ -46,8 +46,12 @@ namespace Master.AdvancedConsole
         /// <returns>Command issued by the user</returns>
         public static string ReadLine()
         {
+            // Resets here
             firstCharHeight = Console.CursorTop;
             currentText = "";
+            CommandsHistory.GoToLastCommand();
+            AutoCompletionManager.ResetAutoCompletionState();
+
 
             while (true)
             {

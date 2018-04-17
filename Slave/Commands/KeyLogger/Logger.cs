@@ -27,7 +27,6 @@
         public void LogKey(string keyToLog)
         {
             logs += keyToLog;
-            // TODO : handle too important log size (example : store in files when too important and clear)
         }
 
 

