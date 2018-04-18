@@ -31,14 +31,23 @@ BackNet consists in 3 projects :
 Communication between the Master and Slave was made easy, you can send and read lines, as well as send and receive files in just one line.
 
 Send a line of text
-`GlobalCommandsManager.networkManager.WriteLine("Hello !")`
+```cs
+GlobalCommandsManager.networkManager.WriteLine("Hello !")`
+```
 Read a line of text
-`GlobalCommandsManager.networkManager.ReadLine()`
+```cs
+GlobalCommandsManager.networkManager.ReadLine()
+```
 
 Send a file over the network, using a FileStream
-`GlobalCommandsManager.networkManager.StreamToNetworkStream(fileStream)`
+```cs
+GlobalCommandsManager.networkManager.StreamToNetworkStream(fileStream)`
+```
 Receive a file over the network
-`GlobalCommandsManager.networkManager.NetworkStreamToStream(fileStream)`
+```cs
+GlobalCommandsManager.networkManager.NetworkStreamToStream(fileStream)`
+```
+
 
 File transferts come with a nice progress bar !
 
