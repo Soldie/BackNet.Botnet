@@ -32,7 +32,7 @@ Communication between the Master and Slave was made easy, you can send and read 
 
 Send a line of text
 ```cs
-GlobalCommandsManager.networkManager.WriteLine("Hello !")`
+GlobalCommandsManager.networkManager.WriteLine("Hello !")
 ```
 Read a line of text
 ```cs
@@ -41,11 +41,11 @@ GlobalCommandsManager.networkManager.ReadLine()
 
 Send a file over the network, using a FileStream
 ```cs
-GlobalCommandsManager.networkManager.StreamToNetworkStream(fileStream)`
+GlobalCommandsManager.networkManager.StreamToNetworkStream(fileStream)
 ```
 Receive a file over the network
 ```cs
-GlobalCommandsManager.networkManager.NetworkStreamToStream(fileStream)`
+GlobalCommandsManager.networkManager.NetworkStreamToStream(fileStream)
 ```
 
 
