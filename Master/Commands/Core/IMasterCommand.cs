@@ -17,9 +17,9 @@ namespace Master.Commands.Core
 
         /// <summary>
         /// List of all possible arguments combinaisons, null if none.
-        /// Explicitly name the argument, or "?" for a string, or "0" for an integer.
-        /// If a string is confidential, add a "*" => "?*", this way, it will not be sent to the slave as is.
-        /// ? arguments must be followed by a [name] => example: "?:[filename]" or "?*:[filename]"
+        /// "?" is for a string, and "0" is for an integer
+        /// If a string is confidential, add a "*" => "?*", this way, it will not be sent to the slave as is
+        /// ? arguments must be followed by [ArgumentName] => example: "?:[filename]" or "?*:[filename]"
         /// </summary>
         List<string> validArguments { get; }
     }
