@@ -89,7 +89,7 @@ Backnet was designed to communicate with a botnet server to issue commands to al
 More botnet commands will be added, like DDOS, bitcoin mining, etc...
 Of course, this behaviour is optional and requires you to setup a botnet server.
 
-PHP source code for the botnet server is avaible in the 'botnet' folder
+PHP source code for the botnet server is avaible in the 'botnet' folder. The database engine used in this project is MySQL.
 <br>
 
 ## License
