@@ -112,7 +112,7 @@ namespace Master.AdvancedConsole
         }
 
         /// <summary>
-        /// Empty autocompletion results list restore the TAB behaviour to default
+        /// Empty autocompletion results list and restore the TAB behaviour to default
         /// </summary>
         public static void ResetAutoCompletionState()
         {

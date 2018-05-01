@@ -1,7 +1,7 @@
 # BackNet
 <img src="https://ci.appveyor.com/api/projects/status/x9x4tirpwb1ce74d/branch/master?svg=true"> <a href="https://www.codefactor.io/repository/github/valsov/backnet"><img src="https://www.codefactor.io/repository/github/valsov/backnet/badge" /></a>
 
-BackNet is a command line remote administration tool written in C#.
+BackNet is a command line remote administration tool for Windows, written in C#.
 Able to create backdoors and communicate with a botnet server, it works over a reverse TCP connection, avoiding firewall issues.
 
 Creating commands is fairly easy, feel free to contribute !
@@ -32,20 +32,20 @@ Communication between the Master and Slave was made easy, you can send and read 
 
 Send a line of text
 ```cs
-GlobalCommandsManager.networkManager.WriteLine("Hello !")
+GlobalCommandsManager.networkManager.WriteLine("Hello !");
 ```
 Read a line of text
 ```cs
-GlobalCommandsManager.networkManager.ReadLine()
+string message = GlobalCommandsManager.networkManager.ReadLine();
 ```
 
 Send a file over the network, using a FileStream
 ```cs
-GlobalCommandsManager.networkManager.StreamToNetworkStream(fileStream)
+GlobalCommandsManager.networkManager.StreamToNetworkStream(fileStream);
 ```
 Receive a file over the network
 ```cs
-GlobalCommandsManager.networkManager.NetworkStreamToStream(fileStream)
+GlobalCommandsManager.networkManager.NetworkStreamToStream(fileStream);
 ```
 
 
@@ -68,15 +68,30 @@ A command will first be sent to the Slave, then processed by the Master (to proc
 	- **name** : same as the one in the IMasterCommand
 	- **Process(List\<string> args)** : code executed on the Slave side, this is usually where most of your work goes !
 
+Valid arguments are stated in a string which must follow those rule:
+	- If there is no arguments for the command, then null
+    - Explicitly name the argument, or "?" for a string, or "0" for an integer
+    - If a string is confidential, add a "\*" => "?\*", this way, it will not be sent to the slave as is
+    - ? arguments must be followed by a [name] => example: "?:[filename]" or "?\*:[filename]"
+
+Example : **download** command
+```cs
+public List<string> validArguments { get; set; } = new List<string>()
+{
+    "?:[remoteFileName] ?*:[localFileName]"
+};
+```
+The arguments are composed of two strings, the remote file name and the local file name. The latter won't be sent to the slave because it is confidential, so it's marked with a star.
+
 ## Botnet
 
 Backnet was designed to communicate with a botnet server to issue commands to all the registered Slaves. This way, you can make a registered Slave connect to you (Master) and send commands  directly to it.
 More botnet commands will be added, like DDOS, bitcoin mining, etc...
 Of course, this behaviour is optional and requires you to setup a botnet server.
 
-Source code for the botnet server will be published soon.
+PHP source code for the botnet server is avaible in the 'botnet' folder
 <br>
 
-### License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/valsov/BackNet/blob/master/LICENSE) file for details
