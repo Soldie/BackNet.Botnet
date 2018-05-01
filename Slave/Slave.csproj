@@ -94,6 +94,7 @@
     <Compile Include="Commands\Wallpaper.cs" />
     <Compile Include="Commands\Webcam.cs" />
     <Compile Include="Commands\NetInfo.cs" />
+    <Compile Include="Core\Config.cs" />
     <Compile Include="Core\SlaveManager.cs" />
     <Compile Include="Core\SlaveNetworkManager.cs" />
     <Page Include="MainWindow.xaml">

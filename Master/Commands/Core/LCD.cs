@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Master.AdvancedConsole;
 
 namespace Master.Commands.Core
 {
@@ -26,7 +27,7 @@ namespace Master.Commands.Core
             }
             else
             {
-                MasterCommandsManager.networkManager.WriteLine("No such directory");
+                ColorTools.WriteCommandError("No such directory");
             }
         }
     }

