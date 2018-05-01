@@ -10,7 +10,6 @@ namespace Master.AdvancedConsole
 
         static int lastLine;
 
-
         /// <summary>
         /// Hide cursor to avoid annoying blink and set total. Show the base gauge and percentage.
         /// </summary>
@@ -26,7 +25,6 @@ namespace Master.AdvancedConsole
             lastLine = Console.CursorTop;
         }
 
-
         /// <summary>
         /// Updates the completion meter with a gauge and a percentage
         /// </summary>
@@ -34,7 +32,7 @@ namespace Master.AdvancedConsole
         public static void Update(long current)
         {
             var newCompletion = (int)((decimal)current / total * 100);
-            
+
             // Transfert progressed
             if (completion != newCompletion)
             {
@@ -51,7 +49,6 @@ namespace Master.AdvancedConsole
                 Console.SetCursorPosition(leftStart, lastLine);
                 Console.Write(current);
 
-
                 // Transfert finished
                 if (completion == 100)
                 {
@@ -62,7 +59,6 @@ namespace Master.AdvancedConsole
                 }
             }
         }
-
 
         /// <summary>
         /// Reset completion and cursor

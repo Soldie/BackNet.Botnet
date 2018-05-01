@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Shared;
+using Slave.Commands.KeyLogger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Shared;
-using Slave.Commands.KeyLogger;
 
 namespace Slave.Commands.Core
 {
@@ -10,12 +10,10 @@ namespace Slave.Commands.Core
     {
         KeyLoggerManager keyLoggerManager { get; }
 
-
         public SlaveCommandsManager(GlobalNetworkManager networkManager) : base(networkManager)
         {
-            keyLoggerManager = ((KeyLoggerCommand) GetCommandByName("keylogger")).keyLoggerManager;
+            keyLoggerManager = ((KeyLoggerCommand)GetCommandByName("keylogger")).keyLoggerManager;
         }
-
 
         /// <summary>
         /// Stop the keylogger from listening to keypresses
@@ -23,13 +21,11 @@ namespace Slave.Commands.Core
         public void StopKeyloggerListening()
             => keyLoggerManager.StopListening();
 
-
         /// <summary>
         /// Stop the keylogger, uninstall keyboard hooks
         /// </summary>
         public void StopKeylogger()
             => keyLoggerManager.Stop();
-
 
         /// <summary>
         /// Produce a string displaying a table from a list of Tuple(string, string)

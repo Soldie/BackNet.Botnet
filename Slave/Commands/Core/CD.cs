@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Shared;
+using System.Collections.Generic;
 using System.IO;
-using Shared;
 
 namespace Slave.Commands.Core
 {
@@ -8,7 +8,6 @@ namespace Slave.Commands.Core
     {
         public string name { get; set; } = "cd";
 
-        
         public void Process(List<string> args)
         {
             if (Directory.Exists(args[0]))

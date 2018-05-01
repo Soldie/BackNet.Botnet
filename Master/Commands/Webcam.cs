@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Master.AdvancedConsole;
+using Master.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Master.AdvancedConsole;
-using Master.Commands.Core;
 
 namespace Master.Commands
 {
@@ -19,7 +19,6 @@ namespace Master.Commands
             "picture ?*:[filename.png]",
             "video ?*:[filename.mp4]"
         };
-
 
         public void Process(List<string> args)
         {

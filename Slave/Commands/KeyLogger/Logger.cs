@@ -7,7 +7,6 @@
     {
         string logs = "";
 
-
         /// <summary>
         /// Returns the current logs and clear them
         /// </summary>
@@ -19,7 +18,6 @@
             return currentLogs;
         }
 
-        
         /// <summary>
         /// Add the given key to the 'logs' variable
         /// </summary>
@@ -28,7 +26,6 @@
         {
             logs += keyToLog;
         }
-
 
         /// <summary>
         /// Empty logs variable

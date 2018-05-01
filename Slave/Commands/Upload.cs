@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Shared;
+using Slave.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Shared;
-using Slave.Commands.Core;
 
 namespace Slave.Commands
 {
     internal class Upload : ICommand
     {
         public string name { get; } = "upload";
-        
-        
+
         public void Process(List<string> args)
         {
             try

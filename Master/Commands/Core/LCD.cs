@@ -17,7 +17,6 @@ namespace Master.Commands.Core
             "?:[directory]"
         };
 
-
         public void Process(List<string> args)
         {
             if (Directory.Exists(args[0]))

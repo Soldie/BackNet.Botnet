@@ -10,15 +10,13 @@ namespace Master.Botnet.JSON
 
         public int port { get; set; }
 
-
-        public ConnectClientRequestJson(int host_id, string hostname_ip, int port) : base(command:"connect_to_client")
+        public ConnectClientRequestJson(int host_id, string hostname_ip, int port) : base(command: "connect_to_client")
         {
             this.host_id = host_id;
             this.hostname_ip = hostname_ip;
             this.port = port;
         }
     }
-
 
     internal class ConnectClientResponseJson
     {

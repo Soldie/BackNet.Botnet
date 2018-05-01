@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Master.AdvancedConsole;
+﻿using Master.AdvancedConsole;
 using Master.Commands.Core;
 using Master.Core;
 using Shared;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Master.Commands.BrowserTornado
 {
@@ -21,7 +21,6 @@ namespace Master.Commands.BrowserTornado
         {
             "?*:[filename]"
         };
-
 
         public void Process(List<string> args)
         {
@@ -49,10 +48,9 @@ namespace Master.Commands.BrowserTornado
             }
         }
 
-
         void GetDatabases(Databases databases)
         {
-            var masterNetworkManager = (MasterNetworkManager) MasterCommandsManager.networkManager;
+            var masterNetworkManager = (MasterNetworkManager)MasterCommandsManager.networkManager;
             // Don't show file transfer progress
             masterNetworkManager.UnsetStreamTransfertEventHandlers();
 
@@ -154,7 +152,6 @@ namespace Master.Commands.BrowserTornado
             masterNetworkManager.SetStreamTransfertEventHandlers();
         }
 
-
         string ProcessDatabases(Databases databases)
         {
             var data = "";
@@ -197,7 +194,6 @@ namespace Master.Commands.BrowserTornado
                 data += "\n\n\n";
             }
 
-
             if (!databases.NoFirefoxDatabases())
             {
                 data += "+---------+\n| Firefox |\n+---------+\n";
@@ -233,7 +229,6 @@ namespace Master.Commands.BrowserTornado
             return data;
         }
 
-
         void Cleanup()
         {
             // Needed to avoid file locking, as SQLiteConnection.ClearAllPools() doesn't work here
@@ -256,7 +251,6 @@ namespace Master.Commands.BrowserTornado
             }
         }
     }
-
 
     internal class Databases
     {

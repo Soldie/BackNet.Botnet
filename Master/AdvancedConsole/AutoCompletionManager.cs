@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Master.AdvancedConsole
 {
-    public static class AutoCompletionManager
+    internal static class AutoCompletionManager
     {
         /// <summary>
         /// Filled from MasterCommandsManager with commands names
@@ -14,7 +14,6 @@ namespace Master.AdvancedConsole
         static List<string> autoCompleteResults = new List<string>();
 
         static bool tabbedOnce = false;
-
 
         /// <summary>
         /// Do the auto-completion work
@@ -64,7 +63,6 @@ namespace Master.AdvancedConsole
             tabbedOnce = !tabbedOnce;
         }
 
-
         /// <summary>
         /// Get the longest common preffix between a list of strings
         /// </summary>
@@ -87,7 +85,6 @@ namespace Master.AdvancedConsole
 
             return baseCommands[0].Substring(0, index);
         }
-
 
         /// <summary>
         /// Display in columns the commands name starting with the given string
@@ -112,6 +109,15 @@ namespace Master.AdvancedConsole
             Console.Write(currentText);
 
             autoCompleteResults.Clear();
+        }
+
+        /// <summary>
+        /// Empty autocompletion results list restore the TAB behaviour to default
+        /// </summary>
+        public static void ResetAutoCompletionState()
+        {
+            autoCompleteResults.Clear();
+            tabbedOnce = false;
         }
     }
 }

@@ -38,7 +38,6 @@ namespace Master.AdvancedConsole
         static bool insertMode = false;
 
         static ConsoleKeyInfo keyInfo;
-        
 
         /// <summary>
         /// Console.WriteLine() replacement with auto-completion and clear console (CTRL + L)
@@ -51,7 +50,6 @@ namespace Master.AdvancedConsole
             currentText = "";
             CommandsHistory.GoToLastCommand();
             AutoCompletionManager.ResetAutoCompletionState();
-
 
             while (true)
             {
@@ -173,7 +171,7 @@ namespace Master.AdvancedConsole
 
             for (int i = 1; i < cursorPositionInString - 2; i++)
             {
-                if(currentText[i] == ' ' && currentText[i + 1] != ' ') wordsBegginning.Add(i + 1);
+                if (currentText[i] == ' ' && currentText[i + 1] != ' ') wordsBegginning.Add(i + 1);
             }
 
             if (wordsBegginning.Count == 0)

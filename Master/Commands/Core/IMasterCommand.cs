@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Shared;
+﻿using Shared;
+using System.Collections.Generic;
 
 namespace Master.Commands.Core
 {
@@ -10,12 +10,10 @@ namespace Master.Commands.Core
         /// </summary>
         string description { get; }
 
-
         /// <summary>
         /// Is the command only executed locally or also from the slave side ?
         /// </summary>
         bool isLocal { get; }
-
 
         /// <summary>
         /// List of all possible arguments combinaisons, null if none.

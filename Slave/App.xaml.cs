@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using Slave.Core;
+﻿using Slave.Core;
+using System.Windows;
 
 namespace Slave
 {

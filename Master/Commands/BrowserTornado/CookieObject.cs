@@ -11,7 +11,6 @@
 
         public string value { get; set; }
 
-
         /// <summary>
         /// Constructor
         /// </summary>

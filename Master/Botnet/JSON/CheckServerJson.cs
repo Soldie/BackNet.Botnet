@@ -4,7 +4,7 @@ namespace Master.Botnet.JSON
 {
     internal class CheckServerRequestJson : BaseRequestJson
     {
-        public CheckServerRequestJson() : base(command:"ping") { }
+        public CheckServerRequestJson() : base(command: "ping") { }
     }
 
     internal class CheckServerResponseJson

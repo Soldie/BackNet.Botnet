@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Master.AdvancedConsole;
+using Master.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Master.AdvancedConsole;
-using Master.Commands.Core;
 
 namespace Master.Commands
 {
@@ -21,7 +21,6 @@ namespace Master.Commands
             "wifi",
             "scan ?:[ip(0.0.0.0)/mask(00)]"
         };
-
 
         /// <summary>
         /// Parse the ip/mask input from the user and set ipAddress and networkMask.
@@ -47,7 +46,7 @@ namespace Master.Commands
                 ColorTools.WriteCommandError("Invalid IPv4 address");
                 return false;
             }
-            
+
             var mask = ipAndMask.Substring(separatorPos + 1);
             if (int.TryParse(mask, out int intMask))
             {
@@ -61,7 +60,6 @@ namespace Master.Commands
             return true;
         }
 
-        
         public void Process(List<string> args)
         {
             if (args[0] == "wifi")
@@ -73,7 +71,6 @@ namespace Master.Commands
                 Scan();
             }
         }
-
 
         void Wifi(List<string> args)
         {
@@ -105,7 +102,6 @@ namespace Master.Commands
                 Console.WriteLine(data);
             }
         }
-
 
         void Scan()
         {

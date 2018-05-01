@@ -6,7 +6,6 @@ namespace Shared
     {
         public ExitException()
         {
-            
         }
     }
 }

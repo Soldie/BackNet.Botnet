@@ -1,14 +1,13 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Master.Botnet.JSON
 {
     internal class ViewHostsRequestJson : BaseRequestJson
     {
-        public ViewHostsRequestJson() : base(command:"get_hosts") { }
+        public ViewHostsRequestJson() : base(command: "get_hosts") { }
     }
 
-    
     internal class InfectedHostJson
     {
         [JsonProperty(Required = Required.Always)]
@@ -25,7 +24,6 @@ namespace Master.Botnet.JSON
 
         [JsonProperty(Required = Required.Always)]
         public DateTime lastConnection { get; set; }
-
 
         public override string ToString()
             => $"Host_id : {hostId} | Name : {name} | Ip : {ip} | First_connection : {firstConnection:dd/MM/yyyy HH:mm:ss} | Last_connection : {lastConnection:dd/MM/yyyy HH:mm:ss}";

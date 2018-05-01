@@ -14,7 +14,6 @@ namespace Shared
         /// </summary>
         public List<ICommand> commandList;
 
-
         /// <summary>
         /// Constructor, fill commandList with the classes implementing the ICommand interface.
         /// Instantiate the network manager.
@@ -33,8 +32,7 @@ namespace Shared
             GlobalCommandsManager.networkManager = networkManager;
         }
 
-
-        /// <summary>   
+        /// <summary>
         /// Return the ICommand whose name was given as a parameter, or null if it doesn't exist
         /// </summary>
         /// <param name="commandName">ICommand name to find</param>
@@ -53,7 +51,6 @@ namespace Shared
 
             return foundCommand;
         }
-        
 
         /// <summary>
         /// Split the given string by using the space delimiter,
@@ -66,7 +63,6 @@ namespace Shared
             return Regex.Matches(commandString, @"[\""].+?[\""]|[^ ]+")
                 .Cast<Match>().Select(x => x.Value).ToList();
         }
-
 
         /// <summary>
         /// Split the given string by using the space delimiter,
@@ -84,7 +80,6 @@ namespace Shared
                         ? m.Value.Substring(1, m.Value.Length - 2)
                         : m.Value)
                 .ToList();
-
         }
     }
 }

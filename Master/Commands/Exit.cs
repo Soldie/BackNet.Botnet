@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Master.Commands.Core;
+﻿using Master.Commands.Core;
 using Shared;
+using System.Collections.Generic;
 
 namespace Master.Commands
 {
@@ -13,7 +13,6 @@ namespace Master.Commands
         public bool isLocal { get; } = true;
 
         public List<string> validArguments { get; } = null;
-
 
         public void Process(List<string> args)
         {

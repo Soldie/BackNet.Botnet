@@ -29,7 +29,6 @@ namespace Master.Commands.BrowserTornado
             }
         }
 
-        
         /// <summary>
         /// Dump all cookies from the given cookie database
         /// </summary>
@@ -52,7 +51,6 @@ namespace Master.Commands.BrowserTornado
             }
         }
 
-        
         /// <summary>
         /// Dump all urls from the given history database
         /// </summary>

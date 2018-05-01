@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Master.AdvancedConsole;
+using Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Master.AdvancedConsole;
-using Shared;
 
 namespace Master.Commands.Core
 {
@@ -14,7 +14,6 @@ namespace Master.Commands.Core
         {
             AutoCompletionManager.commands = commandList.Select(x => x.name).ToList();
         }
-
 
         /// <summary>
         /// Check if the given arguments match at least one validArguments combinaison of the given IMasterCommand class.
@@ -60,7 +59,7 @@ namespace Master.Commands.Core
                         break;
                     }
                 }
-                
+
                 if (!error)
                 {
                     var splittedString = GetSplittedCommandWithQuotes(commandString);
@@ -78,7 +77,6 @@ namespace Master.Commands.Core
 
             return false;
         }
-
 
         /// <summary>
         /// Display an help message for the given IMasterCommand on the console
@@ -113,8 +111,7 @@ namespace Master.Commands.Core
             }
 
             ColorTools.WriteMessage(help.ToString());
-        } 
-
+        }
 
         /// <summary>
         /// Display an help message for all the commands on the console, calls ShowCommandHelp

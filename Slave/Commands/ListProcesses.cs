@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Shared;
+using Slave.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Shared;
-using Slave.Commands.Core;
 
 namespace Slave.Commands
 {
     internal class ListProcesses : ICommand
     {
         public string name { get; } = "ps";
-
 
         public void Process(List<string> args)
         {

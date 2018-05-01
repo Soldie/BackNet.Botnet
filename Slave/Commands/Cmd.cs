@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Shared;
+using Slave.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using Shared;
-using Slave.Commands.Core;
 
 namespace Slave.Commands
 {
     internal class Cmd : ICommand
     {
         public string name { get; } = "cmd";
-        
 
         public void Process(List<string> args)
         {
@@ -42,7 +41,6 @@ namespace Slave.Commands
             {
                 var userInput = SlaveCommandsManager.networkManager.ReadLine();
 
-
                 if (userInput == "exit")
                 {
                     processCmd.Kill();
@@ -59,7 +57,6 @@ namespace Slave.Commands
                 processCmd.StandardInput.WriteLine($"{userInput}\n");
             }
         }
-
 
         /// <summary>
         /// Send output to master

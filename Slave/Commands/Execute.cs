@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Shared;
+using Slave.Commands.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Shared;
-using Slave.Commands.Core;
 
 namespace Slave.Commands
 {
@@ -10,7 +10,6 @@ namespace Slave.Commands
     {
         public string name { get; set; } = "exec";
 
-        
         public void Process(List<string> args)
         {
             var startInfo = new ProcessStartInfo(args[0]);

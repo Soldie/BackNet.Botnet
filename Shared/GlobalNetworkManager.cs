@@ -32,8 +32,7 @@ namespace Shared
 
         public event TransfertFailHandler StreamTransfertFailEvent;
 
-        #endregion Event
-
+        #endregion Events
 
         /// <summary>
         /// Read one line from the network stream
@@ -56,7 +55,6 @@ namespace Shared
                 throw new NetworkException();
             }
         }
-
 
         /// <summary>
         /// Read all the given ReadStream content and write it to the network stream as byte arrays, flushing each time
@@ -103,7 +101,6 @@ namespace Shared
                 }
             }
         }
-
 
         /// <summary>
         /// Read all the network ReadStream content and write it to the given stream
@@ -155,7 +152,6 @@ namespace Shared
             }
         }
 
-
         /// <summary>
         /// Write the given string to the network stream, then flush
         /// </summary>
@@ -173,7 +169,6 @@ namespace Shared
                 throw new NetworkException();
             }
         }
-
 
         /// <summary>
         /// Close the network stream

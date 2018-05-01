@@ -13,7 +13,6 @@ namespace Master.Commands.Core
 
         public List<string> validArguments { get; set; } = null;
 
-
         public void Process(List<string> args)
         {
             var data = "";
