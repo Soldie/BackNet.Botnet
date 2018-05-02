@@ -69,10 +69,10 @@ A command will first be sent to the Slave, then processed by the Master (to proc
 	- **Process(List\<string> args)** : code executed on the Slave side, this is usually where most of your work goes !
 
 Valid arguments are stated in a string which must follow those rule:
-	- If there is no arguments for the command, then null
-    - Explicitly name the argument, or "?" for a string, or "0" for an integer
-    - If a string is confidential, add a "\*" => "?\*", this way, it will not be sent to the slave as is
-    - ? arguments must be followed by a [name] => example: "?:[filename]" or "?\*:[filename]"
+- If there is no arguments for the command, then null
+- "?" is for a string, and "0" is for an integer
+- If a string is confidential, add a "\*" => "?\*", this way, it will not be sent to the slave as is
+- ? arguments must be followed by a [ArgumentName] => example: "?:[filename]" or "?\*:[filename]"
 
 Example : **download** command
 ```cs
@@ -89,7 +89,7 @@ Backnet was designed to communicate with a botnet server to issue commands to al
 More botnet commands will be added, like DDOS, bitcoin mining, etc...
 Of course, this behaviour is optional and requires you to setup a botnet server.
 
-PHP source code for the botnet server is avaible in the 'botnet' folder
+PHP source code for the botnet server is avaible in the 'botnet' folder. The database engine used in this project is MySQL.
 <br>
 
 ## License

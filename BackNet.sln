@@ -9,6 +9,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slave", "Slave\Slave.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{982DC5B6-1123-428A-83DD-D212490C859F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Botnet", "Botnet", "{C5E80805-32C5-47F6-83EC-2AE39AA7F08B}"
+	ProjectSection(SolutionItems) = preProject
+		Botnet\backnet.sql = Botnet\backnet.sql
+		Botnet\db-co.php = Botnet\db-co.php
+		Botnet\functions.php = Botnet\functions.php
+		Botnet\index.php = Botnet\index.php
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
