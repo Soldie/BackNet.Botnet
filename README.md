@@ -26,7 +26,7 @@ Most notable remote commands :
 BackNet consists in 3 projects :
 - **Master** : The console application used to interact with the slave by sending commands. It can also be used to issue commands to the botnet server.
 - **Slave** : The WPF application to deploy on the computer you wish to monitor and control.
-- **Shared** : DLL that contains global mechanics for the Master and Slave projects. For example, the network manager. A DLL is not welcome in a lot of scenarios when using the Slave, so a reference embedding tool should be used, like https://github.com/Fody/Costura
+- **Shared** : DLL that contains global mechanics for the Master and Slave projects. For example, the network manager. A DLL is not welcome in a lot of scenarios when using the Slave, so a reference embedding tool is used for the slave project : [Costura Fody](https://github.com/Fody/Costura)
 
 Communication between the Master and Slave was made easy, you can send and read lines, as well as send and receive files in just one line.
 
