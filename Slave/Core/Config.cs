@@ -2,15 +2,16 @@
 {
     internal static class Config
     {
+        #region Master connection settings
         /// <summary>
         /// IP to connect to
         /// </summary>
-        public static string ip { get; } = null;
+        public static string ip { get; set; } = "127.0.0.1";
 
         /// <summary>
         /// Port to connect to
         /// </summary>
-        public static int port { get; } = 0;
+        public static int port { get; set; } = 1111;
 
         /// <summary>
         /// Time in ms to wait between each master connection attempt
@@ -22,15 +23,26 @@
         /// This is taken into account only if a botnet server address was specified
         /// </summary>
         public static int maxConnectionRetryCount { get; } = 20;
+        #endregion Master connection settings
 
+        #region Botnet settings
         /// <summary>
-        /// Master botnet server adress
+        /// Master botnet server adress, if you don't specify any,
+        /// the slave will connect to the master with the specified ip and port
         /// </summary>
-        public static string botnetAdress { get; } = "http://127.0.0.1/backnet/index.php";
+        public static string botnetAdress { get; } = null;
 
         /// <summary>
         /// Time in ms to wait for between each botnet request
         /// </summary>
         public static int botnetServerRequestRetryDelay { get; } = 5000;
+        #endregion Botnet settings
+
+        /// <summary>
+        /// If you want to show the slave window or not (for debug purposes)
+        /// True : show window
+        /// False : hide window
+        /// </summary>
+        public static bool debug { get; } = true;
     }
 }

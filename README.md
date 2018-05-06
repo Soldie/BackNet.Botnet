@@ -12,12 +12,13 @@ Most notable remote commands :
 - Keylogger
 - Webcam control
 - File upload and download
-- Program execution
+- Remote program execution
 - System informations
 - Local Area Network scan
 - Wifi profiles informations dump (including passwords)
 - Firefox and Google Chrome databases information extraction
 - Remote shell
+- Persistance
 
 **More to come !**
 

