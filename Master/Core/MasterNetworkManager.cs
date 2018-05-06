@@ -80,7 +80,9 @@ namespace Master.Core
         {
             cleanedUp = true;
 
-            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped" : "\n\nDisconnected");
+            ColorTools.WriteWarning(processingCommand ?
+                "\n+----------------------------------+\n| Disconnected - operation stopped |\n+----------------------------------+" :
+                "\n\n+--------------+\n| Disconnected |\n+--------------+");
 
             try
             {
