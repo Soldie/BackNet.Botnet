@@ -183,6 +183,7 @@ namespace Slave.Commands.KeyLogger
 
         /// <summary>
         /// SHIFT equivalent of keys, no letters
+        /// AZERTY specific
         /// </summary>
         public static Dictionary<string, string> SpecialShiftKeys = new Dictionary<string, string>()
         {
@@ -211,6 +212,7 @@ namespace Slave.Commands.KeyLogger
 
         /// <summary>
         /// ALT equivalent of keys
+        /// AZERTY specific
         /// </summary>
         public static Dictionary<string, string> SpecialAltGrKeys = new Dictionary<string, string>()
         {
@@ -230,6 +232,7 @@ namespace Slave.Commands.KeyLogger
 
         /// <summary>
         /// Equivalent of special keys that are of interest to print
+        /// AZERTY specific
         /// </summary>
         public static Dictionary<string, string> SpecialKeys = new Dictionary<string, string>()
         {

