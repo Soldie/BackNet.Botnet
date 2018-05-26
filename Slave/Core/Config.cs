@@ -26,17 +26,23 @@
         #endregion Master connection settings
 
         #region Botnet settings
+
         /// <summary>
         /// Master botnet server adress, if you don't specify any,
         /// the slave will connect to the master with the specified ip and port
         /// </summary>
-        public static string botnetAdress { get; } = null;
+        public static string botnetAdress { get; set; } = null;
 
         /// <summary>
         /// Time in ms to wait for between each botnet request
         /// </summary>
         public static int botnetServerRequestRetryDelay { get; } = 5000;
         #endregion Botnet settings
+
+        /// <summary>
+        /// Indicates wether instance check should be done
+        /// </summary>
+        public static bool IgnoreMutex { get; set; } = false;
 
         /// <summary>
         /// If you want to show the slave window or not (for debug purposes)

