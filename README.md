@@ -19,6 +19,7 @@ Most notable remote commands :
 - Firefox and Google Chrome databases information extraction
 - Remote shell
 - Persistance
+- LoadCommands - allows you to load commands from DLLs at runtime
 
 **More to come !**
 
