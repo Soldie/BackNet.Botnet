@@ -54,8 +54,7 @@ namespace Master.Botnet
             var choice = "";
             while (choice != "9")
             {
-                Console.WriteLine("\n+-----------------------------------+");
-                Console.Write("Choose one option :\n\n    1 : View infected hosts\n    2 : Make infected host connect\n    9 : Exit\n\nChoice : ");
+                Console.Write("\n\nChoose one option :\n\n    1 : View infected hosts\n    2 : Make infected host connect\n    9 : Exit\n\nChoice : ");
 
                 // Reset choice here or infinite loop
                 choice = "";

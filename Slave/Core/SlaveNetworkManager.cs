@@ -63,5 +63,15 @@ namespace Slave.Core
             binaryWriter = new BinaryWriter(networkStream);
             binaryReader = new BinaryReader(networkStream);
         }
+
+        /// <summary>
+        /// Get IP and port of master
+        /// </summary>
+        /// <returns></returns>
+        public Tuple<string, int> GetMasterInfos()
+        {
+            var iPEndPoint = tcpClient.Client.RemoteEndPoint as IPEndPoint;
+            return new Tuple<string, int>(iPEndPoint.Address.ToString(), iPEndPoint.Port);
+        }
     }
 }

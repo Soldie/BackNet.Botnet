@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace Master.Core
 {
@@ -11,7 +12,7 @@ namespace Master.Core
     {
         Socket socketForServer { get; set; }
 
-        TcpListener tcpListener { get; set; }
+        public int portNumber { get; set; }
 
         bool cleanedUp;
 
@@ -25,7 +26,7 @@ namespace Master.Core
         }
 
         /// <summary>
-        /// Set the event handlers to display a completion meter
+        /// Set the event handlers to display a completion meter for the stream transferts
         /// </summary>
         public void SetStreamTransfertEventHandlers()
         {
@@ -35,7 +36,7 @@ namespace Master.Core
         }
 
         /// <summary>
-        /// Unset the event handlers to avoid displaying a completion meter
+        /// Unset the event handlers to avoid displaying a completion meter for the stream transferts
         /// </summary>
         public void UnsetStreamTransfertEventHandlers()
         {
@@ -45,31 +46,69 @@ namespace Master.Core
         }
 
         /// <summary>
-        /// Listen for a connection request on the given port,
-        /// when the connection succeed, instanciate the network stream,
-        /// and based on it StreamReaders and StreamWriters
+        /// Listen for a TCP connection request on the given port,
+        /// when the connection succeed, call InstanciateStreams()
         /// </summary>
         /// <param name="port">Port to listen to</param>
         public void ListenAndConnect(int port)
         {
-            tcpListener = new TcpListener(IPAddress.Any, port);
+            portNumber = port;
+            var tcpListener = new TcpListener(IPAddress.Any, port);
             tcpListener.Start();
 
             Console.Clear();
             ColorTools.WriteCommandMessage($"Listening on port {port} ...");
             // Wait for an incoming connection
-            socketForServer = tcpListener.AcceptSocket();
+            var socket = tcpListener.AcceptSocket();
 
             cleanedUp = false;
 
-            // Initiate streams
+            InstanciateStreams(socket);
+            tcpListener.Stop();
+
+            ColorTools.WriteCommandSuccess("Connected to " + (IPEndPoint)socket.RemoteEndPoint + "\n");
+        }
+
+        /// <summary>
+        /// Listen for a connection request on the given port for the given time
+        /// </summary>
+        /// <param name="port">Port to listen to</param>
+        /// <param name="timeout">Time in seconds</param>
+        /// <returns>Socket</returns>
+        public Socket TryAcceptSocket(int port, int timeout)
+        {
+            var tcpListener = new TcpListener(IPAddress.Any, port);
+            tcpListener.Start();
+            
+            for (int i = 0; i < timeout; i++)
+            {
+                if (tcpListener.Pending())
+                {
+                    var socket = tcpListener.AcceptSocket();
+                    tcpListener.Stop();
+                    return socket;
+                }
+                Thread.Sleep(1000);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Set the socketForServer, eventually closing it before if it was already instanciated.
+        /// Instanciate the network stream, and based on it, StreamReaders and StreamWriters
+        /// </summary>
+        /// <param name="socket">Socket to use in the network stream</param>
+        public void InstanciateStreams(Socket socket)
+        {
+            socketForServer?.Close();
+            socketForServer = socket;
+
             networkStream = new NetworkStream(socketForServer);
             streamReader = new StreamReader(networkStream);
             streamWriter = new StreamWriter(networkStream);
             binaryWriter = new BinaryWriter(networkStream);
             binaryReader = new BinaryReader(networkStream);
-
-            ColorTools.WriteCommandSuccess("Connected to " + (IPEndPoint)socketForServer.RemoteEndPoint + "\n");
         }
 
         /// <summary>
@@ -80,13 +119,14 @@ namespace Master.Core
         {
             cleanedUp = true;
 
-            ColorTools.WriteWarning(processingCommand ? "\nDisconnected, operation stopped" : "\n\nDisconnected");
+            ColorTools.WriteWarning(processingCommand ?
+                "\n+----------------------------------+\n| Disconnected - operation stopped |\n+----------------------------------+" :
+                "\n\n+--------------+\n| Disconnected |\n+--------------+");
 
             try
             {
                 base.Cleanup();
                 socketForServer.Close();
-                tcpListener.Stop();
             }
             catch (Exception)
             {

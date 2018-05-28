@@ -2,7 +2,7 @@
 <img src="https://ci.appveyor.com/api/projects/status/x9x4tirpwb1ce74d/branch/master?svg=true"> <a href="https://www.codefactor.io/repository/github/valsov/backnet"><img src="https://www.codefactor.io/repository/github/valsov/backnet/badge" /></a>
 
 BackNet is a command line remote administration tool for Windows, written in C#.
-Able to create backdoors and communicate with a botnet server, it works over a reverse TCP connection, avoiding firewall issues.
+Able to achieve persistance and communicate with a botnet server, it works over a reverse TCP connection, avoiding firewall issues.
 
 Creating commands is fairly easy, feel free to contribute !
 
@@ -12,12 +12,14 @@ Most notable remote commands :
 - Keylogger
 - Webcam control
 - File upload and download
-- Program execution
+- Remote program execution
 - System informations
 - Local Area Network scan
 - Wifi profiles informations dump (including passwords)
 - Firefox and Google Chrome databases information extraction
 - Remote shell
+- Persistance
+- LoadCommands - allows you to load commands from DLLs at runtime
 
 **More to come !**
 
@@ -26,7 +28,7 @@ Most notable remote commands :
 BackNet consists in 3 projects :
 - **Master** : The console application used to interact with the slave by sending commands. It can also be used to issue commands to the botnet server.
 - **Slave** : The WPF application to deploy on the computer you wish to monitor and control.
-- **Shared** : DLL that contains global mechanics for the Master and Slave projects. For example, the network manager. A DLL is not welcome in a lot of scenarios when using the Slave, so a reference embedding tool should be used, like https://github.com/Fody/Costura
+- **Shared** : DLL that contains global mechanics for the Master and Slave projects. For example, the network manager. A DLL is not welcome in a lot of scenarios when using the Slave, so a reference embedding tool is used for the slave project : [Costura Fody](https://github.com/Fody/Costura)
 
 Communication between the Master and Slave was made easy, you can send and read lines, as well as send and receive files in just one line.
 

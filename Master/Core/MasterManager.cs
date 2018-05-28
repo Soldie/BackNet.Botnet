@@ -40,8 +40,7 @@ namespace Master.Core
             var choice = "";
             while (choice != "9")
             {
-                Console.WriteLine("\n+---------------------------------------------------+");
-                Console.Write("Choose one option :\n\n    1 : Issue commands to the botnet's master server\n    2 : Listen on a port\n    9 : Exit\n\nChoice : ");
+                Console.Write("\n\nChoose one option :\n\n    1 : Issue commands to the botnet's master server\n    2 : Listen on a port\n    9 : Exit\n\nChoice : ");
 
                 // Reset choice here or infinite loop
                 choice = "";

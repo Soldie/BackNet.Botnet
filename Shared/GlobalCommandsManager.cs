@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace Shared
@@ -12,7 +13,7 @@ namespace Shared
         /// <summary>
         /// List of all instanciated command classes
         /// </summary>
-        public List<ICommand> commandList;
+        public static List<ICommand> commandList;
 
         /// <summary>
         /// Constructor, fill commandList with the classes implementing the ICommand interface.
@@ -20,16 +21,30 @@ namespace Shared
         /// </summary>
         protected GlobalCommandsManager(GlobalNetworkManager networkManager)
         {
+            commandList = new List<ICommand>();
+            LoadICommandsFromAssembly(AppDomain.CurrentDomain.GetAssemblies());
+            
+            GlobalCommandsManager.networkManager = networkManager;
+        }
+
+        /// <summary>
+        /// Instanciate every class implementing the ICommand interface from the assembly array.
+        /// Put the instances into the command list.
+        /// </summary>
+        /// <param name="assemblies">Assemblies to load the classes from</param>
+        /// <returns>List of ICommand name</returns>
+        public static List<string> LoadICommandsFromAssembly(Assembly[] assemblies)
+        {
             var type = typeof(ICommand);
 
-            commandList = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
+            var instances = assemblies.SelectMany(a => a.GetTypes())
                 .Where(t => type.IsAssignableFrom(t) && !t.IsInterface)
-                .Select(t => (ICommand)Activator.CreateInstance(t))
-                .OrderBy(x => x.name)
-                .ToList();
+                .Select(t => (ICommand) Activator.CreateInstance(t)).ToList();
+            
+            commandList.AddRange(instances);
+            commandList = commandList.OrderBy(x => x.name).ToList();
 
-            GlobalCommandsManager.networkManager = networkManager;
+            return instances.Select(x => x.name).ToList();
         }
 
         /// <summary>

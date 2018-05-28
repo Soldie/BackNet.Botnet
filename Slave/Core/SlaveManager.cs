@@ -32,11 +32,14 @@ namespace Slave.Core
         /// </summary>
         public SlaveManager()
         {
-            // Only one instance can run
-            var mutex = new Mutex(false, "ThisIsMyMutex-2JUY34DE8E23D7");
-            if (!mutex.WaitOne(TimeSpan.Zero, true))
+            if (!Config.IgnoreMutex)
             {
-                Environment.Exit(0);
+                // Only one instance can run
+                var mutex = new Mutex(false, "ThisIsMyMutex-2JUY34DE8E23D7");
+                if (!mutex.WaitOne(TimeSpan.Zero, true))
+                {
+                    Environment.Exit(0);
+                }
             }
         }
 
