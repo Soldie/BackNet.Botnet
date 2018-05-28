@@ -91,7 +91,6 @@
     <Compile Include="Commands\Terminate.cs" />
     <Compile Include="Commands\Upload.cs" />
     <Compile Include="Commands\Wallpaper.cs" />
-    <Compile Include="Commands\Webcam.cs" />
     <Compile Include="Commands\NetInfo.cs" />
     <Compile Include="Core\MasterManager.cs" />
     <Compile Include="Core\MasterNetworkManager.cs" />

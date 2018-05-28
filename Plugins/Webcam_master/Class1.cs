@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Master.Commands
+namespace Webcam_master
 {
     internal class Webcam : IMasterCommand
     {
