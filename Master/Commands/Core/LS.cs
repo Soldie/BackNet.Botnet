@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Master.AdvancedConsole;
 
 namespace Master.Commands.Core
 {
@@ -18,6 +19,10 @@ namespace Master.Commands.Core
             var data = "";
             while (data != "{end}")
             {
+                if (data == "<Not enough permissions>")
+                {
+                    ColorTools.WriteCommandError("Not enough permissions");
+                }
                 if (data != "")
                     Console.WriteLine(data);
                 data = MasterCommandsManager.networkManager.ReadLine();

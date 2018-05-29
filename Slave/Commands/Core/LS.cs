@@ -1,4 +1,5 @@
-﻿using Shared;
+﻿using System;
+using Shared;
 using System.Collections.Generic;
 using System.IO;
 
@@ -12,18 +13,25 @@ namespace Slave.Commands.Core
         {
             var result = "";
             var cwd = Directory.GetCurrentDirectory();
-            foreach (var dir in Directory.GetDirectories(cwd))
+            try
             {
-                var dirInfo = new DirectoryInfo(dir);
-                result += $"{dirInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}   <DIR>   {dirInfo.Name}\n";
-            }
-            foreach (var file in Directory.GetFiles(cwd))
-            {
-                var fileInfo = new DirectoryInfo(file);
-                result += $"{fileInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}           {fileInfo.Name}\n";
-            }
+                foreach (var dir in Directory.GetDirectories(cwd))
+                {
+                    var dirInfo = new DirectoryInfo(dir);
+                    result += $"{dirInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}   <DIR>   {dirInfo.Name}\n";
+                }
+                foreach (var file in Directory.GetFiles(cwd))
+                {
+                    var fileInfo = new DirectoryInfo(file);
+                    result += $"{fileInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}           {fileInfo.Name}\n";
+                }
 
-            SlaveCommandsManager.networkManager.WriteLine(result);
+                SlaveCommandsManager.networkManager.WriteLine(result);
+            }
+            catch (Exception)
+            {
+                SlaveCommandsManager.networkManager.WriteLine("<Not enough permissions>");
+            }
             SlaveCommandsManager.networkManager.WriteLine("{end}");
         }
     }

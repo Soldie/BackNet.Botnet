@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Master.AdvancedConsole;
 
 namespace Master.Commands.Core
 {
@@ -17,15 +18,23 @@ namespace Master.Commands.Core
         public void Process(List<string> args)
         {
             var cwd = Directory.GetCurrentDirectory();
-            foreach (var dir in Directory.GetDirectories(cwd))
+            try
             {
-                var dirInfo = new DirectoryInfo(dir);
-                Console.WriteLine($"{dirInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}   <DIR>   {dirInfo.Name}");
+                foreach (var dir in Directory.GetDirectories(cwd))
+                {
+                    var dirInfo = new DirectoryInfo(dir);
+                    Console.WriteLine($"{dirInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}   <DIR>   {dirInfo.Name}");
+                }
+
+                foreach (var file in Directory.GetFiles(cwd))
+                {
+                    var fileInfo = new DirectoryInfo(file);
+                    Console.WriteLine($"{fileInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}           {fileInfo.Name}");
+                }
             }
-            foreach (var file in Directory.GetFiles(cwd))
+            catch (Exception)
             {
-                var fileInfo = new DirectoryInfo(file);
-                Console.WriteLine($"{fileInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}           {fileInfo.Name}");
+                ColorTools.WriteCommandError("Not enough permissions");
             }
         }
     }
