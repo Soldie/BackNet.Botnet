@@ -19,15 +19,13 @@ namespace Master.AdvancedConsole
         {
             // Don't store empty strings or spaces-only commands
             if (string.IsNullOrEmpty(command) || command.All(x => x == ' ')) return;
-
+            
             // Concurrent same commands aren't saved
             if (history.Count != 0 && history[history.Count - 1] == command) return;
-
+            
             history.Add(command);
             // If the history is at its size limit, remove the first element
             if (history.Count > LIMIT) history.RemoveAt(0);
-
-            GoToLastCommand();
         }
 
         /// <summary>
@@ -49,7 +47,14 @@ namespace Master.AdvancedConsole
         public static string GetNextCommand()
         {
             if (history.Count == 0) return null;
-            if (currentCommandIndex == history.Count - 1 || currentCommandIndex == history.Count) return "";
+            if (currentCommandIndex >= history.Count - 1)
+            {
+                if (currentCommandIndex == history.Count - 1)
+                {
+                    currentCommandIndex++;
+                }
+                return "";
+            }
 
             currentCommandIndex++;
             return history[currentCommandIndex];

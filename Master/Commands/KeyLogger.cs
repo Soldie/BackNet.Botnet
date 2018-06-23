@@ -33,9 +33,9 @@ namespace Master.Commands
             {
                 Console.Write("Keylogger status : [");
                 if (MasterCommandsManager.networkManager.ReadLine() == "on")
-                    ColorTools.WriteInlineMessage("ON", ConsoleColor.Cyan);
+                    ColorTools.WriteSuccess("ON", true);
                 else
-                    ColorTools.WriteInlineMessage("OFF", ConsoleColor.Red);
+                    ColorTools.WriteError("OFF", true);
                 Console.WriteLine("]");
             }
         }

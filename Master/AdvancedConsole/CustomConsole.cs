@@ -14,13 +14,13 @@ namespace Master.AdvancedConsole
         internal static int firstCharHeight;
 
         internal static int lastCharHeight
-            => firstCharHeight + (currentText.Length + ConsoleTools.PROMPT.Length) / Console.BufferWidth;
+            => firstCharHeight + ((currentText.Length + ConsoleTools.PROMPT.Length) / Console.BufferWidth);
 
         static int lineLenght
-            => currentText.Length - (Console.CursorTop - firstCharHeight) * Console.BufferWidth + ConsoleTools.PROMPT.Length;
+            => currentText.Length - ((Console.CursorTop - firstCharHeight) * Console.BufferWidth) + ConsoleTools.PROMPT.Length;
 
         static int cursorPositionInString
-            => (Console.CursorTop - firstCharHeight) * Console.BufferWidth + Console.CursorLeft - ConsoleTools.PROMPT.Length;
+            => ((Console.CursorTop - firstCharHeight) * Console.BufferWidth) + Console.CursorLeft - ConsoleTools.PROMPT.Length;
 
         #endregion Current text
 
@@ -64,6 +64,10 @@ namespace Master.AdvancedConsole
                         return currentText.All(x => x == ' ') ? "" : currentText;
 
                     case ConsoleKey.Tab:
+                        // Go to end
+                        Console.SetCursorPosition(ConsoleTools.PROMPT.Length, lastCharHeight);
+                        Console.SetCursorPosition(lineLenght, lastCharHeight);
+                        // Autocomplete if possible
                         AutoCompletionManager.AutoComplete(ref currentText);
                         break;
 
@@ -108,10 +112,12 @@ namespace Master.AdvancedConsole
 
                     case ConsoleKey.Delete:
                         EraseNextChar();
+                        AutoCompletionManager.ResetAutoCompletionState();
                         break;
 
                     case ConsoleKey.Backspace:
                         ErasePreviousChar();
+                        AutoCompletionManager.ResetAutoCompletionState();
                         break;
 
                     case ConsoleKey.Insert:
@@ -136,6 +142,7 @@ namespace Master.AdvancedConsole
                         }
 
                         PrintCurrentChar();
+                        AutoCompletionManager.ResetAutoCompletionState();
                         break;
                 }
             }

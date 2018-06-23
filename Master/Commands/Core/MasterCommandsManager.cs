@@ -85,7 +85,7 @@ namespace Master.Commands.Core
         public void ShowCommandHelp(IMasterCommand command)
         {
             ColorTools.WriteMessage(command.description);
-            ColorTools.WriteInlineMessage("Syntax: ", ConsoleColor.DarkCyan);
+            ColorTools.WriteCustomColor("Syntax: ", ConsoleColor.DarkCyan, true);
 
             var help = new StringBuilder();
 
@@ -110,7 +110,7 @@ namespace Master.Commands.Core
                 }
             }
 
-            ColorTools.WriteMessage(help.ToString());
+            ColorTools.WriteCustomColor(help.ToString(), ConsoleColor.White);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Master.Commands.Core
             foreach (var command in commandList)
             {
                 Console.WriteLine(" ");
-                ColorTools.WriteInlineMessage($"-- {command.name} --\n", ConsoleColor.Cyan);
+                ColorTools.WriteSuccess($"-- {command.name} --\n", true);
                 ShowCommandHelp((IMasterCommand)command);
             }
         }

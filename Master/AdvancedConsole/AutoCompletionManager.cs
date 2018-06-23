@@ -99,7 +99,7 @@ namespace Master.AdvancedConsole
             Console.Write('\n');
             foreach (var result in autoCompleteResults)
             {
-                ColorTools.WriteInlineMessage($"    {currentText}", ConsoleColor.Cyan);
+                ColorTools.WriteSuccess($"    {currentText}", true);
                 ColorTools.WriteMessage(result.Substring(currentText.Length));
             }
 

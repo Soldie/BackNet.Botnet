@@ -14,6 +14,7 @@ Most notable remote commands :
 - File upload and download
 - Remote program execution
 - System informations
+- Process list
 - Local Area Network scan
 - Wifi profiles informations dump (including passwords)
 - Firefox and Google Chrome databases information extraction
