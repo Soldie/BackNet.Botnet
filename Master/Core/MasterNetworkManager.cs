@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Master.Core
 {
@@ -32,7 +33,7 @@ namespace Master.Core
         {
             StreamTransfertStartEvent += StreamTransfertStartEventHandler;
             StreamTransfertProgressEvent += StreamTransfertProgressEventHandler;
-            StreamTransfertFailEvent += StreamTransfertFailEventHandler;
+            StreamTransfertEndEvent += StreamTransfertEndEventHandler;
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace Master.Core
         {
             StreamTransfertStartEvent -= StreamTransfertStartEventHandler;
             StreamTransfertProgressEvent -= StreamTransfertProgressEventHandler;
-            StreamTransfertFailEvent -= StreamTransfertFailEventHandler;
+            StreamTransfertEndEvent += StreamTransfertEndEventHandler;
         }
 
         /// <summary>
@@ -160,11 +161,14 @@ namespace Master.Core
 
         /// <summary>
         /// GlobalNetworkManager StreamTransfertStartEvent handler.
-        /// Calls ProgressDisplayer.Init()
+        /// Calls ProgressDisplayer.Init() as a new Task
         /// </summary>
         /// <param name="total">Total number of bytes</param>
         void StreamTransfertStartEventHandler(long total)
-            => ProgressDisplayer.Init(total);
+        {
+            var task = new Task(() => ProgressDisplayer.Init(total));
+            task.Start();
+        }
 
         /// <summary>
         /// GlobalNetworkManager StreamTransfertProgressEvent handler.
@@ -175,10 +179,10 @@ namespace Master.Core
             => ProgressDisplayer.Update(current);
 
         /// <summary>
-        /// GlobalNetworkManager StreamTransfertFailEvent handler.
+        /// GlobalNetworkManager StreamTransfertEndEvent handler.
         /// Calls ProgressDisplayer.End()
         /// </summary>
-        void StreamTransfertFailEventHandler()
+        void StreamTransfertEndEventHandler()
             => ProgressDisplayer.End();
     }
 }

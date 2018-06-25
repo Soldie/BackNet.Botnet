@@ -28,9 +28,9 @@ namespace Shared
 
         public event TransfertProgressHandler StreamTransfertProgressEvent;
 
-        public delegate void TransfertFailHandler();
+        public delegate void TransfertEndHandler();
 
-        public event TransfertFailHandler StreamTransfertFailEvent;
+        public event TransfertEndHandler StreamTransfertEndEvent;
 
         #endregion Events
 
@@ -96,10 +96,11 @@ namespace Shared
                 }
                 catch (Exception)
                 {
-                    StreamTransfertFailEvent?.Invoke();
+                    StreamTransfertEndEvent?.Invoke();
                     throw new NetworkException();
                 }
             }
+            StreamTransfertEndEvent?.Invoke();
         }
 
         /// <summary>
@@ -144,10 +145,11 @@ namespace Shared
                         break;
                     }
                 }
+                StreamTransfertEndEvent?.Invoke();
             }
             catch (Exception)
             {
-                StreamTransfertFailEvent?.Invoke();
+                StreamTransfertEndEvent?.Invoke();
                 throw new NetworkException();
             }
         }
