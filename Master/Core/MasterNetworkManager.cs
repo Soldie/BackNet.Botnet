@@ -11,6 +11,8 @@ namespace Master.Core
 {
     public class MasterNetworkManager : GlobalNetworkManager
     {
+        static MasterNetworkManager instance = new MasterNetworkManager();
+
         Socket socketForServer { get; set; }
 
         public int portNumber { get; set; }
@@ -18,12 +20,21 @@ namespace Master.Core
         bool cleanedUp;
 
         /// <summary>
-        /// Call the SetStreamTransfertEventHandlers() method to set
-        /// the event handlers required to display a completion meter
+        /// Call the SetStreamTransfertEventHandlers() method to set the event handlers required to display a completion meter.
+        /// This constructor is private in order to implement the singleton pattern.
         /// </summary>
-        public MasterNetworkManager()
+        MasterNetworkManager()
         {
             SetStreamTransfertEventHandlers();
+        }
+
+        /// <summary>
+        /// Retrieve the singleton instance of the MasterNetworkManager class
+        /// </summary>
+        /// <returns></returns>
+        public static MasterNetworkManager GetInstance()
+        {
+            return instance;
         }
 
         /// <summary>

@@ -1,9 +1,9 @@
 ﻿using Shared;
-using Slave.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Media;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -17,7 +17,7 @@ namespace Slave.Commands
 
             if (!File.Exists(filename))
             {
-                SlaveCommandsManager.networkManager.WriteLine("FileError");
+                SlaveNetworkManager.GetInstance().WriteLine("FileError");
                 return;
             }
 
@@ -25,11 +25,11 @@ namespace Slave.Commands
             {
                 var player = new SoundPlayer(filename);
                 player.Play();
-                SlaveCommandsManager.networkManager.WriteLine("OK");
+                SlaveNetworkManager.GetInstance().WriteLine("OK");
             }
             catch (InvalidOperationException)
             {
-                SlaveCommandsManager.networkManager.WriteLine("InvalidFormat");
+                SlaveNetworkManager.GetInstance().WriteLine("InvalidFormat");
             }
         }
     }

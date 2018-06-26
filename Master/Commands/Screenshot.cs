@@ -3,6 +3,7 @@ using Master.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Master.Core;
 
 namespace Master.Commands
 {
@@ -34,7 +35,7 @@ namespace Master.Commands
             {
                 using (var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    MasterCommandsManager.networkManager.NetworkStreamToStream(fs);
+                    MasterNetworkManager.GetInstance().NetworkStreamToStream(fs);
                 }
 
                 ColorTools.WriteCommandSuccess($"Screenshot saved : {fileName}");

@@ -1,6 +1,7 @@
 ﻿using Master.AdvancedConsole;
 using Master.Commands.Core;
 using System.Collections.Generic;
+using Master.Core;
 
 namespace Master.Commands
 {
@@ -21,7 +22,7 @@ namespace Master.Commands
         {
             ColorTools.WriteCommandMessage("Starting download of file from url");
 
-            var result = MasterCommandsManager.networkManager.ReadLine();
+            var result = MasterNetworkManager.GetInstance().ReadLine();
             if (result == "Success")
             {
                 ColorTools.WriteCommandSuccess("File downloaded successfully from URL");

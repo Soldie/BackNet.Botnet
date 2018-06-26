@@ -1,5 +1,4 @@
 ﻿using Shared;
-using Slave.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +7,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -67,7 +67,7 @@ namespace Slave.Commands
             }
             data += "{end}";
 
-            SlaveCommandsManager.networkManager.WriteLine(data);
+            SlaveNetworkManager.GetInstance().WriteLine(data);
         }
 
         void Scan(string ipMask)
@@ -90,7 +90,7 @@ namespace Slave.Commands
             countdown.Signal();
             countdown.Wait();
 
-            SlaveCommandsManager.networkManager.WriteLine(upHosts.Count > 0
+            SlaveNetworkManager.GetInstance().WriteLine(upHosts.Count > 0
                 ? upHosts.Aggregate((x, y) => $"{x}|{y}")
                 : "KO");
         }

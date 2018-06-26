@@ -1,8 +1,8 @@
 ﻿using Shared;
-using Slave.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -30,11 +30,11 @@ namespace Slave.Commands
             try
             {
                 System.Diagnostics.Process.Start(startInfo);
-                SlaveCommandsManager.networkManager.WriteLine("OK");
+                SlaveNetworkManager.GetInstance().WriteLine("OK");
             }
             catch (Exception)
             {
-                SlaveCommandsManager.networkManager.WriteLine("KO");
+                SlaveNetworkManager.GetInstance().WriteLine("KO");
             }
         }
     }

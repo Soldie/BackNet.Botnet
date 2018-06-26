@@ -1,6 +1,7 @@
 ﻿using Shared;
 using System.Collections.Generic;
 using System.IO;
+using Slave.Core;
 
 namespace Slave.Commands.Core
 {
@@ -9,6 +10,6 @@ namespace Slave.Commands.Core
         public string name { get; set; } = "pwd";
 
         public void Process(List<string> args)
-            => SlaveCommandsManager.networkManager.WriteLine(Directory.GetCurrentDirectory());
+            => SlaveNetworkManager.GetInstance().WriteLine(Directory.GetCurrentDirectory());
     }
 }

@@ -35,21 +35,23 @@ Communication between the Master and Slave was made easy, you can send and read 
 
 Send a line of text
 ```cs
-GlobalCommandsManager.networkManager.WriteLine("Hello !");
+MasterCommandsManager.GetInstance().WriteLine("Hello !");
 ```
 Read a line of text
 ```cs
-string message = GlobalCommandsManager.networkManager.ReadLine();
+string message = MasterCommandsManager.GetInstance().ReadLine();
 ```
 
 Send a file over the network, using a FileStream
 ```cs
-GlobalCommandsManager.networkManager.StreamToNetworkStream(fileStream);
+MasterCommandsManager.GetInstance().StreamToNetworkStream(fileStream);
 ```
 Receive a file over the network
 ```cs
-GlobalCommandsManager.networkManager.NetworkStreamToStream(fileStream);
+MasterCommandsManager.GetInstance().NetworkStreamToStream(fileStream);
 ```
+
+Those examples apply to the master only, for the slave, you must use SlaveCommandsManager.GetInstance() to access the network manager instance.
 
 
 File transferts come with a nice progress bar !

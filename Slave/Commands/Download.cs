@@ -1,7 +1,7 @@
 ﻿using Shared;
-using Slave.Commands.Core;
 using System.Collections.Generic;
 using System.IO;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -13,7 +13,7 @@ namespace Slave.Commands
         {
             if (!File.Exists(args[0]))
             {
-                SlaveCommandsManager.networkManager.WriteLine("NotFound");
+                SlaveNetworkManager.GetInstance().WriteLine("NotFound");
                 return;
             }
 
@@ -21,14 +21,14 @@ namespace Slave.Commands
             {
                 using (var readStream = new FileStream(args[0], FileMode.Open))
                 {
-                    SlaveCommandsManager.networkManager.WriteLine("OK");
+                    SlaveNetworkManager.GetInstance().WriteLine("OK");
 
-                    SlaveCommandsManager.networkManager.StreamToNetworkStream(readStream);
+                    SlaveNetworkManager.GetInstance().StreamToNetworkStream(readStream);
                 }
             }
             catch (IOException)
             {
-                SlaveCommandsManager.networkManager.WriteLine("IOException");
+                SlaveNetworkManager.GetInstance().WriteLine("IOException");
             }
         }
     }

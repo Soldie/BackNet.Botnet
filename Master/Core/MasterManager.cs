@@ -24,8 +24,8 @@ namespace Master.Core
         /// </summary>
         public MasterManager()
         {
-            networkManager = new MasterNetworkManager();
-            commandsManager = new MasterCommandsManager(networkManager);
+            networkManager = MasterNetworkManager.GetInstance();
+            commandsManager = new MasterCommandsManager();
             ColorTools.SetDefaultConsoleColor();
         }
 

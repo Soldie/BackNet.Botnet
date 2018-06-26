@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Master.AdvancedConsole;
 using Master.Commands.Core;
+using Master.Core;
 using Shared;
 
 namespace Master.Commands
@@ -35,14 +36,14 @@ namespace Master.Commands
         
         public void Process(List<string> args)
         {
-            var result = GlobalCommandsManager.networkManager.ReadLine();
+            var result = MasterNetworkManager.GetInstance().ReadLine();
             if (result == "KO")
             {
                 ColorTools.WriteCommandError($"IO exception encountered when reading remote DLL at {args[1]}");
                 return;
             }
 
-            result = GlobalCommandsManager.networkManager.ReadLine();
+            result = MasterNetworkManager.GetInstance().ReadLine();
             if (result == "KO")
             {
                 ColorTools.WriteCommandError("No classes implementing the ICommand interface were found on the remote DLL");

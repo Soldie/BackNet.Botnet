@@ -18,7 +18,7 @@ namespace Shared
 
         public BinaryReader binaryReader { get; set; }
 
-        #region Events
+        #region Events & related delegates
 
         public delegate void TransfertStartHandler(long total);
 
@@ -32,7 +32,7 @@ namespace Shared
 
         public event TransfertEndHandler StreamTransfertEndEvent;
 
-        #endregion Events
+        #endregion Events & related delegates
 
         /// <summary>
         /// Read one line from the network stream

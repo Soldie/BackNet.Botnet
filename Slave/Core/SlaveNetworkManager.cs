@@ -8,7 +8,26 @@ namespace Slave.Core
 {
     public class SlaveNetworkManager : GlobalNetworkManager
     {
+        static SlaveNetworkManager instance = new SlaveNetworkManager();
+
         TcpClient tcpClient { get; set; }
+
+        /// <summary>
+        /// Private constructor
+        /// </summary>
+        SlaveNetworkManager()
+        {
+            // Disable public constructor
+        }
+
+        /// <summary>
+        /// Retrieve the singleton instance of the SlaveNetworkManager class
+        /// </summary>
+        /// <returns></returns>
+        public static SlaveNetworkManager GetInstance()
+        {
+            return instance;
+        }
 
         /// <summary>
         /// Try to connect to the master with the given ip and port number

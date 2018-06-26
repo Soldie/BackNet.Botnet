@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Master.Core;
 
 namespace Master.Commands
 {
@@ -80,7 +81,7 @@ namespace Master.Commands
             var data = "";
             while (true)
             {
-                var tempData = MasterCommandsManager.networkManager.ReadLine();
+                var tempData = MasterNetworkManager.GetInstance().ReadLine();
                 if (tempData == "{end}") break;
                 data += $"{tempData}\n\r";
             }
@@ -107,7 +108,7 @@ namespace Master.Commands
         {
             ColorTools.WriteCommandMessage("Depending on the mask you provided, this may take a long time...");
 
-            var result = MasterCommandsManager.networkManager.ReadLine();
+            var result = MasterNetworkManager.GetInstance().ReadLine();
             if (result == "KO")
             {
                 ColorTools.WriteMessage("No Host replied");

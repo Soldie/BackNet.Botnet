@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Master.Core;
 
 namespace Master.Commands.Core
 {
@@ -14,6 +15,6 @@ namespace Master.Commands.Core
         public List<string> validArguments { get; set; } = null;
 
         public void Process(List<string> args)
-            => Console.WriteLine(MasterCommandsManager.networkManager.ReadLine());
+            => Console.WriteLine(MasterNetworkManager.GetInstance().ReadLine());
     }
 }

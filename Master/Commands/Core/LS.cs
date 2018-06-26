@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Master.AdvancedConsole;
+using Master.Core;
 
 namespace Master.Commands.Core
 {
@@ -25,7 +26,7 @@ namespace Master.Commands.Core
                 }
                 if (data != "")
                     Console.WriteLine(data);
-                data = MasterCommandsManager.networkManager.ReadLine();
+                data = MasterNetworkManager.GetInstance().ReadLine();
             }
         }
     }

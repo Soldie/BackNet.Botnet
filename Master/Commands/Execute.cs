@@ -1,6 +1,7 @@
 ﻿using Master.AdvancedConsole;
 using Master.Commands.Core;
 using System.Collections.Generic;
+using Master.Core;
 
 namespace Master.Commands
 {
@@ -22,7 +23,7 @@ namespace Master.Commands
 
         public void Process(List<string> args)
         {
-            if (MasterCommandsManager.networkManager.ReadLine() == "OK")
+            if (MasterNetworkManager.GetInstance().ReadLine() == "OK")
             {
                 ColorTools.WriteCommandSuccess("Program executed");
             }

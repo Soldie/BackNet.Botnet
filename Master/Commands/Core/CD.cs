@@ -1,6 +1,7 @@
 ﻿using Master.AdvancedConsole;
 using System;
 using System.Collections.Generic;
+using Master.Core;
 
 namespace Master.Commands.Core
 {
@@ -19,7 +20,7 @@ namespace Master.Commands.Core
 
         public void Process(List<string> args)
         {
-            var result = MasterCommandsManager.networkManager.ReadLine();
+            var result = MasterNetworkManager.GetInstance().ReadLine();
             if (result == "KO")
             {
                 ColorTools.WriteCommandError("No such remote directory");

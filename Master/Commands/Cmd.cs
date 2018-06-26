@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Master.Core;
 
 namespace Master.Commands
 {
@@ -24,7 +25,7 @@ namespace Master.Commands
             {
                 while (true)
                 {
-                    var receivedData = MasterCommandsManager.networkManager.ReadLine();
+                    var receivedData = MasterNetworkManager.GetInstance().ReadLine();
 
                     // Main thread exited and notified this task to stop
                     if (cancelToken.IsCancellationRequested)
@@ -57,7 +58,7 @@ namespace Master.Commands
                     Console.Clear();
                 }
 
-                MasterCommandsManager.networkManager.WriteLine(userInput);
+                MasterNetworkManager.GetInstance().WriteLine(userInput);
                 if (userInput == "exit")
                 {
                     // Cancel the listening task

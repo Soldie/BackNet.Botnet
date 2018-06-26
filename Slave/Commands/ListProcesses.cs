@@ -3,6 +3,7 @@ using Slave.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -19,8 +20,8 @@ namespace Slave.Commands
                 processesInfos.Add(new Tuple<string, string>(process.Id.ToString(), process.ProcessName));
             }
 
-            SlaveCommandsManager.networkManager.WriteLine(SlaveCommandsManager.TableDisplay(processesInfos));
-            SlaveCommandsManager.networkManager.WriteLine("{end}");
+            SlaveNetworkManager.GetInstance().WriteLine(SlaveCommandsManager.TableDisplay(processesInfos));
+            SlaveNetworkManager.GetInstance().WriteLine("{end}");
         }
     }
 }

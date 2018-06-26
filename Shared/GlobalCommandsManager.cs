@@ -8,8 +8,6 @@ namespace Shared
 {
     public abstract class GlobalCommandsManager
     {
-        public static GlobalNetworkManager networkManager { get; set; }
-
         /// <summary>
         /// List of all instanciated command classes
         /// </summary>
@@ -17,14 +15,11 @@ namespace Shared
 
         /// <summary>
         /// Constructor, fill commandList with the classes implementing the ICommand interface.
-        /// Instantiate the network manager.
         /// </summary>
-        protected GlobalCommandsManager(GlobalNetworkManager networkManager)
+        protected GlobalCommandsManager()
         {
             commandList = new List<ICommand>();
             LoadICommandsFromAssembly(AppDomain.CurrentDomain.GetAssemblies());
-            
-            GlobalCommandsManager.networkManager = networkManager;
         }
 
         /// <summary>

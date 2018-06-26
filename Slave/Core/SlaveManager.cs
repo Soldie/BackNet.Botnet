@@ -41,6 +41,9 @@ namespace Slave.Core
                     Environment.Exit(0);
                 }
             }
+
+            networkManager = SlaveNetworkManager.GetInstance();
+            commandsManager = new SlaveCommandsManager();
         }
 
         /// <summary>

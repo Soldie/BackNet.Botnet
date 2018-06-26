@@ -26,8 +26,6 @@ namespace Slave
             }
 
             manager = new SlaveManager();
-            manager.networkManager = new SlaveNetworkManager();
-            manager.commandsManager = new SlaveCommandsManager(manager.networkManager);
 
             // Start the processing in a new thread as a task
             Task mainTask;

@@ -2,6 +2,7 @@
 using Master.Commands.Core;
 using System.Collections.Generic;
 using System.IO;
+using Master.Core;
 
 namespace Master.Commands
 {
@@ -41,10 +42,10 @@ namespace Master.Commands
 
             using (var readStream = new FileStream(path, FileMode.Open))
             {
-                MasterCommandsManager.networkManager.StreamToNetworkStream(readStream);
+                MasterNetworkManager.GetInstance().StreamToNetworkStream(readStream);
             }
 
-            var result = MasterCommandsManager.networkManager.ReadLine();
+            var result = MasterNetworkManager.GetInstance().ReadLine();
 
             if (result == "Success")
             {

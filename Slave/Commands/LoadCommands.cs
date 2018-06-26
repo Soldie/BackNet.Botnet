@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Shared;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -18,11 +19,11 @@ namespace Slave.Commands
             try
             {
                 loadedAssembly = Assembly.LoadFrom(path);
-                GlobalCommandsManager.networkManager.WriteLine("OK");
+                SlaveNetworkManager.GetInstance().WriteLine("OK");
             }
             catch (Exception)
             {
-                GlobalCommandsManager.networkManager.WriteLine("KO");
+                SlaveNetworkManager.GetInstance().WriteLine("KO");
                 return;
             }
 
@@ -30,7 +31,7 @@ namespace Slave.Commands
             var loadedCommands = GlobalCommandsManager.LoadICommandsFromAssembly(new[] {loadedAssembly});
 
             // Send result to master
-            GlobalCommandsManager.networkManager.WriteLine(
+            SlaveNetworkManager.GetInstance().WriteLine(
                 loadedCommands.Count != 0
                 ? loadedCommands.Aggregate((x, y) => $"{x} {y}")
                 : "KO"

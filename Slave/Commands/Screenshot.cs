@@ -1,5 +1,4 @@
 ﻿using Shared;
-using Slave.Commands.Core;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,6 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Slave.Core;
 
 namespace Slave.Commands
 {
@@ -29,7 +29,7 @@ namespace Slave.Commands
                     bitmap.Save(ms, ImageFormat.Png);
                 }
 
-                SlaveCommandsManager.networkManager.StreamToNetworkStream(ms);
+                SlaveNetworkManager.GetInstance().StreamToNetworkStream(ms);
             }
         }
 

